@@ -12,14 +12,7 @@
 	.moon-container {
 		display: flex;
 		justify-content: center;
-		margin: 0 30px;
-	}
-
-	@media (min-width: 720px) {
-		.moon-container {
-			margin: 0 auto;
-			width: 40%;
-		}
+		height: 50vh;
 	}
 
 	.sr-only {
