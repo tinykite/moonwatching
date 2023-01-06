@@ -1,5 +1,5 @@
 exports.handler = async function (event) {
-	console.log('Received event:', event);
+	console.log('Next event:', event.body);
 
 	return {
 		statusCode: 200,
