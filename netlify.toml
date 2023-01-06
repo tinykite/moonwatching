@@ -3,4 +3,4 @@
   publish = "build"
 
 [functions.moon-notifications]
-  schedule = "@daily"
+  schedule = "* * * * *"
