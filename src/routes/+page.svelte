@@ -1,10 +1,18 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { env } from '$env/dynamic/public';
 
 	export let data: PageData;
 	import MoonPhase from '../MoonPhase.svelte';
-	console.log(env.PUBLIC_SUPABASE_URL);
+	import MoonAlertForm from '../MoonAlertForm.svelte';
+
+	export let form;
 </script>
 
 <MoonPhase phase={data.moonPhase} />
+<MoonAlertForm {form} />
+
+<style>
+	:global(body) {
+		color: white;
+	}
+</style>
