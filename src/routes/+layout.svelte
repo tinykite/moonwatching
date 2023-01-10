@@ -1,13 +1,13 @@
+<script>
+	// Importing this in the layout, instead of app.html, to enable HMR
+	import '../styles/global.css';
+</script>
+
 <div class="page-container">
 	<slot />
 </div>
 
 <style>
-	:global(body) {
-		margin: 0;
-		padding: 0;
-	}
-
 	.page-container {
 		background: black;
 		height: 100vh;

@@ -1,5 +1,6 @@
-<script lang="js">
-	export let form;
+<script lang="ts">
+	// TODO: Learn how to type the form data Svelte returns
+	export let form: any;
 </script>
 
 {#if form?.error}
