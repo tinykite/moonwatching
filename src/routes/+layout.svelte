@@ -10,10 +10,11 @@
 <style>
 	.page-container {
 		background: black;
-		height: 100vh;
-		width: 100vw;
+		min-height: 100vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		width: 80%;
+		margin: 0 auto;
 	}
 </style>

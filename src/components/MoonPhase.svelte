@@ -9,12 +9,6 @@
 </div>
 
 <style>
-	.moon-container {
-		display: flex;
-		justify-content: center;
-		height: 50vh;
-	}
-
 	.sr-only {
 		border: 0;
 		clip: rect(0 0 0 0);
