@@ -9,6 +9,9 @@
 </div>
 
 <style>
+	.moon-container {
+		margin-top: 3rem;
+	}
 	.sr-only {
 		border: 0;
 		clip: rect(0 0 0 0);
