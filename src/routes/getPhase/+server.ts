@@ -1,9 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-ignore
-
 import { json } from '@sveltejs/kit';
 
-// @ts-nocheck
 export function GET() {
 	// TODO: enable passing a date
 	// https://mags.ai/blog/sveltekit-endpoint-body-parsing/
