@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-ignore
+
+import { json } from '@sveltejs/kit';
+
 // @ts-nocheck
 export function GET() {
 	// TODO: enable passing a date
@@ -7,31 +10,31 @@ export function GET() {
 	const LUNAR_MONTH = 29.530588853;
 	const currentDate = new Date();
 
-	const getJulianDate = (date) => {
+	const getJulianDate = (date: Date) => {
 		const time = date.getTime();
 		const tzoffset = date.getTimezoneOffset();
 
 		return time / 86400000 - tzoffset / 1440 + 2440587.5;
 	};
 
-	const normalize = (value) => {
+	const normalize = (value: number) => {
 		value = value - Math.floor(value);
 		if (value < 0) {
 			return (value = value + 1);
 		} else return value;
 	};
 
-	const getLunarAgePercent = (date) => {
+	const getLunarAgePercent = (date: Date) => {
 		return normalize((getJulianDate(date) - 2451550.1) / LUNAR_MONTH);
 	};
 
-	const getLunarAge = (date) => {
+	const getLunarAge = (date: Date) => {
 		const percent = getLunarAgePercent(date);
 		const age = percent * LUNAR_MONTH;
 		return age;
 	};
 
-	const getLunarPhase = (date) => {
+	const getLunarPhase = (date: Date) => {
 		const age = getLunarAge(date);
 		if (age < 1.84566) return 'New Moon';
 		else if (age < 5.53699) return 'Waxing Crescent';
@@ -44,11 +47,13 @@ export function GET() {
 		else return 'New Moon';
 	};
 
-	const moonPhase = JSON.stringify(getLunarPhase(currentDate));
+	const moonPhase = getLunarPhase(currentDate);
 
-	return new Response(moonPhase, {
-		headers: {
-			'Content-Type': 'application/json'
-		}
-	});
+	// Identical to
+	// return new Response(moonPhase, {
+	// 	headers: {
+	// 		'Content-Type': 'application/json'
+	// 	}
+	// });
+	return json(moonPhase);
 }
