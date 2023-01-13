@@ -1,4 +1,4 @@
-import * as fetch from 'node-fetch';
+import fetch from 'node-fetch';
 
 exports.handler = async function () {
 	const res = await fetch('http://127.0.0.1:5173/getEmails');
