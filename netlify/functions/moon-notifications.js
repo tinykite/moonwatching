@@ -1,12 +1,10 @@
-const fetch = require('node-fetch');
+import * as fetch from 'node-fetch';
 
-exports.handler = async function (event) {
-	const res = await fetch('https://moonwatching.netlify.app/getPhase');
+exports.handler = async function () {
+	const res = await fetch('http://127.0.0.1:5173/getEmails');
 	const moonPhase = await res.json();
 
-	console.log(`Current phase: ${moonPhase}`);
-	console.log(event.body);
-
+	console.log(moonPhase);
 	return {
 		statusCode: 200
 	};
