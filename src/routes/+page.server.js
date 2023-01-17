@@ -28,6 +28,13 @@ export const actions = {
 
 		const { error } = await supabase.from('subscribers').insert({ email });
 
+		if (error && error.message.includes('violates unique constraint "subscribers_email_key"')) {
+			return fail(422, {
+				email,
+				error: 'Your email has already been submitted'
+			});
+		}
+
 		if (error) {
 			return fail(422, {
 				email: data.get('email'),
@@ -35,8 +42,28 @@ export const actions = {
 			});
 		}
 
-		return {
-			success: 'Your email has been submitted!'
-		};
+		const { data: subscriber } = await supabase
+			.from('subscribers')
+			.select('email')
+			.eq('email', email);
+
+		if (subscriber) {
+			// const { subscriberEmail, error } = await fetch(`http://127.0.0.1:5173/sendEmails`, {
+			// 	method: 'POST',
+			// 	headers: {
+			// 		'Content-Type': 'application/json'
+			// 	},
+			// 	body: JSON.stringify({
+			// 		subscriberName: 'Dakota'
+			// 	})
+			// });
+
+			// if (error) {
+			// 	console.log(error);
+			// }
+			return {
+				success: 'Your email was successsfully submitted!'
+			};
+		}
 	}
 };

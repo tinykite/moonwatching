@@ -1,8 +1,7 @@
 import { json } from '@sveltejs/kit';
 
-export function GET() {
+export async function GET() {
 	// TODO: enable passing a date
-	// https://mags.ai/blog/sveltekit-endpoint-body-parsing/
 	const LUNAR_MONTH = 29.530588853;
 	const currentDate = new Date();
 

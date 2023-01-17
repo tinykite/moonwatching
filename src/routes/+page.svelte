@@ -9,7 +9,7 @@
 
 <main class="page-container">
 	<MoonPhase phase={data.moonPhase} />
-	<h2 class="alert-header">Get Email Updates on the Moon</h2>
+	<h2 class="alert-header">Receive Updates on the New and Full Moon</h2>
 	<MoonAlertForm {form} />
 </main>
 
