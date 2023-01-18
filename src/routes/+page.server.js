@@ -1,5 +1,6 @@
 import { fail } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
+import { PUBLIC_SERVER_PATH } from '$env/static/public';
 
 // As per the HTML Specification
 const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -28,6 +29,7 @@ export const actions = {
 
 		const { error } = await supabase.from('subscribers').insert({ email });
 
+		// TODO: Rewrite this as a Supabase select
 		if (error && error.message.includes('violates unique constraint "subscribers_email_key"')) {
 			return fail(422, {
 				email,
@@ -42,32 +44,19 @@ export const actions = {
 			});
 		}
 
-		const { data: subscriber } = await supabase
-			.from('subscribers')
-			.select('email')
-			.eq('email', email);
+		const confirmationEmail = await fetch(`${PUBLIC_SERVER_PATH}/confirmation`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				email
+			})
+		});
 
-		if (subscriber) {
-			// 	const res = await fetch(`/email`, {
-			// 		method: 'POST',
-			// 		headers: {
-			// 			'Content-Type': 'application/json'
-			// 		},
-			// 		body: JSON.stringify({
-			// 			email: subscriber[0].email
-			// 		})
-			// 	});
+		const emailRes = await confirmationEmail.json();
 
-			// 	const success = await res.json();
-
-			// 	if (error) {
-			// 		return fail(422, { error });
-			// 	}
-
-			// 	if (success) {
-			// 		console.log(res.json);
-			// 	}
-
+		if (emailRes) {
 			return {
 				success: 'Your email was successsfully submitted!'
 			};
