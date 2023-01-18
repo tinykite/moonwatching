@@ -29,21 +29,11 @@ import type { RequestHandler } from './$types';
 // }
 
 export const POST: RequestHandler = async ({ request }) => {
-	const emailBody = request.body;
+	const email = await request.email;
 
-	if (!emailBody) {
+	if (!email) {
 		throw error(404, 'Email not sent');
 	}
-
-	console.log(emailBody);
-
-	// return {
-	// 	status: 200,
-	// 	headers: { 'Content-Type': 'application/json' },
-	// 	body: {
-	// 		message: 'Email sent'
-	// 	}
-	// };
 
 	return json('Email sent');
 };

@@ -44,11 +44,5 @@ export async function GET() {
 
 	const moonPhase = getLunarPhase(currentDate);
 
-	// Identical to
-	// return new Response(moonPhase, {
-	// 	headers: {
-	// 		'Content-Type': 'application/json'
-	// 	}
-	// });
 	return json(moonPhase);
 }
