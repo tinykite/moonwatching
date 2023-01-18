@@ -48,19 +48,26 @@ export const actions = {
 			.eq('email', email);
 
 		if (subscriber) {
-			// const { subscriberEmail, error } = await fetch(`http://127.0.0.1:5173/sendEmails`, {
-			// 	method: 'POST',
-			// 	headers: {
-			// 		'Content-Type': 'application/json'
-			// 	},
-			// 	body: JSON.stringify({
-			// 		subscriberName: 'Dakota'
-			// 	})
-			// });
+			// 	const res = await fetch(`/email`, {
+			// 		method: 'POST',
+			// 		headers: {
+			// 			'Content-Type': 'application/json'
+			// 		},
+			// 		body: JSON.stringify({
+			// 			email: subscriber[0].email
+			// 		})
+			// 	});
 
-			// if (error) {
-			// 	console.log(error);
-			// }
+			// 	const success = await res.json();
+
+			// 	if (error) {
+			// 		return fail(422, { error });
+			// 	}
+
+			// 	if (success) {
+			// 		console.log(res.json);
+			// 	}
+
 			return {
 				success: 'Your email was successsfully submitted!'
 			};

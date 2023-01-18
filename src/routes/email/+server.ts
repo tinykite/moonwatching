@@ -35,5 +35,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		throw error(404, 'Email not sent');
 	}
 
+	console.log(emailBody);
+
 	return json('Email sent');
 };

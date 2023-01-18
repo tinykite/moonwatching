@@ -9,7 +9,7 @@
 {/if}
 
 {#if !form?.success}
-	<form class="form" method="POST" action="?">
+	<form class="form" method="POST">
 		<div class="inputContainer">
 			<label for="email">Email address</label>
 			<input
