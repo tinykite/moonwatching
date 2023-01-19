@@ -12,11 +12,14 @@ export const POST: RequestHandler = async ({ request }) => {
 	const { error: supabaseError } = await supabasePrivate
 		.from('subscribers')
 		.update({ active: 'FALSE' })
-		.eq('email', postmarkData.recipient);
+		.eq('email', postmarkData.Recipient);
 
 	if (supabaseError) {
-		throw error(404, supabaseError?.message ?? 'There was an error updating this subscriber');
+		throw error(
+			404,
+			supabaseError?.message ?? 'There was an error updating the active status of this subscriber'
+		);
 	}
 
-	return json('The status of this subscriber has been successfully updated');
+	return json('The active status of this subscriber has been successfully updated');
 };
