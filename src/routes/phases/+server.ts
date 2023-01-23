@@ -1,48 +1,41 @@
 import { json } from '@sveltejs/kit';
+import { formatISO, addDays, format } from 'date-fns';
+import { supabase } from '$lib/supabaseClient';
+
+// Calculate current minor phase based on the next major phase
+const getMinorPhase = (phase) => {
+	switch (phase) {
+		case 'Full Moon':
+			return 'Waxing Gibbous';
+		case 'Last Quarter':
+			return 'Waning Crescent';
+		case 'First Quarter':
+			return 'Waxing Crescent';
+		case 'New Moon':
+		default:
+			return 'Waning Crescent';
+	}
+};
 
 export async function GET() {
-	// TODO: enable passing a date
-	const LUNAR_MONTH = 29.530588853;
+	let moonPhase;
 	const currentDate = new Date();
+	const currentDateMinusTime = format(currentDate, 'yyyy-MM-dd');
+	const startRange = formatISO(currentDate);
+	const endRange = formatISO(addDays(new Date(), 8));
 
-	const getJulianDate = (date: Date) => {
-		const time = date.getTime();
-		const tzoffset = date.getTimezoneOffset();
+	const { data: nextMoon } = await supabase
+		.from('phases')
+		.select('phase, date')
+		.lt('date', endRange)
+		.gt('date', startRange)
+		.single();
 
-		return time / 86400000 - tzoffset / 1440 + 2440587.5;
-	};
-
-	const normalize = (value: number) => {
-		value = value - Math.floor(value);
-		if (value < 0) {
-			return (value = value + 1);
-		} else return value;
-	};
-
-	const getLunarAgePercent = (date: Date) => {
-		return normalize((getJulianDate(date) - 2451550.1) / LUNAR_MONTH);
-	};
-
-	const getLunarAge = (date: Date) => {
-		const percent = getLunarAgePercent(date);
-		const age = percent * LUNAR_MONTH;
-		return age;
-	};
-
-	const getLunarPhase = (date: Date) => {
-		const age = getLunarAge(date);
-		if (age < 1.84566) return 'New Moon';
-		else if (age < 5.53699) return 'Waxing Crescent';
-		else if (age < 9.22831) return 'First Quarter';
-		else if (age < 12.91963) return 'Waxing Gibbous';
-		else if (age < 16.61096) return 'Full Moon';
-		else if (age < 20.30228) return 'Waning Gibbous';
-		else if (age < 23.99361) return 'Third Quarter';
-		else if (age < 27.68493) return 'Waning Crescent';
-		else return 'New Moon';
-	};
-
-	const moonPhase = getLunarPhase(currentDate);
+	if (nextMoon?.date === currentDateMinusTime) {
+		moonPhase = nextMoon.phase;
+	} else {
+		moonPhase = getMinorPhase(nextMoon.phase);
+	}
 
 	return json(moonPhase);
 }
