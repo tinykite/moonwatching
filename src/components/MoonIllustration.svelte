@@ -117,7 +117,6 @@
 			mask="url(#path-4-inside-1_0_1)"
 		/>
 	</svg>
-	);
 {:else if phase === 'First Quarter'}
 	<svg viewBox="0 0 155 355" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 		<path
