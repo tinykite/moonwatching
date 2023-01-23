@@ -33,7 +33,7 @@ export async function GET() {
 		.single();
 
 	if (!nextMoon) {
-		throw error(400, 'Sorry, no moon data is currently available');
+		throw error(400, 'Could not fetch moon data');
 	}
 
 	// If current day matches the date of a major moon phase
