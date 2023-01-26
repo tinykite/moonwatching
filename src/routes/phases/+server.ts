@@ -1,6 +1,7 @@
 import { json, error } from '@sveltejs/kit';
 import { formatISO, addDays, format } from 'date-fns';
 import { supabase } from '$lib/supabaseClient';
+import type { RequestHandler } from './$types';
 
 type majorPhases = 'Full Moon' | 'Last Quarter' | 'First Quarter' | 'New Moon';
 
@@ -19,7 +20,7 @@ const getMinorPhase = (phase: majorPhases) => {
 	}
 };
 
-export async function GET() {
+export const GET = (async () => {
 	const currentDate = new Date();
 	const currentDateMinusTime = format(currentDate, 'yyyy-MM-dd');
 	const startRange = formatISO(currentDate);
@@ -45,4 +46,4 @@ export async function GET() {
 	const minorPhase = getMinorPhase(nextMoon.phase);
 
 	return json(minorPhase);
-}
+}) satisfies RequestHandler;

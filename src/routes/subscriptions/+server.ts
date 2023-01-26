@@ -1,8 +1,9 @@
 import { json } from '@sveltejs/kit';
 import { supabasePrivate } from '$lib/supabaseClient';
 import { error } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 
-export async function GET() {
+export const GET = (async () => {
 	const { data: subscribers, error: supabaseError } = await supabasePrivate
 		.from('subscribers')
 		.select('email');
@@ -12,4 +13,4 @@ export async function GET() {
 	}
 
 	return json(subscribers);
-}
+}) satisfies RequestHandler;

@@ -2,8 +2,7 @@ import { postmarkClient } from '$lib/postmarkClient';
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-// TODO: Fix Typescript Errors
-export const POST = async ({ request }: RequestHandler) => {
+export const POST = (async ({ request }) => {
 	const { email } = await request.json();
 
 	if (!email) {
@@ -26,4 +25,4 @@ export const POST = async ({ request }: RequestHandler) => {
 	}
 
 	return json('Email sent');
-};
+}) satisfies RequestHandler;
