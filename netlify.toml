@@ -2,8 +2,9 @@
   command = "npm run build"
   publish = "build"
 
+[[plugins]]
+  package = "@netlify/plugin-emails"
+
 [functions.moon-notifications]
   schedule = "@daily"
 
-[[plugins]]
-  package = "@netlify/plugin-emails"
