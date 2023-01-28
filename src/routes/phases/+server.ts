@@ -22,10 +22,22 @@ const getMinorPhase = (phase: majorPhases) => {
 
 export const GET = (async () => {
 	const currentDate = new Date();
-	const currentDateMinusTime = format(currentDate, 'yyyy-MM-dd');
-	const startRange = formatISO(sub(currentDate, { days: 1 }));
-	const endRange = formatISO(addDays(new Date(), 8));
+	const startRange = format(currentDate, 'yyyy-MM-dd');
+	const endRange = addDays(currentDate, 8);
 
+	// If current day is a major moon phase
+	const { data: moonData } = await supabase
+		.from('phases')
+		.select('phase, date')
+		.eq('date', startRange)
+		.single();
+
+	if (moonData) {
+		return json(moonData.phase);
+	}
+
+	// If current day is between major phases,
+	// Find the next major moon phase
 	const { data: nextMoon } = await supabase
 		.from('phases')
 		.select('phase, date')
@@ -34,15 +46,11 @@ export const GET = (async () => {
 		.single();
 
 	if (!nextMoon) {
-		throw error(400, 'Could not fetch moon data');
+		throw error(404, 'No moon data found');
 	}
 
-	// If current day matches the date of a major moon phase
-	if (nextMoon.date === currentDateMinusTime) {
-		return json(nextMoon.phase);
-	}
-
-	// // If current day is between major moon phases
+	// Calculate the current minor phase
 	const minorPhase = getMinorPhase(nextMoon.phase);
+
 	return json(minorPhase);
 }) satisfies RequestHandler;
