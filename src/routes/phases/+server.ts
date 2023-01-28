@@ -1,5 +1,5 @@
 import { json, error } from '@sveltejs/kit';
-import { formatISO, addDays, format } from 'date-fns';
+import { formatISO, addDays, format, sub } from 'date-fns';
 import { supabase } from '$lib/supabaseClient';
 import type { RequestHandler } from './$types';
 
@@ -23,7 +23,7 @@ const getMinorPhase = (phase: majorPhases) => {
 export const GET = (async () => {
 	const currentDate = new Date();
 	const currentDateMinusTime = format(currentDate, 'yyyy-MM-dd');
-	const startRange = formatISO(currentDate);
+	const startRange = formatISO(sub(currentDate, { days: 1 }));
 	const endRange = formatISO(addDays(new Date(), 8));
 
 	const { data: nextMoon } = await supabase
@@ -42,8 +42,7 @@ export const GET = (async () => {
 		return json(nextMoon.phase);
 	}
 
-	// If current day is between major moon phases
+	// // If current day is between major moon phases
 	const minorPhase = getMinorPhase(nextMoon.phase);
-
 	return json(minorPhase);
 }) satisfies RequestHandler;
