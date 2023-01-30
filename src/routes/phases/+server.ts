@@ -23,7 +23,7 @@ const getMinorPhase = (phase: majorPhases) => {
 export const GET = (async () => {
 	const currentDate = new Date();
 	const startRange = format(currentDate, 'yyyy-MM-dd');
-	const endRange = addDays(currentDate, 8);
+	const endRange = format(addDays(currentDate, 8), 'yyyy-MM-dd');
 
 	// If current day is a major moon phase
 	const { data: moonData } = await supabase
@@ -49,7 +49,7 @@ export const GET = (async () => {
 		throw error(404, 'No moon data found');
 	}
 
-	// Calculate the current minor phase
+	// // Calculate the current minor phase
 	const minorPhase = getMinorPhase(nextMoon.phase);
 
 	return json(minorPhase);
