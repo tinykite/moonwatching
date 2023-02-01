@@ -1,15 +1,17 @@
 import { json, error } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import type { RequestHandler } from '../$types';
 import { PUBLIC_EMAIL_SERVER_PATH, PUBLIC_SERVER_PATH } from '$env/static/public';
 
-export const POST: RequestHandler = async ({ request }) => {
-	const { templateName } = await request.json();
+export const GET: RequestHandler = async ({ params }) => {
+	// TODO: Write a type for this params object
+	const { templateName } = params;
 
 	// Retrieve random moon image
 	const moonImageRes = await fetch(`${PUBLIC_SERVER_PATH}/images`);
 	const moonImage = await moonImageRes.json();
 
 	if (!moonImageRes.ok) {
+		console.log(templateName);
 		throw error(404, moonImage.message);
 	}
 
