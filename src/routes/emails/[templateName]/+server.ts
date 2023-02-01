@@ -11,7 +11,6 @@ export const GET: RequestHandler = async ({ params }) => {
 	const moonImage = await moonImageRes.json();
 
 	if (!moonImageRes.ok) {
-		console.log(templateName);
 		throw error(404, moonImage.message);
 	}
 
