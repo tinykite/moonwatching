@@ -1,39 +1,35 @@
-// import { postmarkClient } from '$lib/postmarkClient';
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-
-// export async function POST(event: any) {
-// 	console.log(event.body);
-// 	try {
-// 		// await postmarkClient.sendEmail({
-// 		// 	From: 'dakota@tinykitelab.com',
-// 		// 	To: 'dakota@tinykitelab.com',
-// 		// 	Subject: 'Test Email',
-// 		// 	HtmlBody: '<strong>Hello</strong> here is another test.',
-// 		// 	MessageStream: 'broadcast'
-// 		// });
-// 		// return json('hello folks');
-// 		// throw Error('Email not sent');
-
-// 		return json('Email sent');
-// 	} catch (
-// 		postmarkClientError: any // eslint-disable-line @typescript-eslint/no-explicit-any
-// 		// TODO: properly type
-// 	) {
-// 		// throw error(404, {
-// 		// 	message: postmarkClientError
-// 		// });
-
-// 		throw error(404, postmarkClientError);
-// 	}
-// }
+import { PUBLIC_EMAIL_SERVER_PATH, PUBLIC_SERVER_PATH } from '$env/static/public';
 
 export const POST: RequestHandler = async ({ request }) => {
-	const email = await request.json();
+	const { templateName } = await request.json();
 
-	if (!email) {
-		throw error(404, 'Email not sent');
+	// Retrieve random moon image
+	const moonImageRes = await fetch(`${PUBLIC_SERVER_PATH}/images`);
+	const moonImage = await moonImageRes.json();
+
+	if (!moonImageRes.ok) {
+		throw error(404, moonImage.message);
 	}
 
-	return json('Email sent');
+	// Retrieve a rendered email template, using the random moon image
+	// Template name refers to which email template to use
+	const emailHTML = await fetch(PUBLIC_EMAIL_SERVER_PATH, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			templateName,
+			props: { moonImage }
+		})
+	});
+	const emailRes = await emailHTML.json();
+
+	if (!emailRes.html) {
+		throw error(404, 'Email could not be rendered');
+	}
+
+	return json(emailRes.html);
 };
