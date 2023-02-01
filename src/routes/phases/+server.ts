@@ -1,5 +1,5 @@
 import { json, error } from '@sveltejs/kit';
-import { formatISO, addDays, format, sub } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { supabase } from '$lib/supabaseClient';
 import type { RequestHandler } from './$types';
 
