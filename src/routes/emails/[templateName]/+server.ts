@@ -10,8 +10,6 @@ export const GET: RequestHandler = async ({ params }) => {
 	const moonImageRes = await fetch(`${PUBLIC_SERVER_PATH}/images`);
 	const moonImage = await moonImageRes.json();
 
-	console.log(moonImage);
-
 	if (!moonImageRes.ok) {
 		throw error(404, moonImage.message);
 	}

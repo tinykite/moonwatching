@@ -12,8 +12,7 @@ export const GET: RequestHandler = async () => {
 
 	const randomImage = images[Math.floor(Math.random() * images.length)];
 
-	// Don't return the id, which is only used to lookup the random image
-	const { id, ...imageInfo } = randomImage;
+	const { file_name: fileName, source_url: sourceUrl, id, ...imageData } = randomImage;
 
-	return json(imageInfo);
+	return json({ ...imageData, fileName, sourceUrl });
 };
