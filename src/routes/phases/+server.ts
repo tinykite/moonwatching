@@ -20,7 +20,10 @@ const getMinorPhase = (phase: majorPhases) => {
 	}
 };
 
-export const GET = (async () => {
+export const GET = (async ({ url }) => {
+	const searchParams = new URLSearchParams(url.search);
+	const returnDetails = searchParams.has('details');
+
 	const currentDate = new Date();
 	const startRange = format(currentDate, 'yyyy-MM-dd');
 	const endRange = format(addDays(currentDate, 8), 'yyyy-MM-dd');
@@ -29,9 +32,13 @@ export const GET = (async () => {
 	// return that phase directly
 	const { data: moonData } = await supabase
 		.from('phases')
-		.select('phase, date')
+		.select('phase, date, time')
 		.eq('date', startRange)
 		.single();
+
+	if (returnDetails) {
+		return json({ ...moonData });
+	}
 
 	if (moonData) {
 		return json(moonData.phase);
