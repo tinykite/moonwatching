@@ -10,9 +10,7 @@ export const POST = (async ({ request, fetch }) => {
 	}
 
 	// Retrieve rendered html email
-	// TODO: Decide if there's a better way to handle the fact that Confirmation refers to a React component
-	// So it needs to be capitalized as a parameter in the API route
-	const emailRes = await fetch('/emails/Confirmation');
+	const emailRes = await fetch('/emails?templateName=Confirmation');
 	const html = await emailRes.json();
 
 	if (!emailRes.ok) {
