@@ -32,7 +32,7 @@ export const GET = (async ({ url }) => {
 	// return that phase directly
 	const { data: moonData } = await supabase
 		.from('phases')
-		.select('phase, date, time')
+		.select('phase, date, time, time_format')
 		.eq('date', startRange)
 		.single();
 
