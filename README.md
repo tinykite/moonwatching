@@ -12,6 +12,7 @@ The main website is built with [SvelteKit](https://kit.svelte.dev/). Other relev
 ## Notes
 
 - The Netlify scheduled function is currently in-progress, while I figure out the best way to securely call a SvelteKit POST endpoint.
+- Netlify offers an email integration that supports Postmark and MJML templates, which I initially considered might be a more lightweight solution than the moonwatching-emails service. However, there is a [known bug](https://github.com/sveltejs/kit/issues/8903) that prevents the integration from working with SvelteKit. Additionally, any templating would need to happen with a templating language like Handlebars.
 - The website currently accepts newsletter signups, but the submission of the signup form is rather slow at best. This is a high-priority issue that will also be fixed.
 
 ## Developing
