@@ -23,7 +23,6 @@ export const POST = (async () => {
 	const formattedTime = `${parseInt(hour)}:${minute} ${isPM ? 'PM' : 'AM'} ${moonData.time_format}`;
 
 	// Retrieve rendered html email
-	// TODO: Decide if there's a better way to handle the capitalized name of React email templates
 	const emailRes = await fetch(
 		`https://moon-watching.com/emails?templateName=MoonAlert&time=${formattedTime}&phase=${moonData.phase}`
 	);
