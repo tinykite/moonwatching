@@ -1,18 +1,18 @@
-# create-svelte
+# Hello!
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Welcome to Moon Watching, a website that visualizes the current moon phase and lets folks sign up for email updates on the New and Full Moon.
 
-## Creating a project
+The main website is built with SvelteKit. Other relevant details:
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Subscriber info, moon data, and images are currently stored in a cloud-hosted Postgres instance provided by Supabase
+- HTML emails are compiled using Mailing (which is hosted in the separated moonwatching emails codebase)
+- Emails are sent with Postmark
+- Netlify scheduled functions are used to run a chron job once a day to check the current moon phase.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Notes
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+- The Netlify scheduled function is currently in-progress, while I figure out the best way to securely call a SvelteKit POST endpoint.
+- The website currently accepts newsletter signups, but the submission of the signup form is rather slow at best. This is a high-priority issue that will also be fixed.
 
 ## Developing
 
@@ -27,7 +27,7 @@ npm run dev -- --open
 
 ## Building
 
-To create a production version of your app:
+To create a production version of this app:
 
 ```bash
 npm run build
