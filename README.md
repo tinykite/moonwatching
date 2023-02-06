@@ -2,12 +2,12 @@
 
 Welcome to Moon Watching, a website that visualizes the current moon phase and lets folks sign up for email updates on the New and Full Moon.
 
-The main website is built with SvelteKit. Other relevant details:
+The main website is built with [SvelteKit](https://kit.svelte.dev/). Other relevant details:
 
-- Subscriber info, moon data, and images are currently stored in a cloud-hosted Postgres instance provided by Supabase
-- HTML emails are compiled using Mailing (which is hosted in the separated moonwatching emails codebase)
-- Emails are sent with Postmark
-- Netlify scheduled functions are used to run a chron job once a day to check the current moon phase.
+- Subscriber info, moon data, and images are currently stored in a cloud-hosted Postgres instance provided by [Supabase](https://supabase.com/)
+- HTML emails are compiled using [Mailing](https://www.mailing.run/) (which is hosted in the separate [moonwatching-emails](https://github.com/tinykite/moonwatching-emails) codebase)
+- Emails are sent with [Postmark](https://postmarkapp.com/)
+- [Netlify scheduled functions](https://docs.netlify.com/functions/scheduled-functions/) are used to run a chron job once a day to check the current moon phase.
 
 ## Notes
 
