@@ -11,7 +11,7 @@
 		success?: string;
 	};
 
-	let form: Form = {};
+	let form: Form;
 	$: form = $page?.form;
 
 	let error: string | undefined;
