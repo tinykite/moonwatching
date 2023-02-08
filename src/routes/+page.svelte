@@ -29,9 +29,7 @@
 
 	{#if form?.success}
 		<p class="successMessage">{form?.success}</p>
-	{/if}
-
-	{#if !form?.success}
+	{:else}
 		<form
 			class="form"
 			method="POST"
@@ -49,6 +47,7 @@
 			<div class="inputContainer">
 				<label for="email">Email address</label>
 				<input
+					id="email"
 					name="email"
 					type="email"
 					value={form?.email ?? ''}
