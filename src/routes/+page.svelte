@@ -4,6 +4,7 @@
 
 	import { enhance, applyAction } from '$app/forms';
 	import { page } from '$app/stores';
+	import classNames from 'classnames';
 
 	type Form = {
 		email?: string;
@@ -23,7 +24,7 @@
 	export let data: PageData;
 </script>
 
-<main class="page-container">
+<main class="page-container" aria-live="polite">
 	<MoonPhase phase={data.moonPhase} />
 	<h2 class="alert-header">Receive Updates on the New and Full Moon</h2>
 
@@ -45,19 +46,19 @@
 			}}
 		>
 			<div class="inputContainer">
-				<label for="email">Email address</label>
+				<label class="label" for="email">Email address</label>
 				<input
 					id="email"
 					name="email"
 					type="email"
 					value={form?.email ?? ''}
-					class={form?.error ? 'input--invalid' : ''}
+					class={classNames('input', { 'input--invalid': form?.error })}
 				/>
 				{#if form?.error}
 					<p class="errorMessage">{$page?.form?.error}</p>
 				{/if}
 			</div>
-			<button>Sign up</button>
+			<button class="button">Sign up</button>
 		</form>
 	{/if}
 </main>
@@ -65,6 +66,7 @@
 <style>
 	.page-container {
 		display: grid;
+		margin: 4rem auto;
 	}
 
 	.alert-header {
@@ -74,9 +76,8 @@
 
 	form {
 		display: grid;
-		justify-items: center;
-		min-width: 80%;
-		margin: 2rem auto;
+		width: 100%;
+		margin: 2rem auto 0;
 	}
 
 	.inputContainer {
@@ -86,10 +87,11 @@
 		max-width: 30rem;
 	}
 
-	input {
-		border-radius: 0.5rem;
-		margin-top: 1rem;
-		padding: 0.5rem;
+	.input {
+		border-radius: 0.25rem;
+		margin-top: 0.125rem;
+		padding: 0.75rem;
+		font-size: 0.875rem;
 	}
 
 	.input--invalid {
@@ -97,8 +99,13 @@
 		outline: none;
 	}
 
+	.label {
+		font-size: 1rem;
+	}
+
 	.errorMessage {
 		color: #d51b0c;
+		margin: 0.25rem 0 0 0;
 	}
 
 	.successMessage {
@@ -106,19 +113,20 @@
 		text-align: center;
 	}
 
-	button {
+	.button {
 		margin-top: 1.5rem;
 		font-size: 1rem;
-		padding: 0.375rem 0;
+		padding: 0.75rem 0;
 		cursor: pointer;
-		border-radius: 0.5rem;
+		border-radius: 0.25rem;
 		border: none;
 		border: 1px solid #777;
 		color: white;
 		width: 100%;
+		position: relative;
 	}
 
-	button:hover {
+	.button:hover {
 		background: white;
 		color: #121212;
 		border: 1px solid white;
