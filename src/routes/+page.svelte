@@ -24,7 +24,7 @@
 	export let data: PageData;
 </script>
 
-<!-- According to best practices, a page should only have one global aria-live region per page.  -->
+<!-- According to best practices, a page should only have one global aria-live region.  -->
 <main aria-live="polite" class="main">
 	<MoonPhase phase={data.moonPhase} />
 	<h2 class="alert-header">Receive Updates on the New and Full Moon</h2>
