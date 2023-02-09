@@ -82,6 +82,7 @@
 	.alert-header {
 		font-size: 1.25rem;
 		margin: 3rem 0 0;
+		text-align: center;
 	}
 
 	.main {
