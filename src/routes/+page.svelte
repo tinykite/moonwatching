@@ -103,8 +103,7 @@
 		border: 1px solid #777;
 		border-radius: 0.25rem;
 		font-size: 1rem;
-		line-height: 1;
-		height: 3rem;
+		height: 2.5rem;
 	}
 
 	.input-group {
@@ -185,8 +184,7 @@
 		width: 100%;
 		position: relative;
 		grid-row: 2;
-		line-height: 1;
-		height: 3rem;
+		height: 2.5rem;
 	}
 
 	.button:hover {
