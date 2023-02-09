@@ -24,6 +24,7 @@
 	export let data: PageData;
 </script>
 
+<!-- According to best practices, a page should only have one global aria-live region per page.  -->
 <main aria-live="polite" class="main">
 	<MoonPhase phase={data.moonPhase} />
 	<h2 class="alert-header">Receive Updates on the New and Full Moon</h2>
@@ -37,10 +38,10 @@
 			use:enhance={() => {
 				status = 'loading';
 				return async ({ update, result }) => {
-					update({ reset: false });
+					await update();
+
 					if (result.type === 'error') {
 						await applyAction(result);
-						status = 'error';
 					}
 				};
 			}}
@@ -52,16 +53,17 @@
 					name="email"
 					type="email"
 					value={form?.email ?? ''}
-					class={classNames('input', { 'input--invalid': form?.error })}
+					class={classNames('input', { 'input--invalid': error })}
 				/>
 
-				<p class={classNames('errorMessage', { 'errorMessage--visible': $page.form?.error })}>
-					{$page?.form?.error}
+				<p class={classNames('errorMessage', { 'errorMessage--visible': error })}>
+					{error ?? error}
 				</p>
 			</div>
 
 			<button class="button">
 				{#if status === 'loading'}
+					<span class="sr-only">Loading</span>
 					<div class="dot" />
 					<div class="dot" />
 					<div class="dot" />
@@ -172,7 +174,7 @@
 	}
 
 	.button {
-		display: block;
+		display: flex;
 		align-items: center;
 		justify-content: center;
 		font-size: 1rem;
