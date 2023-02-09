@@ -106,6 +106,7 @@
 		border-radius: 0.25rem;
 		font-size: 1rem;
 		height: 2.5rem;
+		padding: 0 0.5rem;
 	}
 
 	.input-group {
