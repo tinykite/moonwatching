@@ -3,11 +3,15 @@ import { addDays, closestTo, format } from 'date-fns';
 import { supabase } from '$lib/supabaseClient';
 import type { RequestHandler } from './$types';
 
-type majorPhases = 'Full Moon' | 'Last Quarter' | 'First Quarter' | 'New Moon';
+type majorPhase = 'Full Moon' | 'Last Quarter' | 'First Quarter' | 'New Moon';
+interface Moon {
+	phase: majorPhase;
+	date: string;
+}
 
 // Calculate current minor phase based on the next major phase
 // Moon phases in order: https://moon.nasa.gov/moon-in-motion/moon-phases/
-const getMinorPhase = (phase: majorPhases) => {
+const getMinorPhase = (phase: majorPhase) => {
 	switch (phase) {
 		case 'Full Moon':
 			return 'Waxing Gibbous';
@@ -24,15 +28,12 @@ const getNearestMoon = ({
 	futureMoons,
 	currentDate
 }: {
-	futureMoons: Array<{
-		phase: any; // TODO: Fix types here
-		date: any;
-	}>;
+	futureMoons: Moon[];
 	currentDate: Date;
-}) => {
+}): Moon => {
 	// Don't calculate nearest date if only one date is returned
 	if (futureMoons.length === 1) {
-		return futureMoons;
+		return futureMoons[0];
 	}
 
 	// Only necessary for situations where there are two moon phases in the next 8 days
@@ -44,6 +45,10 @@ const getNearestMoon = ({
 	}
 
 	const nearestMoon = futureMoons.find((moon) => moon.date === nearestDate);
+
+	if (!nearestMoon) {
+		throw error(500, 'Could not find a matching nearest moon');
+	}
 
 	return nearestMoon;
 };
