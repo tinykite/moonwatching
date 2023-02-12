@@ -35,14 +35,15 @@ const getNearestMoon = ({
 		return futureMoons;
 	}
 
+	// Only necessary for situations where there are two moon phases in the next 8 days
 	const moonDates = futureMoons.map((moon) => new Date(moon.date));
-	const nearestDate = closestTo(currentDate, moonDates)?.toISOString().split('T');
+	const nearestDate = closestTo(currentDate, moonDates)?.toISOString().split('T')[0];
 
 	if (!nearestDate) {
 		throw error(500, 'Could not calculate nearest date');
 	}
 
-	const nearestMoon = futureMoons.find((moon) => moon.date === nearestDate[0]);
+	const nearestMoon = futureMoons.find((moon) => moon.date === nearestDate);
 
 	return nearestMoon;
 };
@@ -54,7 +55,7 @@ export const GET = (async ({ url }) => {
 	const currentDate = new Date();
 	// TODO: Calculate min/max interval between major moon phases
 	const startRange = format(currentDate, 'yyyy-MM-dd');
-	const endRange = format(addDays(currentDate, 10), 'yyyy-MM-dd');
+	const endRange = format(addDays(currentDate, 8), 'yyyy-MM-dd');
 
 	// If current day is a major moon phase,
 	// return that phase directly
