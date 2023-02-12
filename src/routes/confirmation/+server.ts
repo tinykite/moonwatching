@@ -25,11 +25,12 @@ export const POST = (async ({ request, fetch }) => {
 			HtmlBody: html,
 			MessageStream: 'outbound'
 		});
-	} catch (
-		postmarkClientError: any // eslint-disable-line @typescript-eslint/no-explicit-any
-		// TODO: properly type
-	) {
-		throw error(404, postmarkClientError);
+	} catch (postmarkClientError) {
+		if (postmarkClientError instanceof Error) {
+			throw error(500, postmarkClientError);
+		} else {
+			throw error(500, 'Sorry, an error occurred. Your subscription could be not confirmed.');
+		}
 	}
 
 	return json('Email sent');
