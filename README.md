@@ -1,6 +1,6 @@
 # Hello!
 
-🚧 This service is still an in-progress experiment with SvelteKit 1.0. Please expect design and code flaws 🚧
+🚧 This service is still an in-progress experiment with SvelteKit 1.0. Please expect lots of design and code flaws 🚧
 
 Welcome to Moon Watching, a website that visualizes the current moon phase and lets folks sign up for email updates on the New and Full Moon.
 
@@ -13,9 +13,8 @@ The main website is built with [SvelteKit](https://kit.svelte.dev/). Other relev
 
 ## Notes
 
-- The Netlify scheduled function is currently in-progress, while I figure out the best way to securely call a SvelteKit POST endpoint.
-- Netlify offers an email integration that supports Postmark and MJML templates, which I initially considered might be a more lightweight solution than the moonwatching-emails service. However, there is a [known bug](https://github.com/sveltejs/kit/issues/8903) that prevents the integration from working with SvelteKit. Additionally, any templating would need to happen with a templating language like Handlebars.
-- The website currently accepts newsletter signups, but the submission of the signup form is rather slow at best. This is a high-priority issue that will also be fixed.
+- The Netlify scheduled function is currently in-progress.
+- Netlify offers an email integration that supports Postmark and MJML templates, which I initially considered might be a more lightweight solution than the moonwatching-emails service. However, there was a [known bug](https://github.com/sveltejs/kit/issues/8903) that prevented the integration from working with SvelteKit. Additionally, templates couldn't be split into resharable, atomic components. For these reasons, a separate mailing service renders the emails.
 
 ## Developing
 
