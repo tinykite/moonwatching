@@ -1,5 +1,5 @@
 import { json, error } from '@sveltejs/kit';
-import { addDays, format } from 'date-fns';
+import { addDays, closestTo, format } from 'date-fns';
 import { supabase } from '$lib/supabaseClient';
 import type { RequestHandler } from './$types';
 
@@ -20,13 +20,41 @@ const getMinorPhase = (phase: majorPhases) => {
 	}
 };
 
+const getNearestMoon = ({
+	futureMoons,
+	currentDate
+}: {
+	futureMoons: Array<{
+		phase: any; // TODO: Fix types here
+		date: any;
+	}>;
+	currentDate: Date;
+}) => {
+	// Don't calculate nearest date if only one date is returned
+	if (futureMoons.length === 1) {
+		return futureMoons;
+	}
+
+	const moonDates = futureMoons.map((moon) => new Date(moon.date));
+	const nearestDate = closestTo(currentDate, moonDates)?.toISOString().split('T');
+
+	if (!nearestDate) {
+		throw error(500, 'Could not calculate nearest date');
+	}
+
+	const nearestMoon = futureMoons.find((moon) => moon.date === nearestDate[0]);
+
+	return nearestMoon;
+};
+
 export const GET = (async ({ url }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const returnDetails = searchParams.has('details');
 
 	const currentDate = new Date();
+	// TODO: Calculate min/max interval between major moon phases
 	const startRange = format(currentDate, 'yyyy-MM-dd');
-	const endRange = format(addDays(currentDate, 8), 'yyyy-MM-dd');
+	const endRange = format(addDays(currentDate, 10), 'yyyy-MM-dd');
 
 	// If current day is a major moon phase,
 	// return that phase directly
@@ -36,7 +64,7 @@ export const GET = (async ({ url }) => {
 		.eq('date', startRange)
 		.single();
 
-	if (returnDetails) {
+	if (moonData && returnDetails) {
 		return json({ ...moonData });
 	}
 
@@ -50,15 +78,21 @@ export const GET = (async ({ url }) => {
 		.from('phases')
 		.select('phase, date')
 		.lt('date', endRange)
-		.gt('date', startRange)
-		.single();
+		.gt('date', startRange);
 
 	if (!nextMoon) {
 		throw error(404, 'No moon data found');
 	}
 
-	// Calculate current (minor) phase based on next major phase
-	const minorPhase = getMinorPhase(nextMoon.phase);
+	// Sometimes the API will return more than one upcoming phase
+	// This happens because of the variability of the length of different moon phases
+	const nearestMoon = getNearestMoon({ futureMoons: nextMoon, currentDate });
+
+	if (!nearestMoon) {
+		throw error(500, 'Could not calculate nearest moon');
+	}
+
+	const minorPhase = getMinorPhase(nearestMoon.phase);
 
 	return json(minorPhase);
 }) satisfies RequestHandler;
