@@ -41,13 +41,13 @@ const getNearestMoon = ({
 	const nearestDate = closestTo(currentDate, moonDates)?.toISOString().split('T')[0];
 
 	if (!nearestDate) {
-		throw error(500, 'Could not calculate nearest date');
+		throw error(400, 'Could not calculate nearest date');
 	}
 
 	const nearestMoon = futureMoons.find((moon) => moon.date === nearestDate);
 
 	if (!nearestMoon) {
-		throw error(500, 'Could not find a matching nearest moon');
+		throw error(400, 'Could not find a matching nearest moon');
 	}
 
 	return nearestMoon;
