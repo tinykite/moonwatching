@@ -26,11 +26,11 @@ export const POST = (async ({ request, fetch }) => {
 			MessageStream: 'outbound'
 		});
 	} catch (postmarkClientError) {
-		if (postmarkClientError instanceof Error) {
-			throw error(500, postmarkClientError);
-		} else {
-			throw error(500, 'Sorry, an error occurred. Your subscription could be not confirmed.');
-		}
+		const errorMessage =
+			postmarkClientError instanceof Error
+				? postmarkClientError
+				: 'Sorry, an error occurred. Your subscription could be not confirmed.';
+		throw error(500, errorMessage);
 	}
 
 	return json('Email sent');
