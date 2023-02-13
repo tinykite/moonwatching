@@ -2,6 +2,6 @@
   command = "npm run build"
   publish = "build"
 
-[functions.moon-notifications]
+[functions.moonNotifications]
   schedule = "@daily"
 
