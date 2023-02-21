@@ -2,6 +2,7 @@ import { json, error } from '@sveltejs/kit';
 import { addDays, closestTo, format } from 'date-fns';
 import { supabase } from '$lib/supabaseClient';
 import type { RequestHandler } from './$types';
+import { ALERT_KEY } from '$env/static/private';
 
 type majorPhase = 'Full Moon' | 'Last Quarter' | 'First Quarter' | 'New Moon';
 interface Moon {
@@ -55,10 +56,11 @@ const getNearestMoon = ({
 
 export const GET = (async ({ url }) => {
 	const searchParams = new URLSearchParams(url.search);
-	const returnDetails = searchParams.has('details');
+	const cronRequest = searchParams.has('scheduledFunction');
+
+	const functionTriggers = ['Full Moon', 'New Moon'];
 
 	const currentDate = new Date();
-	// TODO: Calculate min/max interval between major moon phases
 	const startRange = format(currentDate, 'yyyy-MM-dd');
 	const endRange = format(addDays(currentDate, 8), 'yyyy-MM-dd');
 
@@ -70,11 +72,24 @@ export const GET = (async ({ url }) => {
 		.eq('date', startRange)
 		.single();
 
-	if (moonData && returnDetails) {
-		return json({ ...moonData });
+	const moonAlertDay = functionTriggers.includes(moonData?.phase);
+
+	if (cronRequest && moonAlertDay) {
+		const alertRes = await fetch('/alerts', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: ALERT_KEY
+			},
+			body: JSON.stringify({
+				moonData
+			})
+		});
+
+		return json(alertRes);
 	}
 
-	if (moonData) {
+	if (moonData && !cronRequest) {
 		return json(moonData.phase);
 	}
 

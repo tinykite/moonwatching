@@ -4,26 +4,20 @@ import { postmarkClient } from '$lib/postmarkClient';
 import type { RequestHandler } from './$types';
 import { ALERT_KEY } from '$env/static/private';
 
-export const POST = (async ({ request, fetch }) => {
+export const POST = (async ({ request }) => {
 	const REQUEST_KEY = request.headers.get('authorization');
 
-	if (!REQUEST_KEY) {
-		throw error(401, 'No request key');
-	}
-
 	if (REQUEST_KEY !== `Bearer ${ALERT_KEY}`) {
-		return json(`No valid key`);
+		throw error(401, 'Not authorized');
 	}
 
-	const res = await fetch('/phases?details=true');
-	const moonData = await res.json();
+	const { phase, date, time, time_format } = await request.json();
 
-	if (!res.ok) {
-		throw error(404, 'Moon phase could not be fetched');
+	if (!phase || !date || !time || !time_format) {
+		throw error(404, 'No moon data provided');
 	}
 
 	// Disabled for now, for testing
-
 	// TODO: Format time in a less-error prone, easier-to-read way
 	// That may require storing date and time together in UTC and converting it to PST at the edge
 	// Using a native browser API to convert timezones
