@@ -7,8 +7,12 @@ import { ALERT_KEY } from '$env/static/private';
 export const POST = (async ({ request, fetch }) => {
 	const REQUEST_KEY = request.headers.get('authorization');
 
+	if (!REQUEST_KEY) {
+		throw error(401, 'No request key');
+	}
+
 	if (REQUEST_KEY !== `Bearer ${ALERT_KEY}`) {
-		return json(`${REQUEST_KEY} is not a valid key`);
+		return json(`No valid key`);
 	}
 
 	const res = await fetch('/phases?details=true');
