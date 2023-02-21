@@ -8,7 +8,7 @@ export const POST = (async ({ request, fetch }) => {
 	const REQUEST_KEY = request.headers.get('authorization');
 
 	if (REQUEST_KEY !== `Bearer ${ALERT_KEY}`) {
-		return json('Invalid authorization');
+		return json(`${REQUEST_KEY} is not a valid key}`);
 	}
 
 	const res = await fetch('/phases?details=true');
