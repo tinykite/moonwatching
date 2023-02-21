@@ -2,7 +2,7 @@ import type { HandleFetch } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 
 export const handleFetch = (({ event, request, fetch }) => {
-	if (request.url.startsWith('https://moon-watching.com/alerts')) {
+	if (request.url.startsWith('https://moon-watching.com')) {
 		if (!event.request.headers.get('authorization')) {
 			throw error(401, 'Not authorized');
 		}
