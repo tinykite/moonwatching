@@ -10,6 +10,14 @@ interface Moon {
 	date: string;
 }
 
+// Dummy data for testing
+const testMoonData = {
+	phase: 'New Moon',
+	date: '2023-07-03',
+	time: '04:39:00',
+	time_format: 'PDT'
+};
+
 // Calculate current minor phase based on the next major phase
 // Moon phases in order: https://moon.nasa.gov/moon-in-motion/moon-phases/
 const getMinorPhase = (phase: majorPhase) => {
@@ -74,7 +82,8 @@ export const GET = (async ({ url }) => {
 
 	const moonAlertDay = functionTriggers.includes(moonData?.phase);
 
-	if (cronRequest && moonAlertDay) {
+	// Not checking for moonAlertDay here just yet for testing purposes
+	if (cronRequest) {
 		const alertRes = await fetch('/alerts', {
 			method: 'POST',
 			headers: {
@@ -82,7 +91,7 @@ export const GET = (async ({ url }) => {
 				Authorization: ALERT_KEY
 			},
 			body: JSON.stringify({
-				moonData
+				testMoonData
 			})
 		});
 
