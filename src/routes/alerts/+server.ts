@@ -36,10 +36,16 @@ export const POST = (async ({ request }) => {
 	const formattedTime = `${parseInt(hour)}:${minute} ${isPM ? 'PM' : 'AM'} ${time_format}`;
 
 	// Fetch list of subscribers
+	// Commented-out for testing
+	// const { data: subscribers, error: supabaseError } = await supabasePrivate
+	// 	.from('subscribers')
+	// 	.select('email')
+	// 	.eq('active', true);
+
 	const { data: subscribers, error: supabaseError } = await supabasePrivate
 		.from('subscribers')
 		.select('email')
-		.eq('active', true);
+		.eq('email', 'dakota@tinykitelab.com');
 
 	if (supabaseError) {
 		throw error(404, supabaseError?.message ?? 'There was an error connecting to the database');
@@ -57,32 +63,31 @@ export const POST = (async ({ request }) => {
 
 	const emailSubject = `It's the ${phase}!`;
 
-	// Commented out for testing
-	// const subscriberMessages = subscribers.map((subscriber) => {
-	// 	return {
-	// 		From: 'dakota@moon-watching.com',
-	// 		To: subscriber.email,
-	// 		Subject: emailSubject,
-	// 		HtmlBody: html,
-	// 		MessageStream: 'broadcast'
-	// 	};
-	// });
+	const subscriberMessages = subscribers.map((subscriber) => {
+		return {
+			From: 'dakota@moon-watching.com',
+			To: subscriber.email,
+			Subject: emailSubject,
+			HtmlBody: html,
+			MessageStream: 'broadcast'
+		};
+	});
 
-	// try {
-	// 	await postmarkClient.sendEmailBatch(subscriberMessages);
-	// } catch (postmarkClientError: any) {
-	// 	throw error(500, postmarkClientError ?? 'There was an error sending the email');
-	// }
+	try {
+		await postmarkClient.sendEmailBatch(subscriberMessages);
+	} catch (postmarkClientError: any) {
+		throw error(500, postmarkClientError ?? 'There was an error sending the email');
+	}
 
 	// Insert alert into database
-	// const { error: insertError } = await supabasePrivate.from('alerts').insert({ date });
+	const { error: insertError } = await supabasePrivate.from('alerts').insert({ date });
 
-	// if (insertError) {
-	// 	throw error(
-	// 		500,
-	// 		insertError?.message ?? 'There was an error inserting the alert into the database'
-	// 	);
-	// }
+	if (insertError) {
+		throw error(
+			500,
+			insertError?.message ?? 'There was an error inserting the alert into the database'
+		);
+	}
 
 	return json('success');
 }) satisfies RequestHandler;
