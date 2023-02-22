@@ -88,10 +88,10 @@ export const GET = (async ({ url, fetch }) => {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: ALERT_KEY
+				Authorization: `Bearer ${ALERT_KEY}`
 			},
 			body: JSON.stringify({
-				testMoonData
+				...testMoonData
 			})
 		});
 
