@@ -1,5 +1,5 @@
 import { json, error } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
+import { supabasePrivate } from '$lib/supabaseClient';
 import { postmarkClient } from '$lib/postmarkClient';
 import type { RequestHandler } from './$types';
 import { ALERT_KEY } from '$env/static/private';
@@ -17,40 +17,47 @@ export const POST = (async ({ request }) => {
 		throw error(404, 'No moon data provided');
 	}
 
-	// Disabled for now, for testing
+	const { data: pastAlerts } = await supabasePrivate.from('alerts').select('date').eq('date', date);
+
+	// Make sure cron job doesn't send multiple alerts for the same day
+	if (pastAlerts) {
+		throw error(500, 'Alert already sent');
+	}
+
 	// TODO: Format time in a less-error prone, easier-to-read way
 	// That may require storing date and time together in UTC and converting it to PST at the edge
 	// Using a native browser API to convert timezones
-	// const unformattedTime = moonData.time.split(':');
-	// const isPM = unformattedTime[0] > '12';
-	// const hour = isPM ? unformattedTime[0] - 12 : unformattedTime[0];
-	// const minute = unformattedTime[1];
+	const unformattedTime = time.split(':');
+	const isPM = unformattedTime[0] > '12';
+	const hour = isPM ? unformattedTime[0] - 12 : unformattedTime[0];
+	const minute = unformattedTime[1];
 
-	// // use parseInt to remove leading 0
-	// const formattedTime = `${parseInt(hour)}:${minute} ${isPM ? 'PM' : 'AM'} ${moonData.time_format}`;
+	// use parseInt to remove leading 0
+	const formattedTime = `${parseInt(hour)}:${minute} ${isPM ? 'PM' : 'AM'} ${time_format}`;
 
-	// // Retrieve rendered html email
-	// const emailRes = await fetch(
-	// 	`/emails?templateName=MoonAlert&time=${formattedTime}&phase=${moonData.phase}`
-	// );
-	// const html = await emailRes.json();
+	// Fetch list of subscribers
+	const { data: subscribers, error: supabaseError } = await supabasePrivate
+		.from('subscribers')
+		.select('email')
+		.eq('active', true);
 
-	// if (!emailRes.ok) {
-	// 	throw error(html.message);
-	// }
+	if (supabaseError) {
+		throw error(404, supabaseError?.message ?? 'There was an error connecting to the database');
+	}
 
-	// // Retrieve list of subscribers
-	// // Filter out subscribers who aren't active
-	// const { data: subscribers, error: supabaseError } = await supabase
-	// 	.from('subscribers')
-	// 	.select('*');
+	// Retrieve rendered html email
+	const emailRes = await fetch(
+		`/emails?templateName=MoonAlert&time=${formattedTime}&phase=${phase}`
+	);
+	const html = await emailRes.json();
 
-	// if (supabaseError) {
-	// 	throw error(404, supabaseError?.message ?? 'There was an error connecting to the database');
-	// }
+	if (!emailRes.ok) {
+		throw error(html.message);
+	}
 
-	// const emailSubject = `It's the ${moonData.phase}!`;
+	const emailSubject = `It's the ${phase}!`;
 
+	// Commented out for testing
 	// const subscriberMessages = subscribers.map((subscriber) => {
 	// 	return {
 	// 		From: 'dakota@moon-watching.com',
@@ -65,6 +72,16 @@ export const POST = (async ({ request }) => {
 	// 	await postmarkClient.sendEmailBatch(subscriberMessages);
 	// } catch (postmarkClientError: any) {
 	// 	throw error(500, postmarkClientError ?? 'There was an error sending the email');
+	// }
+
+	// Insert alert into database
+	// const { error: insertError } = await supabasePrivate.from('alerts').insert({ date });
+
+	// if (insertError) {
+	// 	throw error(
+	// 		500,
+	// 		insertError?.message ?? 'There was an error inserting the alert into the database'
+	// 	);
 	// }
 
 	return json('success');
