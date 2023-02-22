@@ -4,7 +4,15 @@ import { postmarkClient } from '$lib/postmarkClient';
 import type { RequestHandler } from './$types';
 import { ALERT_KEY } from '$env/static/private';
 
-export const POST = (async ({ request }) => {
+// Dummy data for testing
+const moonData = {
+	phase: 'Full Moon',
+	date: '2023-07-03',
+	time: '04:39:00',
+	time_format: 'PDT'
+};
+
+export const POST = (async ({ request, fetch }) => {
 	const REQUEST_KEY = request.headers.get('authorization');
 
 	if (REQUEST_KEY !== `Bearer ${ALERT_KEY}`) {
@@ -20,7 +28,7 @@ export const POST = (async ({ request }) => {
 	const { data: pastAlerts } = await supabasePrivate.from('alerts').select('date').eq('date', date);
 
 	// Make sure cron job doesn't send multiple alerts for the same day
-	if (pastAlerts) {
+	if (pastAlerts?.length) {
 		throw error(500, 'Alert already sent');
 	}
 
@@ -80,7 +88,7 @@ export const POST = (async ({ request }) => {
 	}
 
 	// Insert alert into database
-	const { error: insertError } = await supabasePrivate.from('alerts').insert({ date });
+	const { error: insertError } = await supabasePrivate.from('alerts').insert({ date, phase });
 
 	if (insertError) {
 		throw error(
