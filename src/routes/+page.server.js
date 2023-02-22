@@ -1,6 +1,6 @@
 import { fail } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
-import { CONFIRMATION_KEY } from '$env/static/private';
+import { postmarkClient } from '$lib/postmarkClient';
 
 // As per the HTML Specification
 const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -27,47 +27,55 @@ export const actions = {
 			});
 		}
 
-		const { error } = await supabase.from('subscribers').insert({ email });
+		const { data: emailData } = await supabase
+			.from('subscribers')
+			.select('email')
+			.eq('email', email);
 
-		// TODO: Rewrite this as a Supabase select
-		if (error && error.message.includes('violates unique constraint "subscribers_email_key"')) {
+		if (emailData?.length) {
 			return fail(422, {
 				email,
-				error: 'Your email has already been submitted'
+				error: 'You are already subscribed'
 			});
 		}
 
+		const emailRes = await fetch('/emails?templateName=Confirmation');
+		const html = await emailRes.json();
+
+		if (!emailRes.ok) {
+			return fail(500, {
+				email,
+				error: 'The email server could not be reached. Please try again later.'
+			});
+		}
+
+		try {
+			await postmarkClient.sendEmail({
+				From: 'dakota@moon-watching.com',
+				To: `${email}`,
+				Subject: 'You are now subscribed to Moon Watching alerts',
+				HtmlBody: html,
+				MessageStream: 'outbound'
+			});
+		} catch (postmarkClientError) {
+			const errorMessage =
+				postmarkClientError instanceof Error
+					? postmarkClientError
+					: 'Sorry, an error occurred. Your subscription could be not confirmed.';
+			return fail(500, { email, error: errorMessage });
+		}
+
+		const { error } = await supabase.from('subscribers').insert({ email });
+
 		if (error) {
-			return fail(422, {
-				email: data.get('email'),
+			return fail(500, {
+				email,
 				error: error.message
 			});
 		}
 
-		const confirmationEmail = await fetch('/confirmation', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${CONFIRMATION_KEY}`
-			},
-			body: JSON.stringify({
-				email
-			})
-		});
-
-		const emailRes = await confirmationEmail.json();
-
-		if (confirmationEmail.status !== 200) {
-			return fail(422, {
-				email,
-				error: 'There was an error submitting your email'
-			});
-		}
-
-		if (emailRes) {
-			return {
-				success: 'Your email was successsfully submitted!'
-			};
-		}
+		return {
+			success: 'Your email was successsfully subscribed!'
+		};
 	}
 };
