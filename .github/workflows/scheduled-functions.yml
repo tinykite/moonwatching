@@ -1,0 +1,16 @@
+# .github/workflows/scheduled-functions.yml
+name: Trigger Moon Alert
+
+on:
+  schedule:
+    # Runs "at 9 am every day" (see https://crontab.guru)
+    - cron: '0 9 * * *'
+jobs:
+  build:
+    name: Trigger Moon Alert Status Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: cURL request
+        run: curl ${{ secrets.ALERT_HOST }}
+      - name: Status report
+        run: echo "This job's status is ${{ job.status }}"
