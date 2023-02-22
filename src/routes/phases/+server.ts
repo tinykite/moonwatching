@@ -12,7 +12,7 @@ interface Moon {
 
 // Dummy data for testing
 const testMoonData = {
-	phase: 'New Moon',
+	phase: 'Waxing Crescent Moon',
 	date: '2023-07-03',
 	time: '04:39:00',
 	time_format: 'PDT'
