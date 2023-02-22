@@ -14,7 +14,7 @@ export const POST = (async ({ request, fetch }) => {
 	const { phase, date, time, time_format } = await request.json();
 
 	if (!phase || !date || !time || !time_format) {
-		throw error(404, 'No moon data provided');
+		throw error(422, 'Incomplete moon data provided');
 	}
 
 	const { data: pastAlerts } = await supabasePrivate.from('alerts').select('date').eq('date', date);
@@ -61,7 +61,9 @@ export const POST = (async ({ request, fetch }) => {
 		throw error(html.message);
 	}
 
-	const emailSubject = `It's the ${phase}!`;
+	// Commenting out for testing
+	// const emailSubject = `It's the ${phase}!`;
+	const emailSubject = `Something will hypothetically happen on ${formattedTime}!`;
 
 	const subscriberMessages = subscribers.map((subscriber) => {
 		return {

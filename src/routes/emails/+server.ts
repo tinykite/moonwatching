@@ -2,14 +2,14 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { PUBLIC_EMAIL_SERVER_PATH } from '$env/static/public';
 
-const moonImage = {
-	fileName: 'crescent-moon-and-mountain.jpg',
-	description:
-		'A crescent moon sets near a mountain on March 12, 2013. Despite the clouds, the darker part of the Moon can be seen to be illuminated by reflected Earthshine.',
-	alt: 'A crescent moon above a mountain',
-	credit: 'NASA/Bill Dunford',
-	sourceUrl: 'https://moon.nasa.gov/resources/72/crescent-moon-and-mountain/?category=images'
-};
+// const moonImage = {
+// 	fileName: 'crescent-moon-and-mountain.jpg',
+// 	description:
+// 		'A crescent moon sets near a mountain on March 12, 2013. Despite the clouds, the darker part of the Moon can be seen to be illuminated by reflected Earthshine.',
+// 	alt: 'A crescent moon above a mountain',
+// 	credit: 'NASA/Bill Dunford',
+// 	sourceUrl: 'https://moon.nasa.gov/resources/72/crescent-moon-and-mountain/?category=images'
+// };
 
 export const GET: RequestHandler = async ({ fetch, url }) => {
 	const searchParams = new URLSearchParams(url.search);
@@ -19,14 +19,13 @@ export const GET: RequestHandler = async ({ fetch, url }) => {
 	const time = isMoonAlert ? searchParams.get('time') : null;
 	const phase = isMoonAlert ? searchParams.get('phase') : null;
 
-	// Disabling random moon image for now for performance
 	// Retrieve random moon image
-	// const moonImageRes = await fetch('/images');
-	// const moonImage = await moonImageRes.json();
+	const moonImageRes = await fetch('/images');
+	const moonImage = await moonImageRes.json();
 
-	// if (!moonImageRes.ok) {
-	// 	throw error(404, moonImage.message);
-	// }
+	if (!moonImageRes.ok) {
+		throw error(404, moonImage.message);
+	}
 
 	const emailProps = { templateName, moonImage, ...(isMoonAlert && { time, phase }) };
 

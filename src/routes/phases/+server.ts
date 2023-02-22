@@ -12,8 +12,7 @@ interface Moon {
 
 // Dummy data for testing
 const testMoonData = {
-	phase: 'Waning Crescent Moon',
-	date: '2023-08-03',
+	phase: 'Fictious New Moon',
 	time: '08:39:00',
 	time_format: 'PST'
 };
@@ -33,6 +32,8 @@ const getMinorPhase = (phase: majorPhase) => {
 	}
 };
 
+// Sometimes the API returns two moon phases in the next 8 days
+// Because of that, we need to calculate the nearest date
 const getNearestMoon = ({
 	futureMoons,
 	currentDate
@@ -40,13 +41,15 @@ const getNearestMoon = ({
 	futureMoons: Moon[];
 	currentDate: Date;
 }): Moon => {
-	// Don't calculate nearest date if only one date is returned
+	// Don't calculate nearest date if only one future moon phase is returned
 	if (futureMoons.length === 1) {
 		return futureMoons[0];
 	}
 
-	// Only necessary for situations where there are two moon phases in the next 8 days
+	// Convert date strings to Date objects for each future moon phase
 	const moonDates = futureMoons.map((moon) => new Date(moon.date));
+
+	// Find nearest date to now
 	const nearestDate = closestTo(currentDate, moonDates)?.toISOString().split('T')[0];
 
 	if (!nearestDate) {
@@ -84,23 +87,25 @@ export const GET = (async ({ url, fetch }) => {
 
 	// Not checking for moonAlertDay here just yet for testing purposes
 	if (cronRequest) {
-		const alertRes = await fetch('/alerts', {
+		const alert = await fetch('/alerts', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${ALERT_KEY}`
 			},
 			body: JSON.stringify({
-				...testMoonData
+				...testMoonData,
+				date: startRange // For testing daily cron jobs with a different date
 			})
 		});
-		const alert = await alertRes.json();
 
-		if (!alertRes.ok) {
-			throw error(500, alert.message);
+		const alertRes = await alert.json();
+
+		if (!alert.ok) {
+			throw error(alert.status, alertRes.message);
 		}
 
-		return json(alert.message);
+		return json(alertRes);
 	}
 
 	if (moonData && !cronRequest) {
@@ -119,8 +124,6 @@ export const GET = (async ({ url, fetch }) => {
 		throw error(404, 'No moon data found');
 	}
 
-	// Sometimes the API will return more than one upcoming phase
-	// This happens because of the variability of the length of different moon phases
 	const nearestMoon = getNearestMoon({ futureMoons: nextMoon, currentDate });
 
 	if (!nearestMoon) {
