@@ -95,6 +95,10 @@ export const GET = (async ({ url, fetch }) => {
 			})
 		});
 
+		if (!alertRes.ok) {
+			throw error(500, 'Could not send alert');
+		}
+
 		return json(alertRes);
 	}
 
