@@ -62,7 +62,7 @@ const getNearestMoon = ({
 	return nearestMoon;
 };
 
-export const GET = (async ({ url }) => {
+export const GET = (async ({ url, fetch }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const cronRequest = searchParams.has('scheduledFunction');
 
