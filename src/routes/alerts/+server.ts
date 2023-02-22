@@ -4,14 +4,6 @@ import { postmarkClient } from '$lib/postmarkClient';
 import type { RequestHandler } from './$types';
 import { ALERT_KEY } from '$env/static/private';
 
-// Dummy data for testing
-const moonData = {
-	phase: 'Full Moon',
-	date: '2023-07-03',
-	time: '04:39:00',
-	time_format: 'PDT'
-};
-
 export const POST = (async ({ request, fetch }) => {
 	const REQUEST_KEY = request.headers.get('authorization');
 
@@ -40,7 +32,7 @@ export const POST = (async ({ request, fetch }) => {
 	const hour = isPM ? unformattedTime[0] - 12 : unformattedTime[0];
 	const minute = unformattedTime[1];
 
-	// use parseInt to remove leading 0
+	// // use parseInt to remove leading 0
 	const formattedTime = `${parseInt(hour)}:${minute} ${isPM ? 'PM' : 'AM'} ${time_format}`;
 
 	// Fetch list of subscribers
@@ -97,5 +89,5 @@ export const POST = (async ({ request, fetch }) => {
 		);
 	}
 
-	return json('success');
+	return json('Successfully sent moon alert');
 }) satisfies RequestHandler;

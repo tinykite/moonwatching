@@ -12,10 +12,10 @@ interface Moon {
 
 // Dummy data for testing
 const testMoonData = {
-	phase: 'Waxing Crescent Moon',
-	date: '2023-07-03',
-	time: '04:39:00',
-	time_format: 'PDT'
+	phase: 'Waning Crescent Moon',
+	date: '2023-08-03',
+	time: '08:39:00',
+	time_format: 'PST'
 };
 
 // Calculate current minor phase based on the next major phase
@@ -94,12 +94,13 @@ export const GET = (async ({ url, fetch }) => {
 				...testMoonData
 			})
 		});
+		const alert = await alertRes.json();
 
 		if (!alertRes.ok) {
-			throw error(500, 'Could not send alert');
+			throw error(500, alert.message);
 		}
 
-		return json(alertRes);
+		return json(alert.message);
 	}
 
 	if (moonData && !cronRequest) {
