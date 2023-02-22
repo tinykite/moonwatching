@@ -1,13 +1,13 @@
 import { fail } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
-import { PUBLIC_SERVER_PATH } from '$env/static/public';
+import { CONFIRMATION_KEY } from '$env/static/private';
 
 // As per the HTML Specification
 const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-	default: async ({ request }) => {
+	default: async ({ request, fetch }) => {
 		const data = await request.formData();
 		const email = data.get('email') ?? '';
 		const isValid = emailRegExp.test(email?.toString());
@@ -44,10 +44,11 @@ export const actions = {
 			});
 		}
 
-		const confirmationEmail = await fetch(`${PUBLIC_SERVER_PATH}/confirmation`, {
+		const confirmationEmail = await fetch('/confirmation', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${CONFIRMATION_KEY}`
 			},
 			body: JSON.stringify({
 				email
@@ -55,6 +56,13 @@ export const actions = {
 		});
 
 		const emailRes = await confirmationEmail.json();
+
+		if (confirmationEmail.status !== 200) {
+			return fail(422, {
+				email,
+				error: 'There was an error submitting your email'
+			});
+		}
 
 		if (emailRes) {
 			return {

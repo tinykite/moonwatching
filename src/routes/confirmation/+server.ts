@@ -1,8 +1,15 @@
 import { postmarkClient } from '$lib/postmarkClient';
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { CONFIRMATION_KEY } from '$env/static/private';
 
 export const POST = (async ({ request, fetch }) => {
+	const REQUEST_KEY = request.headers.get('authorization');
+
+	if (REQUEST_KEY !== `Bearer ${CONFIRMATION_KEY}`) {
+		throw error(401, 'Not authorized');
+	}
+
 	const { email } = await request.json();
 
 	if (!email) {
