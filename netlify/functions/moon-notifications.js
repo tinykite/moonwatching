@@ -5,7 +5,7 @@ exports.handler = async function () {
 	const moonData = await res.json();
 
 	if (!res.ok) {
-		throw new Error('Moon phase could not be fetched');
+		throw new Error(moonData.message);
 	}
 
 	console.log(moonData);
