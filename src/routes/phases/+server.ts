@@ -83,10 +83,9 @@ export const GET = (async ({ url, fetch }) => {
 		.eq('date', startRange)
 		.single();
 
-	const moonAlertDay = functionTriggers.includes(moonData?.phase);
+	const moonAlertDay = cronRequest && functionTriggers.includes(moonData?.phase);
 
-	// Not checking for moonAlertDay here just yet for testing purposes
-	if (cronRequest) {
+	if (moonAlertDay) {
 		const alert = await fetch('/alerts', {
 			method: 'POST',
 			headers: {
@@ -94,8 +93,7 @@ export const GET = (async ({ url, fetch }) => {
 				Authorization: `Bearer ${ALERT_KEY}`
 			},
 			body: JSON.stringify({
-				...testMoonData,
-				date: startRange // For testing daily cron jobs with a different date
+				...moonData
 			})
 		});
 
@@ -106,9 +104,7 @@ export const GET = (async ({ url, fetch }) => {
 		}
 
 		return json(alertRes);
-	}
-
-	if (moonData && !cronRequest) {
+	} else if (moonData) {
 		return json(moonData.phase);
 	}
 
