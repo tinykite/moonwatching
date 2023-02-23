@@ -61,9 +61,7 @@ export const POST = (async ({ request, fetch }) => {
 		throw error(html.message);
 	}
 
-	// Commenting out for testing
-	// const emailSubject = `It's the ${phase}!`;
-	const emailSubject = `Something will hypothetically happen on ${formattedTime}!`;
+	const emailSubject = `It's the ${phase}!`;
 
 	const subscriberMessages = subscribers.map((subscriber) => {
 		return {
