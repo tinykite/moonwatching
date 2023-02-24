@@ -69,7 +69,8 @@ export const GET = (async ({ url, fetch }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const cronRequest = searchParams.has('scheduledFunction');
 
-	const functionTriggers = ['Full Moon', 'New Moon'];
+	// Temporarily unused for testing
+	// const functionTriggers = ['Full Moon', 'New Moon'];
 
 	const currentDate = new Date();
 	const startRange = format(currentDate, 'yyyy-MM-dd');
@@ -83,7 +84,10 @@ export const GET = (async ({ url, fetch }) => {
 		.eq('date', startRange)
 		.single();
 
-	const moonAlertDay = cronRequest && functionTriggers.includes(moonData?.phase);
+	// Commenting out for testing
+	// const moonAlertDay = cronRequest && functionTriggers.includes(moonData?.phase);
+
+	const moonAlertDay = cronRequest && moonData?.phase;
 
 	if (moonAlertDay) {
 		const alert = await fetch('/alerts', {
