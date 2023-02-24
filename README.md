@@ -13,7 +13,6 @@ The main website is built with [SvelteKit](https://kit.svelte.dev/). Other relev
 
 ## Notes
 
-- The Netlify scheduled function is currently in-progress.
 - Netlify offers an email integration that supports Postmark and MJML templates, which I initially considered might be a more lightweight solution than the moonwatching-emails service. However, there was a [known bug](https://github.com/sveltejs/kit/issues/8903) that prevented the integration from working with SvelteKit. Additionally, templates couldn't be split into resharable, atomic components. For these reasons, a separate mailing service renders the emails.
 
 ## Developing
