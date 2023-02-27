@@ -68,6 +68,7 @@ const getNearestMoon = ({
 export const GET = (async ({ url, fetch }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const cronRequest = searchParams.has('scheduledFunction');
+	const allPhases = searchParams.has('allPhases');
 
 	// Temporarily unused for testing
 	// const functionTriggers = ['Full Moon', 'New Moon'];
@@ -75,6 +76,11 @@ export const GET = (async ({ url, fetch }) => {
 	const currentDate = new Date();
 	const startRange = format(currentDate, 'yyyy-MM-dd');
 	const endRange = format(addDays(currentDate, 8), 'yyyy-MM-dd');
+
+	if (allPhases) {
+		const { data: allMoonData } = await supabase.from('phases').select('*');
+		return json(allMoonData);
+	}
 
 	// If current day is a major moon phase,
 	// return that phase directly
