@@ -3,6 +3,7 @@ import { supabasePrivate } from '$lib/supabaseClient';
 import { postmarkClient } from '$lib/postmarkClient';
 import type { RequestHandler } from './$types';
 import { ALERT_KEY } from '$env/static/private';
+import { getFormattedTime } from '$lib/time';
 
 export const POST = (async ({ request, fetch }) => {
 	const REQUEST_KEY = request.headers.get('authorization');
@@ -24,16 +25,7 @@ export const POST = (async ({ request, fetch }) => {
 		throw error(500, 'Alert already sent');
 	}
 
-	// TODO: Format time in a less-error prone, easier-to-read way
-	// That may require storing date and time together in UTC and converting it to PST at the edge
-	// Using a native browser API to convert timezones
-	const unformattedTime = time.split(':');
-	const isPM = unformattedTime[0] > '12';
-	const hour = isPM ? unformattedTime[0] - 12 : unformattedTime[0];
-	const minute = unformattedTime[1];
-
-	// // use parseInt to remove leading 0
-	const formattedTime = `${parseInt(hour)}:${minute} ${isPM ? 'PM' : 'AM'} ${time_format}`;
+	const formattedTime = getFormattedTime({ time, timeFormat: time_format });
 
 	// Fetch list of subscribers
 	// Commented-out for testing
