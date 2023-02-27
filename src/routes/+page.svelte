@@ -12,6 +12,9 @@
 		success?: string;
 	};
 
+	// The $: beneath these variables is necessary to subscribe to a built-in store
+	// And trigger a re-render when the store updates.
+
 	let form: Form;
 	$: form = $page?.form;
 
