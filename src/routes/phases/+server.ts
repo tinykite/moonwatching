@@ -3,6 +3,7 @@ import { addDays, closestTo, format } from 'date-fns';
 import { supabase } from '$lib/supabaseClient';
 import type { RequestHandler } from './$types';
 import { ALERT_KEY } from '$env/static/private';
+import { supabasePrivate } from '$lib/supabaseClient';
 
 type majorPhase = 'Full Moon' | 'Last Quarter' | 'First Quarter' | 'New Moon';
 interface Moon {
@@ -70,8 +71,7 @@ export const GET = (async ({ url, fetch }) => {
 	const cronRequest = searchParams.has('scheduledFunction');
 	const allPhases = searchParams.has('allPhases');
 
-	// Temporarily unused for testing
-	// const functionTriggers = ['Full Moon', 'New Moon'];
+	const functionTriggers = ['Full Moon', 'New Moon'];
 
 	const currentDate = new Date();
 	const startRange = format(currentDate, 'yyyy-MM-dd');
@@ -91,9 +91,7 @@ export const GET = (async ({ url, fetch }) => {
 		.single();
 
 	// Commenting out for testing
-	// const moonAlertDay = cronRequest && functionTriggers.includes(moonData?.phase);
-
-	const moonAlertDay = cronRequest && moonData?.phase;
+	const moonAlertDay = cronRequest && functionTriggers.includes(moonData?.phase);
 
 	if (moonAlertDay) {
 		const alert = await fetch('/alerts', {

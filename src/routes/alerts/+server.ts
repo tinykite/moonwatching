@@ -28,16 +28,10 @@ export const POST = (async ({ request, fetch }) => {
 	const formattedTime = getFormattedTime({ time, timeFormat: time_format });
 
 	// Fetch list of subscribers
-	// Commented-out for testing
-	// const { data: subscribers, error: supabaseError } = await supabasePrivate
-	// 	.from('subscribers')
-	// 	.select('email')
-	// 	.eq('active', true);
-
 	const { data: subscribers, error: supabaseError } = await supabasePrivate
 		.from('subscribers')
 		.select('email')
-		.eq('email', 'dakota@tinykitelab.com');
+		.eq('active', true);
 
 	if (supabaseError) {
 		throw error(404, supabaseError?.message ?? 'There was an error connecting to the database');
