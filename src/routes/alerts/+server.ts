@@ -51,7 +51,7 @@ export const POST = (async ({ request, fetch }) => {
 
 	const subscriberMessages = subscribers.map((subscriber) => {
 		return {
-			From: 'dakota@moon-watching.com',
+			From: 'info@moon-watching.com',
 			To: subscriber.email,
 			Subject: emailSubject,
 			HtmlBody: html,
