@@ -55,6 +55,7 @@ export const POST = (async ({ request, fetch }) => {
 			To: subscriber.email,
 			Subject: emailSubject,
 			HtmlBody: html,
+			TextBody: `It's the ${phase}! There will be a ${phase} beginning at ${formattedTime}, according to the Griffith Observatory.`,
 			MessageStream: 'broadcast'
 		};
 	});

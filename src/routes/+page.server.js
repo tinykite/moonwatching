@@ -55,6 +55,8 @@ export const actions = {
 				To: `${email}`,
 				Subject: 'You are now subscribed to Moon Watching alerts',
 				HtmlBody: html,
+				TextBody:
+					'Thank you for subscribing! You will now receive updates on each upcoming New and Full Moon.',
 				MessageStream: 'outbound'
 			});
 		} catch (postmarkClientError) {
