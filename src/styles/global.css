@@ -76,7 +76,10 @@ body {
   */
 body {
 	line-height: 1.5;
+	/* A bit controversial  */
+	/* More info: https://www.joshwcomeau.com/css/custom-css-reset/#digit-font-smoothing */
 	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 /*
 	6. Improve media defaults
