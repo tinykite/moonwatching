@@ -1,27 +1,3 @@
-body {
-	margin: 0;
-	padding: 0;
-	color: white;
-	background: black;
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	color-scheme: dark; /* https://web.dev/color-scheme/ */
-}
-
-/* https://cloudfour.com/thinks/see-no-evil-hidden-content-and-accessibility/ */
-.sr-only {
-	border: 0;
-	clip: rect(0 0 0 0);
-	clip-path: polygon(0px 0px, 0px 0px, 0px 0px);
-	-webkit-clip-path: polygon(0px 0px, 0px 0px, 0px 0px);
-	height: 1px;
-	margin: -1px;
-	overflow: hidden;
-	padding: 0;
-	position: absolute;
-	width: 1px;
-	white-space: nowrap;
-}
-
 @font-face {
 	font-family: 'Vulf Mono';
 	src: url('/fonts/Vulf_Mono-Bold_web.woff2') format('woff2'),
@@ -62,12 +38,14 @@ body {
 * {
 	margin: 0;
 }
-/*
-	Typographic tweaks!
-	3. Add accessible line-height
-	4. Improve text rendering
-  */
+
 body {
+	margin: 0;
+	padding: 0;
+	color: white;
+	background: black;
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	color-scheme: dark; /* https://web.dev/color-scheme/ */
 	line-height: 1.5;
 	/* A bit controversial  */
 	/* More info: https://www.joshwcomeau.com/css/custom-css-reset/#digit-font-smoothing */
@@ -80,11 +58,17 @@ body {
 img,
 picture,
 video,
-canvas,
-svg {
+canvas {
 	display: block;
 	max-width: 100%;
 }
+
+svg {
+	display: block;
+	width: 100%;
+	max-width: 500px;
+}
+
 /*
 	6. Remove built-in form typography styles
   */

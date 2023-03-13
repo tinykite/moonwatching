@@ -27,10 +27,3 @@
 {:else if phase === 'Waning Crescent'}
 	<WaningCrescent />
 {/if}
-
-<style>
-	svg {
-		width: 100%;
-		max-width: 500px;
-	}
-</style>
