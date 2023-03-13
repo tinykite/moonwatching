@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import MoonPhase from '../components/MoonPhase.svelte';
+	import Nav from '../components/Nav.svelte';
 
 	import { enhance, applyAction } from '$app/forms';
 	import { page } from '$app/stores';
@@ -27,8 +28,9 @@
 	export let data: PageData;
 </script>
 
+<Nav />
 <!-- According to best practices, a page should only have one global aria-live region.  -->
-<main aria-live="polite" class="main">
+<main aria-live="polite" class="moonContainer">
 	<MoonPhase phase={data.moonPhase} />
 	<h2 class="alert-header">Receive Updates on the New and Full Moon</h2>
 
@@ -37,6 +39,7 @@
 	{:else}
 		<form
 			class="form"
+			id="alertForm"
 			method="POST"
 			use:enhance={() => {
 				status = 'loading';
@@ -79,9 +82,11 @@
 </main>
 
 <style>
-	.page-container {
+	.moonContainer {
 		display: grid;
-		margin: 4rem auto;
+		margin: 15vh auto 2rem;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.alert-header {

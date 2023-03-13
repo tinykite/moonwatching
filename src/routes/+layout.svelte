@@ -10,10 +10,6 @@
 <style>
 	.page-container {
 		background: black;
-		min-height: 100vh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		width: 80%;
 		margin: 0 auto;
 	}
