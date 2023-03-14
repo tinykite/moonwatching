@@ -1,5 +1,7 @@
 <script lang="ts">
 	export let phase: any;
+	// This file has been replaced by MoonIllustration.svelte
+	// Keeping this file for temporary reference
 </script>
 
 {#if phase === 'New Moon'}
