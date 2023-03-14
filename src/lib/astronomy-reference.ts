@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-loss-of-precision */
 /**
     @preserve
 
@@ -125,27 +126,15 @@ const SUN_MAG_1AU = -0.17 - 5 * Math.log10(AU_PER_PARSEC); // formula from JPL H
 const MEAN_SYNODIC_MONTH = 29.530588; // average number of days for Moon to return to the same phase
 const SECONDS_PER_DAY = 24 * 3600;
 const MILLIS_PER_DAY = SECONDS_PER_DAY * 1000;
-const SOLAR_DAYS_PER_SIDEREAL_DAY = 0.9972695717592592;
-
-const SUN_RADIUS_KM = 695700.0;
-const SUN_RADIUS_AU = SUN_RADIUS_KM / KM_PER_AU;
 
 const EARTH_FLATTENING = 0.996647180302104;
 const EARTH_FLATTENING_SQUARED = EARTH_FLATTENING * EARTH_FLATTENING;
 const EARTH_EQUATORIAL_RADIUS_KM = 6378.1366;
 const EARTH_EQUATORIAL_RADIUS_AU = EARTH_EQUATORIAL_RADIUS_KM / KM_PER_AU;
 const EARTH_POLAR_RADIUS_KM = EARTH_EQUATORIAL_RADIUS_KM * EARTH_FLATTENING;
-const EARTH_MEAN_RADIUS_KM = 6371.0; /* mean radius of the Earth's geoid, without atmosphere */
-const EARTH_ATMOSPHERE_KM = 88.0; /* effective atmosphere thickness for lunar eclipses */
-const EARTH_ECLIPSE_RADIUS_KM = EARTH_MEAN_RADIUS_KM + EARTH_ATMOSPHERE_KM;
 
-const MOON_EQUATORIAL_RADIUS_KM = 1738.1;
-const MOON_EQUATORIAL_RADIUS_AU = MOON_EQUATORIAL_RADIUS_KM / KM_PER_AU;
 const MOON_MEAN_RADIUS_KM = 1737.4;
-const MOON_POLAR_RADIUS_KM = 1736.0;
-const MOON_POLAR_RADIUS_AU = MOON_POLAR_RADIUS_KM / KM_PER_AU;
 
-const REFRACTION_NEAR_HORIZON = 34 / 60; // degrees of refractive "lift" seen for objects near horizon
 const EARTH_MOON_MASS_RATIO = 81.30056;
 
 /*
@@ -306,104 +295,7 @@ export enum Body {
 	Neptune = 'Neptune',
 	Pluto = 'Pluto',
 	SSB = 'SSB', // Solar System Barycenter
-	EMB = 'EMB', // Earth/Moon Barycenter
-
-	// User-defined fixed locations in the sky...
-	Star1 = 'Star1',
-	Star2 = 'Star2',
-	Star3 = 'Star3',
-	Star4 = 'Star4',
-	Star5 = 'Star5',
-	Star6 = 'Star6',
-	Star7 = 'Star7',
-	Star8 = 'Star8'
-}
-
-const StarList = [
-	Body.Star1,
-	Body.Star2,
-	Body.Star3,
-	Body.Star4,
-	Body.Star5,
-	Body.Star6,
-	Body.Star7,
-	Body.Star8
-];
-
-interface StarDef {
-	ra: number; // EQJ right ascension
-	dec: number; // EQJ declination
-	dist: number; // heliocentric distance in AU
-}
-
-const StarTable: StarDef[] = [
-	{ ra: 0, dec: 0, dist: 0 }, // Body.Star1
-	{ ra: 0, dec: 0, dist: 0 }, // Body.Star2
-	{ ra: 0, dec: 0, dist: 0 }, // Body.Star3
-	{ ra: 0, dec: 0, dist: 0 }, // Body.Star4
-	{ ra: 0, dec: 0, dist: 0 }, // Body.Star5
-	{ ra: 0, dec: 0, dist: 0 }, // Body.Star6
-	{ ra: 0, dec: 0, dist: 0 }, // Body.Star7
-	{ ra: 0, dec: 0, dist: 0 } // Body.Star8
-];
-
-function GetStar(body: Body): StarDef | null {
-	const index = StarList.indexOf(body);
-	return index >= 0 ? StarTable[index] : null;
-}
-
-function UserDefinedStar(body: Body): StarDef | null {
-	const star = GetStar(body);
-	return star && star.dist > 0 ? star : null;
-}
-
-/**
- * @brief Assign equatorial coordinates to a user-defined star.
- *
- * Some Astronomy Engine functions allow their `body` parameter to
- * be a user-defined fixed point in the sky, loosely called a "star".
- * This function assigns a right ascension, declination, and distance
- * to one of the eight user-defined stars `Star1`..`Star8`.
- *
- * Stars are not valid until defined. Once defined, they retain their
- * definition until re-defined by another call to `DefineStar`.
- *
- * @param {Body} body
- *      One of the eight user-defined star identifiers:
- *      `Star1`, `Star2`, `Star3`, `Star4`, `Star5`, `Star6`, `Star7`, or `Star8`.
- *
- * @param {number} ra
- *      The right ascension to be assigned to the star, expressed in J2000 equatorial coordinates (EQJ).
- *      The value is in units of sidereal hours, and must be within the half-open range [0, 24).
- *
- * @param {number} dec
- *      The declination to be assigned to the star, expressed in J2000 equatorial coordinates (EQJ).
- *      The value is in units of degrees north (positive) or south (negative) of the J2000 equator,
- *      and must be within the closed range [-90, +90].
- *
- * @param {number} distanceLightYears
- *      The distance between the star and the Sun, expressed in light-years.
- *      This value is used to calculate the tiny parallax shift as seen by an observer on Earth.
- *      If you don't know the distance to the star, using a large value like 1000 will generally work well.
- *      The minimum allowed distance is 1 light-year, which is required to provide certain internal optimizations.
- */
-export function DefineStar(body: Body, ra: number, dec: number, distanceLightYears: number) {
-	const star = GetStar(body);
-	if (!star) throw `Invalid star body: ${body}`;
-
-	VerifyNumber(ra);
-	VerifyNumber(dec);
-	VerifyNumber(distanceLightYears);
-
-	if (ra < 0 || ra >= 24) throw `Invalid right ascension for star: ${ra}`;
-
-	if (dec < -90 || dec > +90) throw `Invalid declination for star: ${dec}`;
-
-	if (distanceLightYears < 1) throw `Invalid star distance: ${distanceLightYears}`;
-
-	star.ra = ra;
-	star.dec = dec;
-	star.dist = distanceLightYears * AU_PER_LY;
+	EMB = 'EMB' // Earth/Moon Barycenter
 }
 
 enum PrecessDirection {
@@ -454,97 +346,6 @@ interface VsopTable {
 }
 
 const vsop: VsopTable = {
-	Mercury: [
-		[
-			[
-				[4.40250710144, 0.0, 0.0],
-				[0.40989414977, 1.48302034195, 26087.9031415742],
-				[0.050462942, 4.47785489551, 52175.8062831484],
-				[0.00855346844, 1.16520322459, 78263.70942472259],
-				[0.00165590362, 4.11969163423, 104351.61256629678],
-				[0.00034561897, 0.77930768443, 130439.51570787099],
-				[0.00007583476, 3.71348404924, 156527.41884944518]
-			],
-			[
-				[26087.90313685529, 0.0, 0.0],
-				[0.01131199811, 6.21874197797, 26087.9031415742],
-				[0.00292242298, 3.04449355541, 52175.8062831484],
-				[0.00075775081, 6.08568821653, 78263.70942472259],
-				[0.00019676525, 2.80965111777, 104351.61256629678]
-			]
-		],
-		[
-			[
-				[0.11737528961, 1.98357498767, 26087.9031415742],
-				[0.02388076996, 5.03738959686, 52175.8062831484],
-				[0.01222839532, 3.14159265359, 0.0],
-				[0.0054325181, 1.79644363964, 78263.70942472259],
-				[0.0012977877, 4.83232503958, 104351.61256629678],
-				[0.00031866927, 1.58088495658, 130439.51570787099],
-				[0.00007963301, 4.60972126127, 156527.41884944518]
-			],
-			[
-				[0.00274646065, 3.95008450011, 26087.9031415742],
-				[0.00099737713, 3.14159265359, 0.0]
-			]
-		],
-		[
-			[
-				[0.39528271651, 0.0, 0.0],
-				[0.07834131818, 6.19233722598, 26087.9031415742],
-				[0.00795525558, 2.95989690104, 52175.8062831484],
-				[0.00121281764, 6.01064153797, 78263.70942472259],
-				[0.00021921969, 2.77820093972, 104351.61256629678],
-				[0.00004354065, 5.82894543774, 130439.51570787099]
-			],
-			[
-				[0.0021734774, 4.65617158665, 26087.9031415742],
-				[0.00044141826, 1.42385544001, 52175.8062831484]
-			]
-		]
-	],
-	Venus: [
-		[
-			[
-				[3.17614666774, 0.0, 0.0],
-				[0.01353968419, 5.59313319619, 10213.285546211],
-				[0.00089891645, 5.30650047764, 20426.571092422],
-				[0.00005477194, 4.41630661466, 7860.4193924392],
-				[0.00003455741, 2.6996444782, 11790.6290886588],
-				[0.00002372061, 2.99377542079, 3930.2096962196],
-				[0.00001317168, 5.18668228402, 26.2983197998],
-				[0.00001664146, 4.25018630147, 1577.3435424478],
-				[0.00001438387, 4.15745084182, 9683.5945811164],
-				[0.00001200521, 6.15357116043, 30639.856638633]
-			],
-			[
-				[10213.28554621638, 0.0, 0.0],
-				[0.00095617813, 2.4640651111, 10213.285546211],
-				[0.00007787201, 0.6247848222, 20426.571092422]
-			]
-		],
-		[
-			[
-				[0.05923638472, 0.26702775812, 10213.285546211],
-				[0.00040107978, 1.14737178112, 20426.571092422],
-				[0.00032814918, 3.14159265359, 0.0]
-			],
-			[[0.00287821243, 1.88964962838, 10213.285546211]]
-		],
-		[
-			[
-				[0.72334820891, 0.0, 0.0],
-				[0.00489824182, 4.02151831717, 10213.285546211],
-				[0.00001658058, 4.90206728031, 20426.571092422],
-				[0.00001378043, 1.12846591367, 11790.6290886588],
-				[0.00001632096, 2.84548795207, 7860.4193924392],
-				[0.00000498395, 2.58682193892, 9683.5945811164],
-				[0.00000221985, 2.01346696541, 19367.1891622328],
-				[0.00000237454, 2.55136053886, 15720.8387848784]
-			],
-			[[0.00034551041, 0.89198706276, 10213.285546211]]
-		]
-	],
 	Earth: [
 		[
 			[
@@ -614,469 +415,11 @@ const vsop: VsopTable = {
 			],
 			[[0.00004359385, 5.78455133808, 6283.0758499914]]
 		]
-	],
-	Mars: [
-		[
-			[
-				[6.20347711581, 0.0, 0.0],
-				[0.18656368093, 5.0503710027, 3340.6124266998],
-				[0.01108216816, 5.40099836344, 6681.2248533996],
-				[0.00091798406, 5.75478744667, 10021.8372800994],
-				[0.00027744987, 5.97049513147, 3.523118349],
-				[0.00010610235, 2.93958560338, 2281.2304965106],
-				[0.00012315897, 0.84956094002, 2810.9214616052],
-				[0.00008926784, 4.15697846427, 0.0172536522],
-				[0.00008715691, 6.11005153139, 13362.4497067992],
-				[0.00006797556, 0.36462229657, 398.1490034082],
-				[0.00007774872, 3.33968761376, 5621.8429232104],
-				[0.00003575078, 1.6618650571, 2544.3144198834],
-				[0.00004161108, 0.22814971327, 2942.4634232916],
-				[0.00003075252, 0.85696614132, 191.4482661116],
-				[0.00002628117, 0.64806124465, 3337.0893083508],
-				[0.00002937546, 6.07893711402, 0.0673103028],
-				[0.00002389414, 5.03896442664, 796.2980068164],
-				[0.00002579844, 0.02996736156, 3344.1355450488],
-				[0.00001528141, 1.14979301996, 6151.533888305],
-				[0.00001798806, 0.65634057445, 529.6909650946],
-				[0.00001264357, 3.62275122593, 5092.1519581158],
-				[0.00001286228, 3.06796065034, 2146.1654164752],
-				[0.00001546404, 2.91579701718, 1751.539531416],
-				[0.00001024902, 3.69334099279, 8962.4553499102],
-				[0.00000891566, 0.18293837498, 16703.062133499],
-				[0.00000858759, 2.4009381194, 2914.0142358238],
-				[0.00000832715, 2.46418619474, 3340.5951730476],
-				[0.0000083272, 4.49495782139, 3340.629680352],
-				[0.00000712902, 3.66335473479, 1059.3819301892],
-				[0.00000748723, 3.82248614017, 155.4203994342],
-				[0.00000723861, 0.67497311481, 3738.761430108],
-				[0.00000635548, 2.92182225127, 8432.7643848156],
-				[0.00000655162, 0.48864064125, 3127.3133312618],
-				[0.00000550474, 3.81001042328, 0.9803210682],
-				[0.0000055275, 4.47479317037, 1748.016413067],
-				[0.00000425966, 0.55364317304, 6283.0758499914],
-				[0.00000415131, 0.49662285038, 213.299095438],
-				[0.00000472167, 3.62547124025, 1194.4470102246],
-				[0.00000306551, 0.38052848348, 6684.7479717486],
-				[0.00000312141, 0.99853944405, 6677.7017350506],
-				[0.00000293198, 4.22131299634, 20.7753954924],
-				[0.00000302375, 4.48618007156, 3532.0606928114],
-				[0.00000274027, 0.54222167059, 3340.545116397],
-				[0.00000281079, 5.88163521788, 1349.8674096588],
-				[0.00000231183, 1.28242156993, 3870.3033917944],
-				[0.00000283602, 5.7688543494, 3149.1641605882],
-				[0.00000236117, 5.75503217933, 3333.498879699],
-				[0.00000274033, 0.13372524985, 3340.6797370026],
-				[0.00000299395, 2.78323740866, 6254.6266625236]
-			],
-			[
-				[3340.61242700512, 0.0, 0.0],
-				[0.01457554523, 3.60433733236, 3340.6124266998],
-				[0.00168414711, 3.92318567804, 6681.2248533996],
-				[0.00020622975, 4.26108844583, 10021.8372800994],
-				[0.00003452392, 4.7321039319, 3.523118349],
-				[0.00002586332, 4.60670058555, 13362.4497067992],
-				[0.00000841535, 4.45864030426, 2281.2304965106]
-			],
-			[
-				[0.00058152577, 2.04961712429, 3340.6124266998],
-				[0.00013459579, 2.45738706163, 6681.2248533996]
-			]
-		],
-		[
-			[
-				[0.03197134986, 3.76832042431, 3340.6124266998],
-				[0.00298033234, 4.10616996305, 6681.2248533996],
-				[0.00289104742, 0.0, 0.0],
-				[0.00031365539, 4.4465105309, 10021.8372800994],
-				[0.000034841, 4.7881254926, 13362.4497067992]
-			],
-			[
-				[0.00217310991, 6.04472194776, 3340.6124266998],
-				[0.00020976948, 3.14159265359, 0.0],
-				[0.00012834709, 1.60810667915, 6681.2248533996]
-			]
-		],
-		[
-			[
-				[1.53033488271, 0.0, 0.0],
-				[0.1418495316, 3.47971283528, 3340.6124266998],
-				[0.00660776362, 3.81783443019, 6681.2248533996],
-				[0.00046179117, 4.15595316782, 10021.8372800994],
-				[0.00008109733, 5.55958416318, 2810.9214616052],
-				[0.00007485318, 1.77239078402, 5621.8429232104],
-				[0.00005523191, 1.3643630377, 2281.2304965106],
-				[0.0000382516, 4.49407183687, 13362.4497067992],
-				[0.00002306537, 0.09081579001, 2544.3144198834],
-				[0.00001999396, 5.36059617709, 3337.0893083508],
-				[0.00002484394, 4.9254563992, 2942.4634232916],
-				[0.00001960195, 4.74249437639, 3344.1355450488],
-				[0.00001167119, 2.11260868341, 5092.1519581158],
-				[0.00001102816, 5.00908403998, 398.1490034082],
-				[0.00000899066, 4.40791133207, 529.6909650946],
-				[0.00000992252, 5.83861961952, 6151.533888305],
-				[0.00000807354, 2.10217065501, 1059.3819301892],
-				[0.00000797915, 3.44839203899, 796.2980068164],
-				[0.00000740975, 1.49906336885, 2146.1654164752]
-			],
-			[
-				[0.01107433345, 2.03250524857, 3340.6124266998],
-				[0.00103175887, 2.37071847807, 6681.2248533996],
-				[0.000128772, 0.0, 0.0],
-				[0.0001081588, 2.70888095665, 10021.8372800994]
-			],
-			[
-				[0.00044242249, 0.47930604954, 3340.6124266998],
-				[0.00008138042, 0.86998389204, 6681.2248533996]
-			]
-		]
-	],
-	Jupiter: [
-		[
-			[
-				[0.59954691494, 0.0, 0.0],
-				[0.09695898719, 5.06191793158, 529.6909650946],
-				[0.00573610142, 1.44406205629, 7.1135470008],
-				[0.00306389205, 5.41734730184, 1059.3819301892],
-				[0.00097178296, 4.14264726552, 632.7837393132],
-				[0.00072903078, 3.64042916389, 522.5774180938],
-				[0.00064263975, 3.41145165351, 103.0927742186],
-				[0.00039806064, 2.29376740788, 419.4846438752],
-				[0.00038857767, 1.27231755835, 316.3918696566],
-				[0.00027964629, 1.7845459182, 536.8045120954],
-				[0.0001358973, 5.7748104079, 1589.0728952838],
-				[0.00008246349, 3.5822792584, 206.1855484372],
-				[0.00008768704, 3.63000308199, 949.1756089698],
-				[0.00007368042, 5.0810119427, 735.8765135318],
-				[0.0000626315, 0.02497628807, 213.299095438],
-				[0.00006114062, 4.51319998626, 1162.4747044078],
-				[0.00004905396, 1.32084470588, 110.2063212194],
-				[0.00005305285, 1.30671216791, 14.2270940016],
-				[0.00005305441, 4.18625634012, 1052.2683831884],
-				[0.00004647248, 4.69958103684, 3.9321532631],
-				[0.00003045023, 4.31676431084, 426.598190876],
-				[0.00002609999, 1.56667394063, 846.0828347512],
-				[0.00002028191, 1.06376530715, 3.1813937377],
-				[0.00001764763, 2.14148655117, 1066.49547719],
-				[0.00001722972, 3.88036268267, 1265.5674786264],
-				[0.00001920945, 0.97168196472, 639.897286314],
-				[0.00001633223, 3.58201833555, 515.463871093],
-				[0.00001431999, 4.29685556046, 625.6701923124],
-				[0.00000973272, 4.09764549134, 95.9792272178]
-			],
-			[
-				[529.69096508814, 0.0, 0.0],
-				[0.00489503243, 4.2208293947, 529.6909650946],
-				[0.00228917222, 6.02646855621, 7.1135470008],
-				[0.00030099479, 4.54540782858, 1059.3819301892],
-				[0.0002072092, 5.45943156902, 522.5774180938],
-				[0.00012103653, 0.16994816098, 536.8045120954],
-				[0.00006067987, 4.42422292017, 103.0927742186],
-				[0.00005433968, 3.98480737746, 419.4846438752],
-				[0.00004237744, 5.89008707199, 14.2270940016]
-			],
-			[
-				[0.00047233601, 4.32148536482, 7.1135470008],
-				[0.00030649436, 2.929777887, 529.6909650946],
-				[0.00014837605, 3.14159265359, 0.0]
-			]
-		],
-		[
-			[
-				[0.02268615702, 3.55852606721, 529.6909650946],
-				[0.00109971634, 3.90809347197, 1059.3819301892],
-				[0.00110090358, 0.0, 0.0],
-				[0.00008101428, 3.60509572885, 522.5774180938],
-				[0.00006043996, 4.25883108339, 1589.0728952838],
-				[0.00006437782, 0.30627119215, 536.8045120954]
-			],
-			[[0.00078203446, 1.52377859742, 529.6909650946]]
-		],
-		[
-			[
-				[5.20887429326, 0.0, 0.0],
-				[0.25209327119, 3.49108639871, 529.6909650946],
-				[0.00610599976, 3.84115365948, 1059.3819301892],
-				[0.00282029458, 2.57419881293, 632.7837393132],
-				[0.00187647346, 2.07590383214, 522.5774180938],
-				[0.00086792905, 0.71001145545, 419.4846438752],
-				[0.00072062974, 0.21465724607, 536.8045120954],
-				[0.00065517248, 5.9799588479, 316.3918696566],
-				[0.00029134542, 1.67759379655, 103.0927742186],
-				[0.00030135335, 2.16132003734, 949.1756089698],
-				[0.00023453271, 3.54023522184, 735.8765135318],
-				[0.00022283743, 4.19362594399, 1589.0728952838],
-				[0.00023947298, 0.2745803748, 7.1135470008],
-				[0.00013032614, 2.96042965363, 1162.4747044078],
-				[0.0000970336, 1.90669633585, 206.1855484372],
-				[0.00012749023, 2.71550286592, 1052.2683831884],
-				[0.00007057931, 2.18184839926, 1265.5674786264],
-				[0.00006137703, 6.26418240033, 846.0828347512],
-				[0.00002616976, 2.00994012876, 1581.959348283]
-			],
-			[
-				[0.0127180152, 2.64937512894, 529.6909650946],
-				[0.00061661816, 3.00076460387, 1059.3819301892],
-				[0.00053443713, 3.89717383175, 522.5774180938],
-				[0.00031185171, 4.88276958012, 536.8045120954],
-				[0.00041390269, 0.0, 0.0]
-			]
-		]
-	],
-	Saturn: [
-		[
-			[
-				[0.87401354025, 0.0, 0.0],
-				[0.11107659762, 3.96205090159, 213.299095438],
-				[0.01414150957, 4.58581516874, 7.1135470008],
-				[0.00398379389, 0.52112032699, 206.1855484372],
-				[0.00350769243, 3.30329907896, 426.598190876],
-				[0.00206816305, 0.24658372002, 103.0927742186],
-				[0.000792713, 3.84007056878, 220.4126424388],
-				[0.00023990355, 4.66976924553, 110.2063212194],
-				[0.00016573588, 0.43719228296, 419.4846438752],
-				[0.00014906995, 5.76903183869, 316.3918696566],
-				[0.0001582029, 0.93809155235, 632.7837393132],
-				[0.00014609559, 1.56518472, 3.9321532631],
-				[0.00013160301, 4.44891291899, 14.2270940016],
-				[0.00015053543, 2.71669915667, 639.897286314],
-				[0.00013005299, 5.98119023644, 11.0457002639],
-				[0.00010725067, 3.12939523827, 202.2533951741],
-				[0.00005863206, 0.23656938524, 529.6909650946],
-				[0.00005227757, 4.20783365759, 3.1813937377],
-				[0.00006126317, 1.76328667907, 277.0349937414],
-				[0.00005019687, 3.17787728405, 433.7117378768],
-				[0.0000459255, 0.61977744975, 199.0720014364],
-				[0.00004005867, 2.24479718502, 63.7358983034],
-				[0.00002953796, 0.98280366998, 95.9792272178],
-				[0.0000387367, 3.22283226966, 138.5174968707],
-				[0.00002461186, 2.03163875071, 735.8765135318],
-				[0.00003269484, 0.77492638211, 949.1756089698],
-				[0.00001758145, 3.2658010994, 522.5774180938],
-				[0.00001640172, 5.5050445305, 846.0828347512],
-				[0.00001391327, 4.02333150505, 323.5054166574],
-				[0.00001580648, 4.37265307169, 309.2783226558],
-				[0.00001123498, 2.83726798446, 415.5524906121],
-				[0.00001017275, 3.71700135395, 227.5261894396],
-				[0.00000848642, 3.1915017083, 209.3669421749]
-			],
-			[
-				[213.2990952169, 0.0, 0.0],
-				[0.01297370862, 1.82834923978, 213.299095438],
-				[0.00564345393, 2.88499717272, 7.1135470008],
-				[0.00093734369, 1.06311793502, 426.598190876],
-				[0.00107674962, 2.27769131009, 206.1855484372],
-				[0.00040244455, 2.04108104671, 220.4126424388],
-				[0.00019941774, 1.2795439047, 103.0927742186],
-				[0.00010511678, 2.7488034213, 14.2270940016],
-				[0.00006416106, 0.38238295041, 639.897286314],
-				[0.00004848994, 2.43037610229, 419.4846438752],
-				[0.00004056892, 2.92133209468, 110.2063212194],
-				[0.00003768635, 3.6496533078, 3.9321532631]
-			],
-			[
-				[0.0011644133, 1.17988132879, 7.1135470008],
-				[0.00091841837, 0.0732519584, 213.299095438],
-				[0.00036661728, 0.0, 0.0],
-				[0.00015274496, 4.06493179167, 206.1855484372]
-			]
-		],
-		[
-			[
-				[0.04330678039, 3.60284428399, 213.299095438],
-				[0.00240348302, 2.85238489373, 426.598190876],
-				[0.00084745939, 0.0, 0.0],
-				[0.00030863357, 3.48441504555, 220.4126424388],
-				[0.00034116062, 0.57297307557, 206.1855484372],
-				[0.0001473407, 2.11846596715, 639.897286314],
-				[0.00009916667, 5.79003188904, 419.4846438752],
-				[0.00006993564, 4.7360468972, 7.1135470008],
-				[0.00004807588, 5.43305312061, 316.3918696566]
-			],
-			[
-				[0.00198927992, 4.93901017903, 213.299095438],
-				[0.00036947916, 3.14159265359, 0.0],
-				[0.00017966989, 0.5197943111, 426.598190876]
-			]
-		],
-		[
-			[
-				[9.55758135486, 0.0, 0.0],
-				[0.52921382865, 2.39226219573, 213.299095438],
-				[0.01873679867, 5.2354960466, 206.1855484372],
-				[0.01464663929, 1.64763042902, 426.598190876],
-				[0.00821891141, 5.93520042303, 316.3918696566],
-				[0.00547506923, 5.0153261898, 103.0927742186],
-				[0.0037168465, 2.27114821115, 220.4126424388],
-				[0.00361778765, 3.13904301847, 7.1135470008],
-				[0.00140617506, 5.70406606781, 632.7837393132],
-				[0.00108974848, 3.29313390175, 110.2063212194],
-				[0.00069006962, 5.94099540992, 419.4846438752],
-				[0.00061053367, 0.94037691801, 639.897286314],
-				[0.00048913294, 1.55733638681, 202.2533951741],
-				[0.00034143772, 0.19519102597, 277.0349937414],
-				[0.00032401773, 5.47084567016, 949.1756089698],
-				[0.00020936596, 0.46349251129, 735.8765135318],
-				[0.00009796004, 5.20477537945, 1265.5674786264],
-				[0.00011993338, 5.98050967385, 846.0828347512],
-				[0.000208393, 1.52102476129, 433.7117378768],
-				[0.00015298404, 3.0594381494, 529.6909650946],
-				[0.00006465823, 0.17732249942, 1052.2683831884],
-				[0.00011380257, 1.7310542704, 522.5774180938],
-				[0.00003419618, 4.94550542171, 1581.959348283]
-			],
-			[
-				[0.0618298134, 0.2584351148, 213.299095438],
-				[0.00506577242, 0.71114625261, 206.1855484372],
-				[0.00341394029, 5.79635741658, 426.598190876],
-				[0.00188491195, 0.47215589652, 220.4126424388],
-				[0.00186261486, 3.14159265359, 0.0],
-				[0.00143891146, 1.40744822888, 7.1135470008]
-			],
-			[[0.00436902572, 4.78671677509, 213.299095438]]
-		]
-	],
-	Uranus: [
-		[
-			[
-				[5.48129294297, 0.0, 0.0],
-				[0.09260408234, 0.89106421507, 74.7815985673],
-				[0.01504247898, 3.6271926092, 1.4844727083],
-				[0.00365981674, 1.89962179044, 73.297125859],
-				[0.00272328168, 3.35823706307, 149.5631971346],
-				[0.00070328461, 5.39254450063, 63.7358983034],
-				[0.00068892678, 6.09292483287, 76.2660712756],
-				[0.00061998615, 2.26952066061, 2.9689454166],
-				[0.00061950719, 2.85098872691, 11.0457002639],
-				[0.0002646877, 3.14152083966, 71.8126531507],
-				[0.00025710476, 6.11379840493, 454.9093665273],
-				[0.0002107885, 4.36059339067, 148.0787244263],
-				[0.00017818647, 1.74436930289, 36.6485629295],
-				[0.00014613507, 4.73732166022, 3.9321532631],
-				[0.00011162509, 5.8268179635, 224.3447957019],
-				[0.0001099791, 0.48865004018, 138.5174968707],
-				[0.00009527478, 2.95516862826, 35.1640902212],
-				[0.00007545601, 5.236265824, 109.9456887885],
-				[0.00004220241, 3.23328220918, 70.8494453042],
-				[0.000040519, 2.277550173, 151.0476698429],
-				[0.00003354596, 1.0654900738, 4.4534181249],
-				[0.00002926718, 4.62903718891, 9.5612275556],
-				[0.0000349034, 5.48306144511, 146.594251718],
-				[0.00003144069, 4.75199570434, 77.7505439839],
-				[0.00002922333, 5.35235361027, 85.8272988312],
-				[0.00002272788, 4.36600400036, 70.3281804424],
-				[0.00002051219, 1.51773566586, 0.1118745846],
-				[0.00002148602, 0.60745949945, 38.1330356378],
-				[0.00001991643, 4.92437588682, 277.0349937414],
-				[0.00001376226, 2.04283539351, 65.2203710117],
-				[0.00001666902, 3.62744066769, 380.12776796],
-				[0.00001284107, 3.11347961505, 202.2533951741],
-				[0.00001150429, 0.93343589092, 3.1813937377],
-				[0.00001533221, 2.58594681212, 52.6901980395],
-				[0.00001281604, 0.54271272721, 222.8603229936],
-				[0.00001372139, 4.19641530878, 111.4301614968],
-				[0.00001221029, 0.1990065003, 108.4612160802],
-				[0.00000946181, 1.19253165736, 127.4717966068],
-				[0.00001150989, 4.17898916639, 33.6796175129]
-			],
-			[
-				[74.7815986091, 0.0, 0.0],
-				[0.00154332863, 5.24158770553, 74.7815985673],
-				[0.00024456474, 1.71260334156, 1.4844727083],
-				[0.00009258442, 0.4282973235, 11.0457002639],
-				[0.00008265977, 1.50218091379, 63.7358983034],
-				[0.0000915016, 1.41213765216, 149.5631971346]
-			]
-		],
-		[
-			[
-				[0.01346277648, 2.61877810547, 74.7815985673],
-				[0.000623414, 5.08111189648, 149.5631971346],
-				[0.00061601196, 3.14159265359, 0.0],
-				[0.00009963722, 1.61603805646, 76.2660712756],
-				[0.0000992616, 0.57630380333, 73.297125859]
-			],
-			[[0.00034101978, 0.01321929936, 74.7815985673]]
-		],
-		[
-			[
-				[19.21264847206, 0.0, 0.0],
-				[0.88784984413, 5.60377527014, 74.7815985673],
-				[0.03440836062, 0.32836099706, 73.297125859],
-				[0.0205565386, 1.7829515933, 149.5631971346],
-				[0.0064932241, 4.52247285911, 76.2660712756],
-				[0.00602247865, 3.86003823674, 63.7358983034],
-				[0.00496404167, 1.40139935333, 454.9093665273],
-				[0.00338525369, 1.58002770318, 138.5174968707],
-				[0.00243509114, 1.57086606044, 71.8126531507],
-				[0.00190522303, 1.99809394714, 1.4844727083],
-				[0.00161858838, 2.79137786799, 148.0787244263],
-				[0.00143706183, 1.38368544947, 11.0457002639],
-				[0.00093192405, 0.17437220467, 36.6485629295],
-				[0.00071424548, 4.24509236074, 224.3447957019],
-				[0.00089806014, 3.66105364565, 109.9456887885],
-				[0.00039009723, 1.66971401684, 70.8494453042],
-				[0.00046677296, 1.39976401694, 35.1640902212],
-				[0.00039025624, 3.36234773834, 277.0349937414],
-				[0.00036755274, 3.88649278513, 146.594251718],
-				[0.00030348723, 0.70100838798, 151.0476698429],
-				[0.00029156413, 3.180563367, 77.7505439839],
-				[0.00022637073, 0.72518687029, 529.6909650946],
-				[0.00011959076, 1.7504339214, 984.6003316219],
-				[0.00025620756, 5.25656086672, 380.12776796]
-			],
-			[[0.01479896629, 3.67205697578, 74.7815985673]]
-		]
-	],
-	Neptune: [
-		[
-			[
-				[5.31188633046, 0.0, 0.0],
-				[0.0179847553, 2.9010127389, 38.1330356378],
-				[0.01019727652, 0.48580922867, 1.4844727083],
-				[0.00124531845, 4.83008090676, 36.6485629295],
-				[0.00042064466, 5.41054993053, 2.9689454166],
-				[0.00037714584, 6.09221808686, 35.1640902212],
-				[0.00033784738, 1.24488874087, 76.2660712756],
-				[0.00016482741, 0.00007727998, 491.5579294568],
-				[0.00009198584, 4.93747051954, 39.6175083461],
-				[0.0000899425, 0.27462171806, 175.1660598002]
-			],
-			[
-				[38.13303563957, 0.0, 0.0],
-				[0.00016604172, 4.86323329249, 1.4844727083],
-				[0.00015744045, 2.27887427527, 38.1330356378]
-			]
-		],
-		[
-			[
-				[0.03088622933, 1.44104372644, 38.1330356378],
-				[0.00027780087, 5.91271884599, 76.2660712756],
-				[0.00027623609, 0.0, 0.0],
-				[0.00015355489, 2.52123799551, 36.6485629295],
-				[0.00015448133, 3.50877079215, 39.6175083461]
-			]
-		],
-		[
-			[
-				[30.07013205828, 0.0, 0.0],
-				[0.27062259632, 1.32999459377, 38.1330356378],
-				[0.01691764014, 3.25186135653, 36.6485629295],
-				[0.00807830553, 5.18592878704, 1.4844727083],
-				[0.0053776051, 4.52113935896, 35.1640902212],
-				[0.00495725141, 1.5710564165, 491.5579294568],
-				[0.00274571975, 1.84552258866, 175.1660598002],
-				[0.0001201232, 1.92059384991, 1021.2488945514],
-				[0.00121801746, 5.79754470298, 76.2660712756],
-				[0.00100896068, 0.3770272493, 73.297125859],
-				[0.00135134092, 3.37220609835, 39.6175083461],
-				[0.00007571796, 1.07149207335, 388.4651552382]
-			]
-		]
 	]
 };
 
 export function DeltaT_EspenakMeeus(ut: number): number {
-	var u: number, u2: number, u3: number, u4: number, u5: number, u6: number, u7: number;
+	let u: number, u2: number, u3: number, u4: number, u5: number, u6: number, u7: number;
 
 	/*
         Fred Espenak writes about Delta-T generically here:
@@ -1466,8 +809,8 @@ function iau2000b(time: AstroTime): NutationAngles {
 }
 
 function mean_obliq(time: AstroTime): number {
-	var t = time.tt / 36525;
-	var asec =
+	const t = time.tt / 36525;
+	const asec =
 		((((-0.0000000434 * t - 0.000000576) * t + 0.0020034) * t - 0.0001831) * t - 46.836769) * t +
 		84381.406;
 	return asec / 3600.0;
@@ -1482,7 +825,7 @@ export interface EarthTiltInfo {
 	tobl: number;
 }
 
-var cache_e_tilt: EarthTiltInfo;
+let cache_e_tilt: EarthTiltInfo;
 
 export function e_tilt(time: AstroTime): EarthTiltInfo {
 	if (!cache_e_tilt || Math.abs(cache_e_tilt.tt - time.tt) > 1.0e-6) {
@@ -1579,8 +922,8 @@ function CalcMoon(time: AstroTime) {
 		DF: number,
 		DD: number,
 		DS: number;
-	let coArray = DeclareArray2(-6, 6, 1, 4);
-	let siArray = DeclareArray2(-6, 6, 1, 4);
+	const coArray = DeclareArray2(-6, 6, 1, 4);
+	const siArray = DeclareArray2(-6, 6, 1, 4);
 
 	function CO(x: number, y: number) {
 		return ArrayGet2(coArray, x, y);
@@ -1614,13 +957,13 @@ function CalcMoon(time: AstroTime) {
 	GAM1C = 0;
 	SINPI = 3422.7;
 
-	var S1 = Sine(0.19833 + 0.05611 * T);
-	var S2 = Sine(0.27869 + 0.04508 * T);
-	var S3 = Sine(0.16827 - 0.36903 * T);
-	var S4 = Sine(0.34734 - 5.37261 * T);
-	var S5 = Sine(0.10498 - 5.37899 * T);
-	var S6 = Sine(0.42681 - 0.41855 * T);
-	var S7 = Sine(0.14943 - 5.37511 * T);
+	const S1 = Sine(0.19833 + 0.05611 * T);
+	const S2 = Sine(0.27869 + 0.04508 * T);
+	const S3 = Sine(0.16827 - 0.36903 * T);
+	const S4 = Sine(0.34734 - 5.37261 * T);
+	const S5 = Sine(0.10498 - 5.37899 * T);
+	const S6 = Sine(0.42681 - 0.41855 * T);
+	const S7 = Sine(0.14943 - 5.37511 * T);
 	DL0 = 0.84 * S1 + 0.31 * S2 + 14.27 * S3 + 7.26 * S4 + 0.28 * S5 + 0.24 * S6;
 	DL = 2.94 * S1 + 0.31 * S2 + 14.27 * S3 + 9.34 * S4 + 1.12 * S5 + 0.83 * S6;
 	DLS = -6.4 * S1 - 1.89 * S6;
@@ -1710,7 +1053,7 @@ function CalcMoon(time: AstroTime) {
 		r: number,
 		s: number
 	): void {
-		var result = Term(p, q, r, s);
+		const result = Term(p, q, r, s);
 		DLAM += coeffl * result.y;
 		DS += coeffs * result.y;
 		GAM1C += coeffg * result.x;
@@ -2679,7 +2022,7 @@ export function Horizon(
 	refraction?: string
 ): HorizontalCoordinates {
 	// based on NOVAS equ2hor()
-	let time = MakeTime(date);
+	const time = MakeTime(date);
 	VerifyObserver(observer);
 	VerifyNumber(ra);
 	VerifyNumber(dec);
@@ -2707,9 +2050,9 @@ export function Horizon(
 	// y = direction from center of Earth toward 90 degrees west longitude on equator.
 	// z = direction from center of Earth toward the north pole.
 
-	let uze: ArrayVector = [coslat * coslon, coslat * sinlon, sinlat];
-	let une: ArrayVector = [-sinlat * coslon, -sinlat * sinlon, coslat];
-	let uwe: ArrayVector = [sinlon, -coslon, 0];
+	const uze: ArrayVector = [coslat * coslon, coslat * sinlon, sinlat];
+	const une: ArrayVector = [-sinlat * coslon, -sinlat * sinlon, coslat];
+	const uwe: ArrayVector = [sinlon, -coslon, 0];
 
 	// Correct the vectors uze, une, uwe for the Earth's rotation by calculating
 	// sidereal time. Call spin() for each uncorrected vector to rotate about
@@ -2718,15 +2061,15 @@ export function Horizon(
 	// rotation of the Earth to westward apparent movement of objects with time.
 
 	const spin_angle = -15 * sidereal_time(time);
-	let uz = spin(spin_angle, uze);
-	let un = spin(spin_angle, une);
-	let uw = spin(spin_angle, uwe);
+	const uz = spin(spin_angle, uze);
+	const un = spin(spin_angle, une);
+	const uw = spin(spin_angle, uwe);
 
 	// Convert angular equatorial coordinates (RA, DEC) to
 	// cartesian equatorial coordinates in 'p', using the
 	// same orientation system as uze, une, uwe.
 
-	let p = [cosdc * cosra, cosdc * sinra, sindc];
+	const p = [cosdc * cosra, cosdc * sinra, sindc];
 
 	// Use dot products of p with the zenith, north, and west
 	// vectors to obtain the cartesian coordinates of the body in
@@ -2761,8 +2104,8 @@ export function Horizon(
 	let out_dec = dec;
 
 	if (refraction) {
-		let zd0 = zd;
-		let refr = Refraction(refraction, 90 - zd);
+		const zd0 = zd;
+		const refr = Refraction(refraction, 90 - zd);
 		zd -= refr;
 		if (refr > 0.0 && zd > 3.0e-4) {
 			const sinzd = Math.sin(zd * DEG2RAD);
@@ -4391,11 +3734,6 @@ export function HelioVector(body: Body, date: FlexibleDateTime): Vector {
 	}
 	if (body === Body.SSB) return CalcSolarSystemBarycenter(time);
 
-	const star = UserDefinedStar(body);
-	if (star) {
-		const sphere = new Spherical(star.dec, 15 * star.ra, star.dist);
-		return VectorFromSphere(sphere, time);
-	}
 	throw `HelioVector: Unknown body "${body}"`;
 }
 
@@ -4419,8 +3757,6 @@ export function HelioVector(body: Body, date: FlexibleDateTime): Vector {
  *      The heliocentric distance in AU.
  */
 export function HelioDistance(body: Body, date: FlexibleDateTime): number {
-	const star = UserDefinedStar(body);
-	if (star) return star.dist;
 	const time = MakeTime(date);
 	if (body in vsop) return VsopFormula(vsop[body][RAD_INDEX], time.tt / DAYS_PER_MILLENNIUM, false);
 	return HelioVector(body, time).Length();
@@ -4568,31 +3904,6 @@ export function BackdatePosition(
 ): Vector {
 	VerifyBoolean(aberration);
 	const time = MakeTime(date);
-	if (UserDefinedStar(targetBody)) {
-		// This is a user-defined star, which must be treated as a special case.
-		// First, we assume its heliocentric position does not change with time.
-		// Second, we assume its heliocentric position has already been corrected
-		// for light-travel time, its coordinates given as it appears on Earth at the present.
-		// Therefore, no backdating is applied.
-		const tvec = HelioVector(targetBody, time);
-		if (aberration) {
-			// (Observer velocity) - (light vector) = (Aberration-corrected direction to target body).
-			// Note that this is an approximation, because technically the light vector should
-			// be measured in barycentric coordinates, not heliocentric. The error is very small.
-			const ostate = HelioState(observerBody, time);
-			const rvec = new Vector(tvec.x - ostate.x, tvec.y - ostate.y, tvec.z - ostate.z, time);
-			const s = C_AUDAY / rvec.Length(); // conversion factor from relative distance to speed of light
-			return new Vector(
-				rvec.x + ostate.vx / s,
-				rvec.y + ostate.vy / s,
-				rvec.z + ostate.vz / s,
-				time
-			);
-		}
-		// No correction is needed. Simply return the star's current position as seen from the observer.
-		const ovec = HelioVector(observerBody, time);
-		return new Vector(tvec.x - ovec.x, tvec.y - ovec.y, tvec.z - ovec.z, time);
-	}
 	let observerPos: Vector;
 	if (aberration) {
 		// With aberration, `BackdatePosition` will calculate `observerPos` at different times.
@@ -4764,40 +4075,9 @@ export function BaryState(body: Body, date: FlexibleDateTime): StateVector {
 export function HelioState(body: Body, date: FlexibleDateTime): StateVector {
 	const time = MakeTime(date);
 	switch (body) {
-		case Body.Sun:
-			// Trivial case: the Sun is the origin of the heliocentric frame.
-			return new StateVector(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, time);
-
-		case Body.SSB:
-			// Calculate the barycentric Sun. Then the negative of that is the heliocentric SSB.
-			const bary = new major_bodies_t(time.tt);
-			return new StateVector(
-				-bary.Sun.r.x,
-				-bary.Sun.r.y,
-				-bary.Sun.r.z,
-				-bary.Sun.v.x,
-				-bary.Sun.v.y,
-				-bary.Sun.v.z,
-				time
-			);
-
-		case Body.Mercury:
-		case Body.Venus:
-		case Body.Earth:
-		case Body.Mars:
-		case Body.Jupiter:
-		case Body.Saturn:
-		case Body.Uranus:
-		case Body.Neptune:
-			// Planets included in the VSOP87 model.
-			const planet = CalcVsopPosVel(vsop[body], time.tt);
-			return ExportState(planet, time);
-
-		case Body.Pluto:
-			return CalcPluto(time, true);
-
 		case Body.Moon:
 		case Body.EMB:
+		default:
 			const earth = CalcVsopPosVel(vsop.Earth, time.tt);
 			const state = body == Body.Moon ? GeoMoonState(time) : GeoEmbState(time);
 			return new StateVector(
@@ -4809,13 +4089,6 @@ export function HelioState(body: Body, date: FlexibleDateTime): StateVector {
 				state.vz + earth.v.z,
 				time
 			);
-
-		default:
-			if (UserDefinedStar(body)) {
-				const vec = HelioVector(body, time);
-				return new StateVector(vec.x, vec.y, vec.z, 0, 0, 0, time);
-			}
-			throw `HelioState: Unsupported body "${body}"`;
 	}
 }
 
@@ -5091,13 +4364,13 @@ export function SearchSunLongitude(
 	limitDays: number
 ): AstroTime | null {
 	function sun_offset(t: AstroTime): number {
-		let pos = SunPosition(t);
+		const pos = SunPosition(t);
 		return LongitudeOffset(pos.elon - targetLon);
 	}
 	VerifyNumber(targetLon);
 	VerifyNumber(limitDays);
-	let t1 = MakeTime(dateStart);
-	let t2 = t1.AddDays(limitDays);
+	const t1 = MakeTime(dateStart);
+	const t2 = t1.AddDays(limitDays);
 	return Search(sun_offset, t1, t2, { dt_tolerance_seconds: 0.01 });
 }
 
@@ -5286,13 +4559,13 @@ function SaturnMagnitude(
 
 function MoonMagnitude(phase: number, helio_dist: number, geo_dist: number): number {
 	// https://astronomy.stackexchange.com/questions/10246/is-there-a-simple-analytical-formula-for-the-lunar-phase-brightness-curve
-	let rad = phase * DEG2RAD;
-	let rad2 = rad * rad;
-	let rad4 = rad2 * rad2;
+	const rad = phase * DEG2RAD;
+	const rad2 = rad * rad;
+	const rad4 = rad2 * rad2;
 	let mag = -12.717 + 1.49 * Math.abs(rad) + 0.0431 * rad4;
 
 	const moon_mean_distance_au = 385000.6 / KM_PER_AU;
-	let geo_au = geo_dist / moon_mean_distance_au;
+	const geo_au = geo_dist / moon_mean_distance_au;
 	mag += 5 * Math.log10(helio_dist * geo_au);
 	return mag;
 }
@@ -5410,8 +4683,8 @@ export function Illumination(body: Body, date: FlexibleDateTime): IlluminationIn
 		phase = AngleBetween(gc, hc);
 	}
 
-	let geo_dist = gc.Length(); // distance from body to center of Earth
-	let helio_dist = hc.Length(); // distance from body to center of Sun
+	const geo_dist = gc.Length(); // distance from body to center of Earth
+	const helio_dist = hc.Length(); // distance from body to center of Sun
 	let ring_tilt; // only reported for Saturn
 
 	if (body === Body.Sun) {
@@ -5439,7 +4712,7 @@ function SynodicPeriod(body: Body): number {
 	// The synodic period of a planet is how long it takes between consecutive oppositions
 	// or conjunctions, on average.
 
-	let planet = Planet[body];
+	const planet = Planet[body];
 	if (!planet) throw `Not a valid planet name: ${body}`;
 
 	// See here for explanation of the formula:
@@ -5514,11 +4787,11 @@ export function SearchRelativeLongitude(
 	for (let iter = 0; iter < 100; ++iter) {
 		// Estimate how many days in the future (positive) or past (negative)
 		// we have to go to get closer to the target relative longitude.
-		let day_adjust = (-error_angle / 360) * syn;
+		const day_adjust = (-error_angle / 360) * syn;
 		time = time.AddDays(day_adjust);
 		if (Math.abs(day_adjust) * SECONDS_PER_DAY < 1) return time;
 
-		let prev_angle = error_angle;
+		const prev_angle = error_angle;
 		error_angle = offset(time);
 
 		if (Math.abs(prev_angle) < 30) {
@@ -5526,7 +4799,7 @@ export function SearchRelativeLongitude(
 			// by adjusting the synodic period to more closely match the
 			// variable speed of both planets in this part of their respective orbits.
 			if (prev_angle !== error_angle) {
-				let ratio = prev_angle / (prev_angle - error_angle);
+				const ratio = prev_angle / (prev_angle - error_angle);
 				if (ratio > 0.5 && ratio < 2.0) syn *= ratio;
 			}
 		}
@@ -5597,7 +4870,7 @@ export function SearchMoonPhase(
 	limitDays: number
 ): AstroTime | null {
 	function moon_offset(t: AstroTime): number {
-		let mlon: number = MoonPhase(t);
+		const mlon: number = MoonPhase(t);
 		return LongitudeOffset(mlon - targetLon);
 	}
 
@@ -5671,10 +4944,10 @@ export class MoonQuarter {
  */
 export function SearchMoonQuarter(dateStart: FlexibleDateTime): MoonQuarter {
 	// Determine what the next quarter phase will be.
-	let phaseStart = MoonPhase(dateStart);
-	let quarterStart = Math.floor(phaseStart / 90);
-	let quarter = (quarterStart + 1) % 4;
-	let time = SearchMoonPhase(90 * quarter, dateStart, 10);
+	const phaseStart = MoonPhase(dateStart);
+	const quarterStart = Math.floor(phaseStart / 90);
+	const quarter = (quarterStart + 1) % 4;
+	const time = SearchMoonPhase(90 * quarter, dateStart, 10);
 	if (!time) throw 'Cannot find moon quarter';
 	return new MoonQuarter(quarter, time);
 }
@@ -5695,6 +4968,6 @@ export function NextMoonQuarter(mq: MoonQuarter): MoonQuarter {
 	// Skip 6 days past the previous found moon quarter to find the next one.
 	// This is less than the minimum possible increment.
 	// So far I have seen the interval well contained by the range (6.5, 8.3) days.
-	let date = new Date(mq.time.date.getTime() + 6 * MILLIS_PER_DAY);
+	const date = new Date(mq.time.date.getTime() + 6 * MILLIS_PER_DAY);
 	return SearchMoonQuarter(date);
 }
