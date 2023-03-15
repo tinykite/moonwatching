@@ -31,7 +31,7 @@
 <Nav />
 <!-- According to best practices, a page should only have one global aria-live region.  -->
 <main aria-live="polite" class="moonContainer">
-	<MoonPhase phase={data.moonPhase} />
+	<MoonPhase phase={data.moonPhase.phase} />
 	<h2 class="alert-header">Receive Updates on the New and Full Moon</h2>
 
 	{#if form?.success}

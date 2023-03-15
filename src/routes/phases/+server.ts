@@ -9,6 +9,7 @@ type majorPhase = 'Full Moon' | 'Last Quarter' | 'First Quarter' | 'New Moon';
 interface Moon {
 	phase: majorPhase;
 	date: string;
+	ecliptic_longitude: number;
 }
 
 // Dummy data for testing
@@ -23,13 +24,27 @@ const testMoonData = {
 const getMinorPhase = (phase: majorPhase) => {
 	switch (phase) {
 		case 'Full Moon':
-			return 'Waxing Gibbous';
+			return {
+				phase: 'Waxing Gibbous',
+				ecliptic_longitude: 135 // Ecliptic longitude is a value in the range [0, 360]
+				// The values returned here are estimated medians, and are not intended to be used for precise calculations.
+				// TODO: Verify this against astronomy calculations for real dates
+			};
 		case 'Last Quarter':
-			return 'Waning Gibbous';
+			return {
+				phase: 'Waning Gibbous',
+				ecliptic_longitude: 225
+			};
 		case 'First Quarter':
-			return 'Waxing Crescent';
+			return {
+				phase: 'Waxing Crescent',
+				ecliptic_longitude: 45
+			};
 		case 'New Moon':
-			return 'Waning Crescent';
+			return {
+				phase: 'Waning Crescent',
+				ecliptic_longitude: 315
+			};
 	}
 };
 
@@ -69,7 +84,6 @@ const getNearestMoon = ({
 export const GET = (async ({ url, fetch }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const cronRequest = searchParams.has('scheduledFunction');
-	const allPhases = searchParams.has('allPhases');
 
 	const functionTriggers = ['Full Moon', 'New Moon'];
 
@@ -77,16 +91,11 @@ export const GET = (async ({ url, fetch }) => {
 	const startRange = format(currentDate, 'yyyy-MM-dd');
 	const endRange = format(addDays(currentDate, 8), 'yyyy-MM-dd');
 
-	if (allPhases) {
-		const { data: allMoonData } = await supabase.from('phases').select('*');
-		return json(allMoonData);
-	}
-
 	// If current day is a major moon phase,
 	// return that phase directly
 	const { data: moonData } = await supabase
 		.from('phases')
-		.select('phase, date, time, time_format')
+		.select('phase, date, time, time_format, ecliptic_longitude')
 		.eq('date', startRange)
 		.single();
 
@@ -113,14 +122,14 @@ export const GET = (async ({ url, fetch }) => {
 
 		return json(alertRes);
 	} else if (moonData) {
-		return json(moonData.phase);
+		return json(moonData);
 	}
 
 	// If current day is between major phases,
 	// query the database for the next major moon phase
 	const { data: nextMoon } = await supabase
 		.from('phases')
-		.select('phase, date')
+		.select('phase, date, ecliptic_longitude')
 		.lt('date', endRange)
 		.gt('date', startRange);
 
