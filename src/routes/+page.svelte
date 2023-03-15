@@ -9,6 +9,8 @@
 	import { interpolate } from '$lib/math-utils';
 	import Color from 'colorjs.io';
 	import { backgroundColor } from '$lib/stores';
+	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	type Form = {
 		email?: string;
@@ -39,12 +41,22 @@
 	const color = new Color('#001D4A');
 	color.lch.l *= backgroundOffset;
 	backgroundColor.set(color.toString({ format: 'hex' }));
+
+	onMount(() => {
+		const unsubscribe = backgroundColor.subscribe((value) => {
+			document.body.style.backgroundColor = value;
+		});
+
+		onDestroy(unsubscribe);
+	});
 </script>
 
 <Nav />
 <!-- According to best practices, a page should only have one global aria-live region.  -->
 <main aria-live="polite" class="moonContainer">
 	<MoonPhase phase={data.moonPhase.phase} />
+
+	{$backgroundColor}
 	<h2 class="alert-header">Receive Updates on the New and Full Moon</h2>
 
 	{#if form?.success}
