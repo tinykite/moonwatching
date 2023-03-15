@@ -6,6 +6,9 @@
 	import { enhance, applyAction } from '$app/forms';
 	import { page } from '$app/stores';
 	import classNames from 'classnames';
+	import { interpolate } from '$lib/math-utils';
+	import Color from 'colorjs.io';
+	import { backgroundColor } from '$lib/stores';
 
 	type Form = {
 		email?: string;
@@ -26,6 +29,16 @@
 	$: status = $page?.form?.status;
 
 	export let data: PageData;
+
+	let eclipticDomain = data.moonPhase.ecliptic_longitude > 180 ? [181, 360] : [0, 180];
+	const backgroundOffset = interpolate({
+		domain: eclipticDomain,
+		range: [0, 1],
+		value: data.moonPhase.ecliptic_longitude
+	});
+	const color = new Color('#001D4A');
+	color.lch.l *= backgroundOffset;
+	backgroundColor.set(color.toString({ format: 'hex' }));
 </script>
 
 <Nav />

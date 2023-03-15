@@ -43,7 +43,9 @@ body {
 	margin: 0;
 	padding: 0;
 	color: white;
-	background: black;
+	background: #000916;
+	transition: background-color 3s ease;
+	transition-delay: 3s;
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	color-scheme: dark; /* https://web.dev/color-scheme/ */
 	line-height: 1.5;
