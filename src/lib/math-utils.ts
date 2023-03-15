@@ -1,4 +1,4 @@
-interface lerpOptions {
+interface interpolateProps {
 	domain: number[];
 	range: number[];
 	value: number;
@@ -8,7 +8,7 @@ interface lerpOptions {
 // For example, lerp(0, 100, 0.5) would return 50
 // This function tackles the more general use case for linear interpolation, which calculates the equivalent value between two ranges
 // For example, lerp({ domain: [0, 100], range: [0, 200], value: 50 }) would return 100
-export const interpolate = ({ domain, range, value }: lerpOptions): number => {
+export const interpolate = ({ domain, range, value }: interpolateProps): number => {
 	const [x1, x2] = domain;
 	const [y1, y2] = range;
 
