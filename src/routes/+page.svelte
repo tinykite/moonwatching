@@ -9,8 +9,8 @@
 	import { interpolate } from '$lib/math-utils';
 	import Color from 'colorjs.io';
 	import { backgroundColor } from '$lib/stores';
-	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
+	import { browser } from '$app/environment';
 
 	type Form = {
 		email?: string;
@@ -42,20 +42,20 @@
 	color.lch.l *= backgroundOffset;
 	backgroundColor.set(color.toString({ format: 'hex' }));
 
-	onMount(() => {
-		const unsubscribe = backgroundColor.subscribe((value) => {
+	const unsubscribe = backgroundColor.subscribe((value) => {
+		if (browser) {
 			document.body.style.backgroundColor = value;
-		});
-
-		onDestroy(unsubscribe);
+		}
 	});
+
+	onDestroy(unsubscribe);
 </script>
 
 <Nav />
 <!-- According to best practices, a page should only have one global aria-live region.  -->
 <main aria-live="polite" class="moonContainer">
 	<MoonPhase phase={data.moonPhase.phase} />
-	<h2 class="alert-header">Receive Updates on the New and Full Moon</h2>
+	<h2 class="alert-header">Get Email Alerts on the New and Full Moon</h2>
 
 	{#if form?.success}
 		<p class="successMessage">{form?.success}</p>
@@ -113,9 +113,10 @@
 	}
 
 	.alert-header {
-		font-size: 1.25rem;
+		font-size: 1rem;
 		margin: 3rem 0 0;
 		text-align: center;
+		color: #e4edff;
 	}
 
 	.main {
@@ -129,15 +130,17 @@
 		grid-row-gap: 0.5rem;
 		grid-template-columns: 1fr 5rem;
 		width: 100%;
-		margin: 2rem auto 0;
+		margin-top: 1rem;
 	}
 
 	.input {
-		border: 1px solid #777;
+		border: 1px solid #888888;
 		border-radius: 0.25rem;
-		font-size: 1rem;
+		font-size: 0.75rem;
 		height: 2.5rem;
 		padding: 0 0.5rem;
+		background-color: #0f1f38;
+		color: #e4edff;
 	}
 
 	.input-group {
@@ -185,8 +188,9 @@
 	}
 
 	.label {
-		font-size: 1rem;
+		font-size: 0.75rem;
 		grid-row: 1;
+		color: #e4edff;
 	}
 
 	.errorMessage {
@@ -205,6 +209,10 @@
 		text-align: center;
 	}
 
+	button {
+		background-color: none;
+	}
+
 	.button {
 		display: flex;
 		align-items: center;
@@ -213,8 +221,9 @@
 		cursor: pointer;
 		border-radius: 0.25rem;
 		border: none;
-		border: 1px solid #777;
-		color: white;
+		border: 1px solid #888888;
+		background: #0f1f38;
+		color: #e4edff;
 		width: 100%;
 		position: relative;
 		grid-row: 2;
