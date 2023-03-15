@@ -3,7 +3,6 @@ import { addDays, closestTo, format } from 'date-fns';
 import { supabase } from '$lib/supabaseClient';
 import type { RequestHandler } from './$types';
 import { ALERT_KEY } from '$env/static/private';
-import { supabasePrivate } from '$lib/supabaseClient';
 
 type majorPhase = 'Full Moon' | 'Last Quarter' | 'First Quarter' | 'New Moon';
 interface Moon {
@@ -11,13 +10,6 @@ interface Moon {
 	date: string;
 	ecliptic_longitude: number;
 }
-
-// Dummy data for testing
-const testMoonData = {
-	phase: 'Fictious New Moon',
-	time: '08:39:00',
-	time_format: 'PST'
-};
 
 // Calculate current minor phase based on the next major phase
 // Moon phases in order: https://moon.nasa.gov/moon-in-motion/moon-phases/
