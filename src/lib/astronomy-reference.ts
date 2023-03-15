@@ -34,6 +34,9 @@
  * @license MIT
  */
 
+// MOONWATCHING NOTE: There are many eslint linting errors in this file that are slowly being fixed.
+// For performance reasons, this file also includes only a subset of the full astronomy library, none of currently which exist in sub-packages for code-splitting.
+
 export type FlexibleDateTime = Date | number | AstroTime;
 
 /**
