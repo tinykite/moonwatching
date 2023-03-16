@@ -1,8 +1,8 @@
 @font-face {
-	font-family: 'Vulf Mono';
-	src: url('/fonts/Vulf_Mono-Bold_web.woff2') format('woff2'),
-		url('/fonts/Vulf_Mono-Bold_web.woff') format('woff');
-	font-weight: 700;
+	font-family: 'Vulf Mono Light';
+	src: url('/fonts/Vulf_Mono-Light_web.woff2') format('woff2'),
+		url('/fonts/Vulf_Mono-Light_web-Web.woff') format('woff');
+	font-weight: 100;
 	font-style: normal;
 }
 
@@ -10,7 +10,7 @@
 	font-family: 'Vulf Mono';
 	src: url('/fonts/Vulf_Mono-Regular_web.woff2') format('woff2'),
 		url('/fonts/Vulf_Mono-Regular_web-Web.woff') format('woff');
-	font-weight: 500;
+	font-weight: 100;
 	font-style: normal;
 }
 
@@ -20,6 +20,14 @@
 		url('/fonts/Vulf_Mono-Italic_web.woff') format('woff');
 	font-weight: 500;
 	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Vulf Mono';
+	src: url('/fonts/Vulf_Mono-Bold_web.woff2') format('woff2'),
+		url('/fonts/Vulf_Mono-Bold_web.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
 }
 
 @font-face {

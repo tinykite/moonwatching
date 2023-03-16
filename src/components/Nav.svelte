@@ -18,6 +18,8 @@
 		margin-top: 3rem;
 		align-items: center;
 		color: #e4edff;
+		font-family: 'Vulf Mono';
+		font-weight: 500;
 	}
 
 	.nav__list {
@@ -28,8 +30,6 @@
 	}
 
 	.nav__list a {
-		font-family: 'Vulf Mono';
-		font-weight: 500;
 		color: inherit;
 		text-decoration: none;
 	}
