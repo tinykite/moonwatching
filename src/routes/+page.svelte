@@ -11,6 +11,7 @@
 	import { backgroundColor } from '$lib/stores';
 	import { onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
+	import { format } from 'date-fns';
 
 	type Form = {
 		email?: string;
@@ -31,6 +32,8 @@
 	$: status = $page?.form?.status;
 
 	export let data: PageData;
+
+	const formattedDate = format(new Date(data.moonPhase.date), 'MMMM do, yyyy');
 
 	let eclipticDomain = data.moonPhase.ecliptic_longitude > 180 ? [181, 360] : [0, 180];
 	const backgroundOffset = interpolate({
@@ -55,6 +58,9 @@
 <!-- According to best practices, a page should only have one global aria-live region.  -->
 <main aria-live="polite" class="moonContainer">
 	<MoonPhase phase={data.moonPhase.phase} />
+	<p class="date">
+		{formattedDate}
+	</p>
 	<h2 class="alert-header">Get Email Alerts on the New and Full Moon</h2>
 
 	{#if form?.success}
@@ -110,6 +116,15 @@
 		margin: 15vh auto 2rem;
 		align-items: center;
 		justify-content: center;
+	}
+
+	.date {
+		margin-top: 6.5rem;
+		text-align: center;
+		font-family: 'Vulf Mono';
+		font-size: 1.25rem;
+		font-weight: 700;
+		color: #e4edff;
 	}
 
 	.alert-header {

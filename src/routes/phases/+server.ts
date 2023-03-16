@@ -137,5 +137,5 @@ export const GET = (async ({ url, fetch }) => {
 
 	const minorPhase = getMinorPhase(nearestMoon.phase);
 
-	return json(minorPhase);
+	return json({ ...minorPhase, date: currentDate });
 }) satisfies RequestHandler;
