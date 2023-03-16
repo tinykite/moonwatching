@@ -16,7 +16,13 @@
 		align-items: center;
 	}
 
-	@media (min-width: 1440px) {
+	@media (min-width: 64.25rem) {
+		.illustrationWrapper {
+			width: 450px;
+		}
+	}
+
+	@media (min-width: 90rem) {
 		.illustrationWrapper {
 			width: 25vw;
 		}
