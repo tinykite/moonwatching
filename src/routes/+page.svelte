@@ -61,53 +61,55 @@
 	<p class="date">
 		{formattedDate}
 	</p>
-	<h2 class="alert-header">Get Email Alerts on the New and Full Moon</h2>
+	<div class="form">
+		<h2 class="alert-header">New and Full Moon Email Alerts</h2>
 
-	{#if form?.success}
-		<p class="successMessage">{form?.success}</p>
-	{:else}
-		<form
-			class="form"
-			id="alertForm"
-			method="POST"
-			use:enhance={() => {
-				status = 'loading';
-				return async ({ update, result }) => {
-					await update();
+		{#if form?.success}
+			<p class="successMessage">{form?.success}</p>
+		{:else}
+			<form
+				class="form"
+				id="alertForm"
+				method="POST"
+				use:enhance={() => {
+					status = 'loading';
+					return async ({ update, result }) => {
+						await update();
 
-					if (result.type === 'error') {
-						await applyAction(result);
-					}
-				};
-			}}
-		>
-			<label class="label" for="email">Email address</label>
-			<div class="input-group">
-				<input
-					id="email"
-					name="email"
-					type="email"
-					value={form?.email ?? ''}
-					class={classNames('input', { 'input--invalid': error })}
-				/>
+						if (result.type === 'error') {
+							await applyAction(result);
+						}
+					};
+				}}
+			>
+				<label class="label" for="email">Email address</label>
+				<div class="input-group">
+					<input
+						id="email"
+						name="email"
+						type="email"
+						value={form?.email ?? ''}
+						class={classNames('input', { 'input--invalid': error })}
+					/>
 
-				<p class={classNames('errorMessage', { 'errorMessage--visible': error })}>
-					{error ?? error}
-				</p>
-			</div>
+					<p class={classNames('errorMessage', { 'errorMessage--visible': error })}>
+						{error ?? error}
+					</p>
+				</div>
 
-			<button class="button">
-				{#if status === 'loading'}
-					<span class="sr-only">Loading</span>
-					<div class="dot" />
-					<div class="dot" />
-					<div class="dot" />
-				{:else}
-					Submit
-				{/if}
-			</button>
-		</form>
-	{/if}
+				<button class="button">
+					{#if status === 'loading'}
+						<span class="sr-only">Loading</span>
+						<div class="dot" />
+						<div class="dot" />
+						<div class="dot" />
+					{:else}
+						Submit
+					{/if}
+				</button>
+			</form>
+		{/if}
+	</div>
 </main>
 
 <style>
@@ -129,13 +131,17 @@
 
 	.alert-header {
 		font-size: 1rem;
-		margin: 3rem 0 0;
+		font-family: 'Vulf Mono';
+		font-weight: 500;
+		font-style: normal;
+		margin-top: 3rem;
 		text-align: center;
 		color: #e4edff;
 	}
 
-	.main {
-		max-width: 80%;
+	.form {
+		max-width: 40ch;
+		margin: 0 auto;
 	}
 
 	form {
@@ -145,7 +151,6 @@
 		grid-row-gap: 0.5rem;
 		grid-template-columns: 1fr 5rem;
 		width: 100%;
-		margin-top: 1rem;
 	}
 
 	.input {
@@ -204,8 +209,10 @@
 
 	.label {
 		font-size: 0.75rem;
+		font-family: 'Vulf Sans';
 		grid-row: 1;
 		color: #e4edff;
+		margin-top: 1rem;
 	}
 
 	.errorMessage {
@@ -224,15 +231,11 @@
 		text-align: center;
 	}
 
-	button {
-		background-color: none;
-	}
-
 	.button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 1rem;
+		font-size: 0.75rem;
 		cursor: pointer;
 		border-radius: 0.25rem;
 		border: none;

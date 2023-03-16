@@ -22,6 +22,14 @@
 	font-style: italic;
 }
 
+@font-face {
+	font-family: 'Vulf Sans';
+	src: url('/fonts/Vulf_Sans-Regular.woff2') format('woff2'),
+		url('/fonts/Vulf_Sans-Regular.woff') format('woff');
+	font-weight: 500;
+	font-style: normal;
+}
+
 /* https://www.joshwcomeau.com/css/custom-css-reset/ */
 
 /*
@@ -46,7 +54,7 @@ body {
 	background: #000916;
 	transition: background-color 3s ease;
 	transition-delay: 3s;
-	font-family: Avenir, Helvetica, Arial, sans-serif;
+	font-family: 'Volf Mono', monospace;
 	color-scheme: dark; /* https://web.dev/color-scheme/ */
 	line-height: 1.5;
 	/* A bit controversial  */
