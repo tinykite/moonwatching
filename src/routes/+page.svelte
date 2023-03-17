@@ -115,18 +115,30 @@
 <style>
 	.moonContainer {
 		display: grid;
-		margin: 15vh auto 2rem;
+		margin: 8vh auto 0;
 		align-items: center;
 		justify-content: center;
 	}
 
+	@media (min-width: 1440px) {
+		.moonContainer {
+			margin: 15vh auto 2rem;
+		}
+	}
+
 	.date {
-		margin-top: 6.5rem;
+		margin-top: 8vh;
 		text-align: center;
 		font-family: 'Vulf Mono';
 		font-size: 1.25rem;
 		font-weight: 700;
 		color: #e4edff;
+	}
+
+	@media (min-width: 1440px) {
+		.date {
+			margin-top: 6.5rem;
+		}
 	}
 
 	.alert-header {
