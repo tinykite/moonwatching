@@ -36,9 +36,10 @@
 	const formattedDate = format(new Date(data.moonPhase.date), 'MMMM do, yyyy');
 
 	let eclipticDomain = data.moonPhase.ecliptic_longitude > 180 ? [181, 360] : [0, 180];
+	const lightnessRange = data.moonPhase.ecliptic_longitude > 180 ? [1, 0] : [0, 1];
 	const backgroundOffset = interpolate({
 		domain: eclipticDomain,
-		range: [0, 1],
+		range: lightnessRange,
 		value: data.moonPhase.ecliptic_longitude
 	});
 	const color = new Color('#001D4A');
