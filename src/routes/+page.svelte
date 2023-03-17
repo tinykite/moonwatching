@@ -46,13 +46,9 @@
 	color.lch.l *= backgroundOffset;
 	backgroundColor.set(color.toString({ format: 'hex' }));
 
-	const unsubscribe = backgroundColor.subscribe((value) => {
-		if (browser) {
-			document.body.style.backgroundColor = value;
-		}
-	});
-
-	onDestroy(unsubscribe);
+	$: if (browser) {
+		document.body.style.backgroundColor = $backgroundColor;
+	}
 </script>
 
 <Nav />
