@@ -14,3 +14,13 @@ export const interpolate = ({ domain, range, value }: interpolateProps): number 
 
 	return y1 + ((y2 - y1) / (x2 - x1)) * (value - x1);
 };
+
+export const getBackgroundColorScales = (ecliptic: number) => {
+	const isWaxing = ecliptic > 180;
+	const eclipticDomain = isWaxing ? [181, 360] : [0, 180];
+	const lightnessRange = isWaxing ? [1, 0] : [0, 1];
+	return {
+		eclipticDomain,
+		lightnessRange
+	};
+};

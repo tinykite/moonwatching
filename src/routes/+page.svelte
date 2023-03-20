@@ -6,12 +6,12 @@
 	import { enhance, applyAction } from '$app/forms';
 	import { page } from '$app/stores';
 	import classNames from 'classnames';
-	import { interpolate } from '$lib/math-utils';
+	import { getBackgroundColorScales, interpolate } from '$lib/math-utils';
 	import Color from 'colorjs.io';
 	import { backgroundColor } from '$lib/stores';
-	import { onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
-	import { format } from 'date-fns';
+	import DateInput from '../components/DateInput.svelte';
+	import CurrentDate from '../components/CurrentDate.svelte';
 
 	type Form = {
 		email?: string;
@@ -33,10 +33,10 @@
 
 	export let data: PageData;
 
-	const formattedDate = format(new Date(data.moonPhase.date), 'MMMM do, yyyy');
+	const { eclipticDomain, lightnessRange } = getBackgroundColorScales(
+		data.moonPhase.ecliptic_longitude
+	);
 
-	let eclipticDomain = data.moonPhase.ecliptic_longitude > 180 ? [181, 360] : [0, 180];
-	const lightnessRange = data.moonPhase.ecliptic_longitude > 180 ? [1, 0] : [0, 1];
 	const backgroundOffset = interpolate({
 		domain: eclipticDomain,
 		range: lightnessRange,
@@ -55,9 +55,11 @@
 <!-- According to best practices, a page should only have one global aria-live region.  -->
 <main aria-live="polite" class="moonContainer">
 	<MoonPhase phase={data.moonPhase.phase} />
-	<p class="date">
-		{formattedDate}
-	</p>
+	<div class="dateContainer">
+		<CurrentDate currentDate={data.moonPhase.date} />
+		<DateInput />
+	</div>
+
 	<div class="form">
 		<h2 class="alert-header">New and Full Moon Email Alerts</h2>
 
@@ -123,17 +125,12 @@
 		}
 	}
 
-	.date {
-		margin-top: 8vh;
-		text-align: center;
-		font-family: 'Vulf Mono';
-		font-size: 1.25rem;
-		font-weight: 700;
-		color: #e4edff;
+	.dateContainer {
+		margin-top: 3rem;
 	}
 
-	@media (min-width: 1440px) {
-		.date {
+	@media (min-width: 1441px) {
+		.dateContainer {
 			margin-top: 6.5rem;
 		}
 	}
@@ -170,6 +167,11 @@
 		padding: 0 0.5rem;
 		background-color: #0f1f38;
 		color: #e4edff;
+	}
+
+	.input:focus {
+		outline: #86c2f6 solid 1px;
+		border: 1px solid #86c2f6;
 	}
 
 	.input-group {
