@@ -46,6 +46,7 @@
 	color.lch.l *= backgroundOffset;
 	backgroundColor.set(color.toString({ format: 'hex' }));
 
+	// TODO: For performance, rewrite this to animate the opacity of a background color, rather than animating between two colors.
 	$: if (browser) {
 		document.body.style.backgroundColor = $backgroundColor;
 	}
