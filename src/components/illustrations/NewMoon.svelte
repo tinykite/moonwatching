@@ -27,7 +27,6 @@
 <style>
 	.newMoon {
 		position: relative;
-		margin-top: 3rem;
 	}
 	@media (min-width: 1440px) {
 		.newMoon::before {

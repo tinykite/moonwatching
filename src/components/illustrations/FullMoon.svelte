@@ -38,7 +38,6 @@
 <style>
 	.fullMoon {
 		position: relative;
-		margin-top: 2rem;
 	}
 	@media (min-width: 1440px) {
 		.fullMoon::before {
