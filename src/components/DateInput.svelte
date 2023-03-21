@@ -1,54 +1,130 @@
 <script lang="ts">
 	import { indeterminateDate } from '$lib/stores';
 	import { fade } from 'svelte/transition';
+	import * as astronomy from '$lib/astronomy-reference';
+	import { format } from 'date-fns';
+	import { phase } from '$lib/stores';
 
-	let dateForm: HTMLElement | null;
+	// let dateForm: HTMLElement | null;
 	let dateInput: HTMLInputElement | null;
 	let userDate: string;
 
-	// if (browser) {
-	// 	dateForm = document.querySelector('.custom-date-lookup');
-	// }
+	const validDateFormat = /^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$/;
 
-	// const unsubscribe = indeterminateDate.subscribe((value) => {
-	// 	if (!dateForm) return;
+	const getCurrentQuarter = (quarter: number) => {
+		if (quarter === 0) {
+			return 'New Moon';
+		}
 
-	// 	dateForm.hidden = $indeterminateDate;
-	// 	dateForm.style.opacity = $indeterminateDate ? '1' : '0';
-	// });
+		if (quarter === 1) {
+			return 'First Quarter';
+		}
 
-	// onDestroy(unsubscribe);
+		if (quarter === 2) {
+			return 'Full Moon';
+		}
+
+		if (quarter === 3) {
+			return 'Third Quarter';
+		}
+	};
+
+	const getPreviousQuarter = (quarter: number) => {
+		if (quarter === 0) {
+			return 'Waning Crescent';
+		}
+
+		if (quarter === 1) {
+			return 'Waxing Crescent';
+		}
+
+		if (quarter === 2) {
+			return 'Waxing Gibbous';
+		}
+
+		if (quarter === 3) {
+			return 'Waning Gibbous';
+		}
+	};
+
+	const calculatePhase = ({ nextQuarter, date }: { nextQuarter: any; date: any }) => {
+		const { quarter, time } = nextQuarter;
+
+		const nextQuarterDate = format(time.date, 'MM/dd/yyyy');
+		const currentDate = format(date, 'MM/dd/yyyy');
+
+		console.log(nextQuarter);
+
+		// If the next quarter is the same day as the current date, return the current quarter
+		if (nextQuarterDate === currentDate) {
+			return getCurrentQuarter(quarter);
+		}
+
+		return getPreviousQuarter(quarter);
+	};
+
+	const onSubmit = (e: Event) => {
+		e.preventDefault();
+
+		if (validDateFormat.test(userDate)) {
+			const date = new Date(userDate);
+
+			const nextQuarter = astronomy.SearchMoonQuarter(date);
+			const newPhase = calculatePhase({ nextQuarter, date });
+
+			console.log(newPhase);
+
+			phase.set(newPhase);
+		} else console.log('invalid date');
+	};
 </script>
 
 {#if $indeterminateDate}
-	<form class="custom-date-lookup" transition:fade>
-		<label for="date" class="custom-date-lookup__label">Date (MM/DD/YYYY)</label>
-		<input
-			bind:this={dateInput}
-			type="text"
-			id="date"
-			class="custom-date-lookup__input"
-			bind:value={userDate}
-		/>
+	<form
+		class="custom-date-lookup"
+		transition:fade
+		on:submit={(event) => {
+			onSubmit(event);
+		}}
+	>
+		<div class="input-group">
+			<label for="date" class="custom-date-lookup__label">Date (MM/DD/YYYY)</label>
+			<input
+				bind:this={dateInput}
+				type="text"
+				id="date"
+				class="custom-date-lookup__input"
+				bind:value={userDate}
+				required
+			/>
+		</div>
+		<button class="button">Submit</button>
 	</form>
 {/if}
 
-<!-- <form class="custom-date-lookup" hidden>
-	<label for="date" class="custom-date-lookup__label">Date (MM/DD/YYYY)</label>
-	<input
-		bind:this={dateInput}
-		type="text"
-		id="date"
-		class="custom-date-lookup__input"
-		bind:value={userDate}
-	/>
-</form> -->
 <style>
 	.custom-date-lookup {
-		width: 16rem;
 		margin: 1.5rem auto 0;
 		display: flex;
+		justify-content: center;
+	}
+
+	.input-group {
+		display: flex;
 		flex-direction: column;
+		margin-right: 1rem;
+	}
+
+	.button {
+		background: none;
+		border: 1px solid #d0d0d0;
+		font-family: 'Vulf Mono';
+		font-size: 0.875rem;
+		color: #d0d0d0;
+		text-transform: uppercase;
+		cursor: pointer;
+		align-self: flex-end;
+		padding: 0.75rem 1.5rem;
 	}
 
 	.custom-date-lookup__label {

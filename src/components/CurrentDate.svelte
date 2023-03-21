@@ -19,7 +19,7 @@
 	{formattedDate}
 </p>
 
-<!-- <button class="dateToggle" on:click={() => toggleDateInput()}>
+<button class="dateToggle" on:click={() => toggleDateInput()}>
 	<p class="dateToggle__text">Choose a different date</p>
 	<svg
 		class={'dateToggle__icon'}
@@ -35,7 +35,8 @@
 			stroke-linejoin="round"
 		/>
 	</svg>
-</button> -->
+</button>
+
 <style>
 	.date {
 		text-align: center;

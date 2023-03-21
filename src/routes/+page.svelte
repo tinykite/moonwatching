@@ -12,6 +12,7 @@
 	import { browser } from '$app/environment';
 	import DateInput from '../components/DateInput.svelte';
 	import CurrentDate from '../components/CurrentDate.svelte';
+	import { phase } from '$lib/stores';
 
 	type Form = {
 		email?: string;
@@ -32,6 +33,8 @@
 	$: status = $page?.form?.status;
 
 	export let data: PageData;
+
+	phase.set(data.moonPhase.phase);
 
 	const { eclipticDomain, lightnessRange } = getBackgroundColorScales(
 		data.moonPhase.ecliptic_longitude
@@ -55,7 +58,8 @@
 <Nav />
 <!-- According to best practices, a page should only have one global aria-live region.  -->
 <main aria-live="polite" class="moonContainer">
-	<MoonPhase phase={data.moonPhase.phase} />
+	{#if phase} <MoonPhase phase={$phase} /> {/if}
+
 	<div class="dateContainer">
 		<CurrentDate currentDate={data.moonPhase.date} />
 		<DateInput />
@@ -117,7 +121,6 @@
 		display: grid;
 		margin: 8vh auto 0;
 		align-items: center;
-		justify-content: center;
 	}
 
 	@media (min-width: 1440px) {
