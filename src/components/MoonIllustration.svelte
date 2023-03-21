@@ -22,7 +22,7 @@
 	<FullMoon />
 {:else if phase === 'Waning Gibbous'}
 	<WaningGibbous />
-{:else if phase === 'Last Quarter'}
+{:else if phase === 'Last Quarter' || phase === 'Third Quarter'}
 	<LastQuarter />
 {:else if phase === 'Waning Crescent'}
 	<WaningCrescent />
