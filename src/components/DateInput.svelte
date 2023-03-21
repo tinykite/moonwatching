@@ -53,8 +53,6 @@
 		const nextQuarterDate = format(time.date, 'MM/dd/yyyy');
 		const currentDate = format(date, 'MM/dd/yyyy');
 
-		console.log(nextQuarter);
-
 		// If the next quarter is the same day as the current date, return the current quarter
 		if (nextQuarterDate === currentDate) {
 			return getCurrentQuarter(quarter);
@@ -71,8 +69,6 @@
 
 			const nextQuarter = astronomy.SearchMoonQuarter(date);
 			const newPhase = calculatePhase({ nextQuarter, date });
-
-			console.log(newPhase);
 
 			phase.set(newPhase);
 		} else console.log('invalid date');
