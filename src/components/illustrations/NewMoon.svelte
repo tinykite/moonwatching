@@ -29,13 +29,13 @@
 		position: relative;
 		margin-top: 3rem;
 	}
-	@media (min-width: 500px) {
+	@media (min-width: 1440px) {
 		.newMoon::before {
 			content: '';
 			position: absolute;
-			top: -75px;
-			left: -70px;
-			height: 100vh;
+			top: -30%;
+			left: -23%;
+			height: 17vh;
 			bottom: 0;
 			right: 0;
 			width: auto;
