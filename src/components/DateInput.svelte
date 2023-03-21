@@ -8,6 +8,8 @@
 	// let dateForm: HTMLElement | null;
 	let dateInput: HTMLInputElement | null;
 	let userDate: string;
+	let error: boolean;
+	let errorMessage: string;
 
 	const validDateFormat = /^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$/;
 
@@ -61,17 +63,36 @@
 		return getPreviousQuarter(quarter);
 	};
 
+	const onSubmitCustomDate = () => {
+		error = false;
+		errorMessage = '';
+		const date = new Date(userDate);
+
+		if (!date) {
+			error = true;
+			errorMessage = 'Please enter a valid date';
+			return;
+		}
+
+		const nextQuarter = astronomy.SearchMoonQuarter(date);
+		const newPhase = calculatePhase({ nextQuarter, date });
+
+		phase.set(newPhase);
+	};
+
+	$: if (userDate && validDateFormat.test(userDate)) {
+		onSubmitCustomDate();
+	}
+
 	const onSubmit = (e: Event) => {
 		e.preventDefault();
 
 		if (validDateFormat.test(userDate)) {
-			const date = new Date(userDate);
-
-			const nextQuarter = astronomy.SearchMoonQuarter(date);
-			const newPhase = calculatePhase({ nextQuarter, date });
-
-			phase.set(newPhase);
-		} else console.log('invalid date');
+			onSubmitCustomDate();
+		} else {
+			error = true;
+			errorMessage = 'Please enter a date in the format MM/DD/YYYY';
+		}
 	};
 </script>
 
@@ -92,10 +113,15 @@
 				class="custom-date-lookup__input"
 				bind:value={userDate}
 				required
+				title="Please enter a date in the format MM/DD/YYYY"
+				pattern={String.raw`^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$`}
 			/>
 		</div>
-		<button class="button">Submit</button>
+		<!-- <button class="button">Submit</button> -->
 	</form>
+	{#if error}
+		<p class="custom-date-lookup__error">{errorMessage}</p>
+	{/if}
 {/if}
 
 <style>
@@ -109,6 +135,7 @@
 		display: flex;
 		flex-direction: column;
 		margin-right: 1rem;
+		/* width: 12.5rem; */
 	}
 
 	.button {
