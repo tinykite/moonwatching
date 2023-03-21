@@ -34,7 +34,7 @@
 			content: '';
 			position: absolute;
 			top: -75px;
-			left: -4px;
+			left: -70px;
 			width: 110px;
 			bottom: 0;
 			right: 0;
