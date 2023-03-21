@@ -1,4 +1,4 @@
-<svg viewBox="0 0 422 229" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 422 229" fill="none" xmlns="http://www.w3.org/2000/svg" class="illustration">
 	<path
 		d="M1.5 117.98C1.5 81.4571 30.707 51.7556 67.0387 50.958V185.002C30.707 184.205 1.5 154.503 1.5 117.98Z"
 		stroke="white"

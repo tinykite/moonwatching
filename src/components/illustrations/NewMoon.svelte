@@ -1,5 +1,5 @@
 <div class="newMoon">
-	<svg viewBox="0 0 277 225" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<svg viewBox="0 0 277 225" fill="none" xmlns="http://www.w3.org/2000/svg" class="illustration">
 		<path
 			d="M52.2397 151.605V223.489H41.4521V170.29H40.53L30.6645 184.563H23.6843L13.8188 170.597H12.7876V223.489H2V151.605H12.7876L26.2424 170.498H28.1956L41.4521 151.605H52.2397Z"
 			fill="white"
@@ -35,10 +35,10 @@
 			position: absolute;
 			top: -75px;
 			left: -70px;
-			width: 110px;
+			height: 100vh;
 			bottom: 0;
 			right: 0;
-			height: auto;
+			width: auto;
 			background: url('/images/new-moon.svg') no-repeat;
 		}
 	}
