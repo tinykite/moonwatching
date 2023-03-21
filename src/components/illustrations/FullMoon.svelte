@@ -40,16 +40,16 @@
 		position: relative;
 		margin-top: 2rem;
 	}
-	@media (min-width: 500px) {
+	@media (min-width: 1440px) {
 		.fullMoon::before {
 			content: '';
 			position: absolute;
-			top: -50px;
-			left: -4px;
-			width: 110px;
+			height: 45%;
+			width: auto;
+			top: -20%;
+			left: -21%;
 			bottom: 0;
 			right: 0;
-			height: auto;
 			background: url('/images/full-moon.svg') no-repeat;
 		}
 	}
