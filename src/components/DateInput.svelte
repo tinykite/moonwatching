@@ -115,6 +115,7 @@
 				required
 				title="Please enter a date in the format MM/DD/YYYY"
 				pattern={String.raw`^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$`}
+				maxLength={10}
 			/>
 		</div>
 		<!-- <button class="button">Submit</button> -->
