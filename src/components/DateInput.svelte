@@ -7,7 +7,6 @@
 	import { getCurrentQuarter, getPreviousQuarter } from '$lib/moon-utils';
 	import { animate } from 'motion';
 
-	// let dateForm: HTMLElement | null;
 	let dateInput: HTMLInputElement | null;
 	let userDate: string;
 	let error: boolean;

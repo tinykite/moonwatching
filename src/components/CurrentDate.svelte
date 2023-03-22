@@ -44,6 +44,10 @@
 		font-size: 1.25rem;
 		font-weight: 700;
 		color: #e4edff;
+		opacity: 0;
+		animation-name: fadeIn;
+		animation-duration: 3s;
+		animation-fill-mode: forwards;
 		transition: opacity 0.3s ease-in-out;
 	}
 
