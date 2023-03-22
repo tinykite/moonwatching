@@ -2,6 +2,8 @@
 	import { indeterminateDate } from '$lib/stores';
 	import { format } from 'date-fns';
 	export let currentDate: string;
+	import { onMount } from 'svelte';
+	import { animate } from 'motion';
 
 	const formattedDate = format(new Date(currentDate), 'MMMM do, yyyy');
 
@@ -13,6 +15,10 @@
 		dateRef.style.opacity = $indeterminateDate ? '0' : '1';
 		iconRef.style.transform = $indeterminateDate ? 'rotate(90deg)' : 'rotate(0deg)';
 	};
+
+	onMount(async () => {
+		animate('.date', { opacity: 1 }, { duration: 3 });
+	});
 </script>
 
 <p class="date" bind:this={dateRef}>
@@ -45,9 +51,6 @@
 		font-weight: 700;
 		color: #e4edff;
 		opacity: 0;
-		animation-name: fadeIn;
-		animation-duration: 3s;
-		animation-fill-mode: forwards;
 		transition: opacity 0.3s ease-in-out;
 	}
 

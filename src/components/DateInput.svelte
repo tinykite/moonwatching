@@ -102,7 +102,6 @@
 		display: flex;
 		flex-direction: column;
 		margin-right: 1rem;
-		/* width: 12.5rem; */
 	}
 
 	.custom-date-lookup__label {
