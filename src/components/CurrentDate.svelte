@@ -2,8 +2,6 @@
 	import { indeterminateDate } from '$lib/stores';
 	import { format } from 'date-fns';
 	export let currentDate: string;
-	import { onMount } from 'svelte';
-	import { animate } from 'motion';
 
 	const formattedDate = format(new Date(currentDate), 'MMMM do, yyyy');
 
@@ -12,13 +10,15 @@
 
 	const toggleDateInput = () => {
 		indeterminateDate.update((value) => !value);
+
+		// Reset the initial animation
+		// TODO: Refactor so this isn't reset every time
+		dateRef.style.animationFillMode = 'none';
+		dateRef.style.animation = 'none';
+
 		dateRef.style.opacity = $indeterminateDate ? '0' : '1';
 		iconRef.style.transform = $indeterminateDate ? 'rotate(90deg)' : 'rotate(0deg)';
 	};
-
-	onMount(async () => {
-		animate('.date', { opacity: 1 }, { duration: 3 });
-	});
 </script>
 
 <p class="date" bind:this={dateRef}>
@@ -52,6 +52,9 @@
 		color: #e4edff;
 		opacity: 0;
 		transition: opacity 0.3s ease-in-out;
+		animation-name: fadeIn;
+		animation-duration: 3s;
+		animation-fill-mode: forwards;
 	}
 
 	.dateToggle {
