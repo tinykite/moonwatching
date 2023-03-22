@@ -83,7 +83,6 @@
 				maxLength={10}
 			/>
 		</div>
-		<!-- <button class="button">Submit</button> -->
 	</form>
 	{#if error}
 		<p class="custom-date-lookup__error">{errorMessage}</p>
@@ -102,18 +101,6 @@
 		flex-direction: column;
 		margin-right: 1rem;
 		/* width: 12.5rem; */
-	}
-
-	.button {
-		background: none;
-		border: 1px solid #d0d0d0;
-		font-family: 'Vulf Mono';
-		font-size: 0.875rem;
-		color: #d0d0d0;
-		text-transform: uppercase;
-		cursor: pointer;
-		align-self: flex-end;
-		padding: 0.75rem 1.5rem;
 	}
 
 	.custom-date-lookup__label {
