@@ -14,7 +14,8 @@ import { PUBLIC_EMAIL_SERVER_PATH } from '$env/static/public';
 export const GET: RequestHandler = async ({ fetch, url }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const templateName = searchParams.get('templateName');
-	const isMoonAlert = templateName === 'MoonAlert';
+	const isMoonAlert =
+		templateName === 'MoonAlertTemplate' || templateName === 'MoonAlertBasicTemplate';
 
 	const time = isMoonAlert ? searchParams.get('time') : null;
 	const phase = isMoonAlert ? searchParams.get('phase') : null;
