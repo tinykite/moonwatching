@@ -5,6 +5,7 @@
 	import { format } from 'date-fns';
 	import { phase } from '$lib/stores';
 	import { getCurrentQuarter, getPreviousQuarter } from '$lib/moon-utils';
+	import { animate } from 'motion';
 
 	// let dateForm: HTMLElement | null;
 	let dateInput: HTMLInputElement | null;
@@ -28,7 +29,7 @@
 		return getPreviousQuarter(quarter);
 	};
 
-	const onSubmitCustomDate = () => {
+	const onSubmitCustomDate = async () => {
 		error = false;
 		errorMessage = '';
 		const date = new Date(userDate);
@@ -42,7 +43,9 @@
 		const nextQuarter = astronomy.SearchMoonQuarter(date);
 		const newPhase = calculatePhase({ nextQuarter, date });
 
+		await animate('.illustrationWrapper', { opacity: 0 }, { duration: 0.75 }).finished;
 		phase.set(newPhase);
+		animate('.illustrationWrapper', { opacity: 1 }, { duration: 0.75 });
 	};
 
 	$: if (userDate && validDateFormat.test(userDate)) {

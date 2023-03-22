@@ -59,6 +59,10 @@
 		font-size: 0.875rem;
 		color: #b6cfff;
 		margin: 0 auto;
+		opacity: 0;
+		animation-name: fadeIn;
+		animation-duration: 3s;
+		animation-fill-mode: forwards;
 	}
 
 	.dateToggle__icon {
@@ -66,9 +70,36 @@
 		height: 0.5rem;
 		display: inline;
 		transition: transform 0.3s ease-in-out;
+		animation-duration: 1s;
+		animation-name: nudge;
+		animation-delay: 3s;
 	}
 
 	.dateToggle__text {
 		margin-right: 0.5rem;
+	}
+
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@keyframes nudge {
+		0% {
+			transform: translateX(0);
+		}
+
+		50% {
+			transform: translateX(10px);
+		}
+
+		100% {
+			transform: translateX(0);
+		}
 	}
 </style>
