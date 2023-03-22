@@ -4,6 +4,7 @@
 	import * as astronomy from '$lib/astronomy-reference';
 	import { format } from 'date-fns';
 	import { phase } from '$lib/stores';
+	import { getCurrentQuarter, getPreviousQuarter } from '$lib/moon-utils';
 
 	// let dateForm: HTMLElement | null;
 	let dateInput: HTMLInputElement | null;
@@ -12,42 +13,6 @@
 	let errorMessage: string;
 
 	const validDateFormat = /^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$/;
-
-	const getCurrentQuarter = (quarter: number) => {
-		if (quarter === 0) {
-			return 'New Moon';
-		}
-
-		if (quarter === 1) {
-			return 'First Quarter';
-		}
-
-		if (quarter === 2) {
-			return 'Full Moon';
-		}
-
-		if (quarter === 3) {
-			return 'Third Quarter';
-		}
-	};
-
-	const getPreviousQuarter = (quarter: number) => {
-		if (quarter === 0) {
-			return 'Waning Crescent';
-		}
-
-		if (quarter === 1) {
-			return 'Waxing Crescent';
-		}
-
-		if (quarter === 2) {
-			return 'Waxing Gibbous';
-		}
-
-		if (quarter === 3) {
-			return 'Waning Gibbous';
-		}
-	};
 
 	const calculatePhase = ({ nextQuarter, date }: { nextQuarter: any; date: any }) => {
 		const { quarter, time } = nextQuarter;
