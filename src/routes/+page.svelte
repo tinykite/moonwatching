@@ -59,7 +59,6 @@
 <Nav />
 <!-- According to best practices, a page should only have one global aria-live region.  -->
 <main aria-live="polite" class="moonContainer">
-	<PhaseSelecter />
 	{#if phase}
 		<MoonPhase phase={$phase} />
 
