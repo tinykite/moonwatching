@@ -80,7 +80,7 @@
 		height: 0.5rem;
 		display: inline;
 		transition: transform 0.3s ease-in-out;
-		animation-duration: 1s;
+		animation-duration: 0.75s;
 		animation-name: nudge;
 		animation-delay: 3s;
 	}
@@ -105,7 +105,7 @@
 		}
 
 		50% {
-			transform: translateX(10px);
+			transform: translateX(5px);
 		}
 
 		100% {
