@@ -131,3 +131,9 @@ h6 {
 .illustration {
 	height: 38vh;
 }
+
+@media (min-width: 64rem) {
+	.illustration {
+		height: 50vh;
+	}
+}

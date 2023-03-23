@@ -13,6 +13,7 @@
 	import DateInput from '../components/DateInput.svelte';
 	import CurrentDate from '../components/CurrentDate.svelte';
 	import { phase } from '$lib/stores';
+	import PhaseSelecter from '../components/PhaseSelecter.svelte';
 
 	type Form = {
 		email?: string;
@@ -58,6 +59,7 @@
 <Nav />
 <!-- According to best practices, a page should only have one global aria-live region.  -->
 <main aria-live="polite" class="moonContainer">
+	<PhaseSelecter />
 	{#if phase}
 		<MoonPhase phase={$phase} />
 
