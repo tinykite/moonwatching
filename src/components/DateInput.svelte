@@ -2,9 +2,8 @@
 	import { indeterminateDate } from '$lib/stores';
 	import { fade } from 'svelte/transition';
 	import * as astronomy from '$lib/astronomy-reference';
-	import { format } from 'date-fns';
 	import { phase } from '$lib/stores';
-	import { getCurrentQuarter, getPreviousQuarter } from '$lib/moon-utils';
+	import { calculatePhase } from '$lib/moon-utils';
 	import { animate } from 'motion';
 
 	let dateInput: HTMLInputElement | null;
@@ -13,20 +12,6 @@
 	let errorMessage: string;
 
 	const validDateFormat = /^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$/;
-
-	const calculatePhase = ({ nextQuarter, date }: { nextQuarter: any; date: any }) => {
-		const { quarter, time } = nextQuarter;
-
-		const nextQuarterDate = format(time.date, 'MM/dd/yyyy');
-		const currentDate = format(date, 'MM/dd/yyyy');
-
-		// If the next quarter is the same day as the current date, return the current quarter
-		if (nextQuarterDate === currentDate) {
-			return getCurrentQuarter(quarter);
-		}
-
-		return getPreviousQuarter(quarter);
-	};
 
 	const onSubmitCustomDate = async () => {
 		error = false;
