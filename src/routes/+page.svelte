@@ -14,6 +14,7 @@
 	import CurrentDate from '../components/CurrentDate.svelte';
 	import { phase } from '$lib/stores';
 	import PhaseSelecter from '../components/PhaseSelecter.svelte';
+	import { animate } from 'motion';
 
 	type Form = {
 		email?: string;
@@ -50,9 +51,9 @@
 	color.lch.l *= backgroundOffset;
 	backgroundColor.set(color.toString({ format: 'hex' }));
 
-	// TODO: For performance, rewrite this to animate the opacity of a background color, rather than animating between two colors.
-	$: if (browser) {
+	$: if (browser && phase) {
 		document.body.style.backgroundColor = $backgroundColor;
+		animate('.illustrationWrapper', { opacity: 1 }, { duration: 1 });
 	}
 </script>
 
