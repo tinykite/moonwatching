@@ -61,12 +61,12 @@
 <main aria-live="polite" class="moonContainer">
 	{#if phase}
 		<MoonPhase phase={$phase} />
-
-		<div class="dateContainer">
-			<CurrentDate currentDate={data.moonPhase.date} />
-			<DateInput />
-		</div>
 	{/if}
+
+	<div class="dateContainer">
+		<CurrentDate currentDate={data.moonPhase.date} />
+		<DateInput />
+	</div>
 
 	<div class="form">
 		<h2 class="alert-header">New and Full Moon Email Alerts</h2>
