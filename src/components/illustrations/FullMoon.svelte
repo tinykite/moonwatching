@@ -55,7 +55,9 @@
 	@media (min-width: 48rem) {
 		.illustration--fullMoon {
 			position: relative;
-			left: -12%; /* Necessary to center the text of the illustration with other elements on the page */
+			right: calc(
+				100% / 5 * 0.5
+			); /* Necessary to center the text of the illustration with other elements on the page */
 		}
 	}
 </style>
