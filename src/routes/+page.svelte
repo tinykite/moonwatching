@@ -16,6 +16,7 @@
 	import { animate } from 'motion';
 	import Dialog from '../components/Dialog.svelte';
 	import type { SvelteComponent } from 'svelte';
+	import { prevent_default } from 'svelte/internal';
 
 	type Form = {
 		email?: string;
@@ -115,6 +116,9 @@
 					};
 				}}
 			>
+				<!-- Fixes an issue where hitting enter on an input dismisses the modal without waiting for client or server-side validation -->
+				<!-- This should be hidden from keyboard users and screenreaders alike -->
+				<button disabled style="display:none;" />
 				<label class="form__label form__label--light" for="email">Email address</label>
 				<div class="form__input-group">
 					<input
