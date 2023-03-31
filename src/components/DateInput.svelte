@@ -57,12 +57,12 @@
 		}}
 	>
 		<div class="input-group">
-			<label for="date" class="custom-date-lookup__label">Date (MM/DD/YYYY)</label>
+			<label for="date" class="form__label">Date (MM/DD/YYYY)</label>
 			<input
 				bind:this={dateInput}
 				type="text"
 				id="date"
-				class="custom-date-lookup__input"
+				class="form__input"
 				bind:value={userDate}
 				required
 				title="Please enter a date in the format MM/DD/YYYY"
@@ -87,30 +87,5 @@
 		display: flex;
 		flex-direction: column;
 		margin-right: 1rem;
-	}
-
-	.custom-date-lookup__label {
-		font-family: 'Vulf Sans';
-		font-weight: 100;
-		font-size: 0.75rem;
-		color: #e4edff;
-	}
-
-	.custom-date-lookup__input {
-		border-width: 0 0 2px 0;
-		margin-top: 0.25rem;
-		font-size: 1.25rem;
-		font-family: 'Vulf Mono';
-		font-weight: 500;
-		color: #e4edff;
-		background: none;
-		padding: 0.125rem 0.5rem 0.125rem 0;
-	}
-
-	.custom-date-lookup__input:focus {
-		background-color: none;
-		outline: none;
-		border-width: 0 0 2px 0;
-		border-color: #86c2f6;
 	}
 </style>

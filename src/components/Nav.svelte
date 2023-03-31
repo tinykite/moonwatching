@@ -1,12 +1,18 @@
-<script>
+<script lang="ts">
+	import type { SvelteComponent } from 'svelte';
 	import Logo from './Logo.svelte';
+	export let emailDialog: SvelteComponent;
+
+	function openEmailDialog() {
+		emailDialog.open();
+	}
 </script>
 
 <nav class="nav">
 	<Logo />
 	<ul class="nav__list">
 		<li>
-			<a href="#alertForm">Get Moon Alerts</a>
+			<button on:click={() => openEmailDialog()}>Get Moon Alerts</button>
 		</li>
 	</ul>
 </nav>
@@ -36,9 +42,12 @@
 		display: none;
 	}
 
-	.nav__list a {
+	.nav__list button {
 		color: inherit;
 		text-decoration: none;
+		background: none;
+		border: none;
+		cursor: pointer;
 	}
 
 	@media (min-width: 37rem) {

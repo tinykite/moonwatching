@@ -60,6 +60,10 @@
 	margin: 0;
 }
 
+html:has(dialog[open]) {
+	overflow: hidden;
+}
+
 body {
 	margin: 0;
 	padding: 0;
@@ -141,4 +145,160 @@ h6 {
 	.illustration {
 		height: 45vh;
 	}
+}
+
+.form__label {
+	font-family: 'Vulf Sans';
+	font-weight: 100;
+	font-size: 0.75rem;
+	color: #e4edff;
+}
+
+.form__label--light {
+	color: #000e24;
+}
+
+.form__input {
+	border-width: 0 0 2px 0;
+	margin-top: 0.25rem;
+	font-size: 1.25rem;
+	font-family: 'Vulf Mono';
+	font-weight: 500;
+	color: #e4edff;
+	background: none;
+	padding: 0.125rem 0.5rem 0.125rem 0;
+}
+
+.form__input--sm {
+	font-size: 1rem;
+}
+
+.form__input--light {
+	color: #000e24;
+	color-scheme: light;
+	mix-blend-mode: multiply;
+}
+
+.form__input:focus {
+	background-color: none;
+	outline: none;
+	border-width: 0 0 2px 0;
+	border-color: #86c2f6;
+}
+
+.form__input--invalid {
+	outline: none;
+	border-width: 0 0 2px 0;
+	border-color: #d51b0c;
+}
+
+.form__input-group {
+	display: flex;
+	flex-direction: column;
+	grid-row: 2;
+}
+
+.form__errorMessage {
+	color: #d51b0c;
+	margin: 0.5rem 0 0 0;
+	opacity: 0;
+	transition: opacity 0.5s ease-in;
+	font-size: 1rem;
+	height: 1rem;
+}
+
+.form__errorMessage--visible {
+	opacity: 1;
+}
+
+.form__successMessage {
+	text-align: center;
+	color: #000e24;
+}
+
+.form__button {
+	border: 1px solid #000e24;
+	background: #000e24;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.75rem;
+	cursor: pointer;
+	width: 10rem;
+	height: 3rem;
+	color: #d0d0d0;
+	font-family: 'Vulf Mono', monotype;
+	text-transform: uppercase;
+}
+
+.form__button:hover {
+	border: 1px solid #000e24;
+	background: none;
+	color: #000e24;
+}
+
+.form__button--inverse {
+	border: 1px solid #000e24;
+	background: none;
+	color: #000e24;
+}
+
+.form__button--inverse:hover {
+	border: 2px solid #000e24;
+	color: #d0d0d0;
+	background: #000e24;
+}
+
+.form__dot {
+	height: 0.5rem;
+	width: 0.5rem;
+	background-color: #fff;
+	border-radius: 50%;
+
+	animation: dotFade 2s linear infinite;
+}
+
+.form__dot:not(:last-child) {
+	margin-right: 0.5rem;
+}
+
+.form__dot:nth-of-type(2) {
+	animation-delay: 0.25s;
+}
+
+.form__dot:nth-of-type(3) {
+	animation-delay: 0.5s;
+}
+
+@keyframes dotFade {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+.u-marginAuto {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.u-marginTop-sm {
+	margin-top: 3.125rem;
+}
+
+.u-marginTop-xs {
+	margin-top: 2rem;
+}
+
+.u-flex {
+	display: flex;
+}
+
+.u-justifyContent-center {
+	justify-content: center;
 }

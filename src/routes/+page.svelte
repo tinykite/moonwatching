@@ -13,8 +13,9 @@
 	import DateInput from '../components/DateInput.svelte';
 	import CurrentDate from '../components/CurrentDate.svelte';
 	import { phase } from '$lib/stores';
-	import PhaseSelecter from '../components/PhaseSelecter.svelte';
 	import { animate } from 'motion';
+	import Dialog from '../components/Dialog.svelte';
+	import type { SvelteComponent } from 'svelte';
 
 	type Form = {
 		email?: string;
@@ -22,10 +23,13 @@
 		success?: string;
 	};
 
+	let emailDialog: SvelteComponent;
+
 	// The $: beneath these variables is necessary to subscribe to a built-in store
 	// And trigger a re-render when the store updates.
 
 	let form: Form;
+
 	$: form = $page?.form;
 
 	let error: string | undefined;
@@ -55,11 +59,14 @@
 		document.body.style.backgroundColor = $backgroundColor;
 		animate('.illustrationWrapper', { opacity: 1 }, { duration: 1 });
 	}
+
+	function closeEmailDialog() {
+		emailDialog.close();
+	}
 </script>
 
-<Nav />
-<!-- According to best practices, a page should only have one global aria-live region.  -->
-<main aria-live="polite" class="moonContainer">
+<Nav {emailDialog} />
+<main class="moonContainer">
 	{#if phase}
 		<MoonPhase phase={$phase} />
 	{/if}
@@ -69,12 +76,32 @@
 		<DateInput />
 	</div>
 
-	<div class="form">
-		<h2 class="alert-header">New and Full Moon Email Alerts</h2>
+	<Dialog
+		success={$page?.form?.success}
+		bind:this={emailDialog}
+		title="Sign up for email updates on the new and full moon"
+	>
+		<span slot="icon" class="u-marginAuto">
+			<svg
+				width="48"
+				height="50"
+				viewBox="0 0 48 50"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M46 25C46 38.2565 35.4715 49 22.5112 49C22.3316 49 22.1658 49 22 48.9859V1.01412C22.152 1 22.3316 1 22.5112 1C35.4715 1 46 11.7435 46 25Z"
+					fill="#000E24"
+				/>
+				<path
+					d="M46.1872 25C46.1872 38.0226 36.0625 48.5704 23.5936 48.5704C23.4242 48.5704 23.2547 48.5704 23.0994 48.5556C10.8423 48.2905 1 37.8459 1 25C1 12.1542 10.8423 1.70959 23.0994 1.44442C23.2547 1.42969 23.4242 1.42969 23.5936 1.42969C36.0625 1.42969 46.1872 11.9774 46.1872 25Z"
+					stroke="#000E24"
+					stroke-width="2"
+				/>
+			</svg>
+		</span>
 
-		{#if form?.success}
-			<p class="successMessage">{form?.success}</p>
-		{:else}
+		<div slot="form" class="u-marginTop-sm">
 			<form
 				class="form"
 				id="alertForm"
@@ -90,34 +117,41 @@
 					};
 				}}
 			>
-				<label class="label" for="email">Email address</label>
-				<div class="input-group">
+				<label class="form__label form__label--light" for="email">Email address</label>
+				<div class="form__input-group">
 					<input
 						id="email"
 						name="email"
 						type="email"
 						value={form?.email ?? ''}
-						class={classNames('input', { 'input--invalid': error })}
+						class={classNames('form__input form__input--light form__input--sm', {
+							'form__input--invalid': error
+						})}
 					/>
 
-					<p class={classNames('errorMessage', { 'errorMessage--visible': error })}>
-						{error ?? error}
+					<p class={classNames('form__errorMessage', { 'form__errorMessage--visible': error })}>
+						{error ? error : ''}
 					</p>
 				</div>
 
-				<button class="button">
-					{#if status === 'loading'}
-						<span class="sr-only">Loading</span>
-						<div class="dot" />
-						<div class="dot" />
-						<div class="dot" />
-					{:else}
-						Submit
-					{/if}
-				</button>
+				<div class="u-marginTop-xs u-marginAuto u-flex u-justifyContent-center">
+					<button class="form__button form__button--inverse" on:click={() => closeEmailDialog()}
+						>Close</button
+					>
+					<button class="form__button">
+						{#if status === 'loading'}
+							<span class="sr-only">Loading</span>
+							<div class="form__dot" />
+							<div class="form__dot" />
+							<div class="form__dot" />
+						{:else}
+							Submit
+						{/if}
+					</button>
+				</div>
 			</form>
-		{/if}
-	</div>
+		</div>
+	</Dialog>
 </main>
 
 <style>
@@ -140,142 +174,6 @@
 	@media (min-width: 1441px) {
 		.dateContainer {
 			margin-top: 6.5rem;
-		}
-	}
-
-	.alert-header {
-		font-size: 1rem;
-		font-family: 'Vulf Mono';
-		font-weight: 500;
-		font-style: normal;
-		margin-top: 3rem;
-		text-align: center;
-		color: #e4edff;
-	}
-
-	.form {
-		max-width: 40ch;
-		margin: 0 auto;
-	}
-
-	form {
-		display: grid;
-		align-items: start;
-		grid-column-gap: 1rem;
-		grid-row-gap: 0.5rem;
-		grid-template-columns: 1fr 5rem;
-		width: 100%;
-	}
-
-	.input {
-		border: 1px solid #888888;
-		border-radius: 0.25rem;
-		font-size: 0.75rem;
-		height: 2.5rem;
-		padding: 0 0.5rem;
-		background-color: #0f1f38;
-		color: #e4edff;
-	}
-
-	.input:focus {
-		outline: #86c2f6 solid 1px;
-		border: 1px solid #86c2f6;
-	}
-
-	.input-group {
-		display: flex;
-		flex-direction: column;
-		grid-row: 2;
-	}
-
-	.dot {
-		height: 0.5rem;
-		width: 0.5rem;
-		background-color: #fff;
-		border-radius: 50%;
-
-		animation: dotFade 2s linear infinite;
-	}
-
-	.dot:not(:last-child) {
-		margin-right: 0.5rem;
-	}
-
-	.dot:nth-of-type(2) {
-		animation-delay: 0.25s;
-	}
-
-	.dot:nth-of-type(3) {
-		animation-delay: 0.5s;
-	}
-
-	@keyframes dotFade {
-		0% {
-			opacity: 0;
-		}
-		50% {
-			opacity: 1;
-		}
-		100% {
-			opacity: 0;
-		}
-	}
-
-	.input--invalid {
-		border: 1px solid #d51b0c;
-		outline: none;
-	}
-
-	.label {
-		font-size: 0.75rem;
-		font-family: 'Vulf Sans';
-		grid-row: 1;
-		color: #e4edff;
-		margin-top: 1rem;
-	}
-
-	.errorMessage {
-		color: #d51b0c;
-		margin: 0.5rem 0 0 0;
-		opacity: 0;
-		transition: opacity 0.5s ease-in;
-	}
-
-	.errorMessage--visible {
-		opacity: 1;
-	}
-
-	.successMessage {
-		margin: 3rem auto;
-		text-align: center;
-	}
-
-	.button {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 0.75rem;
-		cursor: pointer;
-		border-radius: 0.25rem;
-		border: none;
-		border: 1px solid #888888;
-		background: #0f1f38;
-		color: #e4edff;
-		width: 100%;
-		position: relative;
-		grid-row: 2;
-		height: 2.5rem;
-	}
-
-	.button:hover {
-		background: white;
-		color: #121212;
-		border: 1px solid white;
-	}
-
-	@media (min-width: 50rem) {
-		.alert-header {
-			margin: 6rem auto 0;
 		}
 	}
 </style>
