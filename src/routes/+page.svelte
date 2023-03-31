@@ -67,9 +67,7 @@
 
 <Nav {emailDialog} />
 <main class="moonContainer">
-	{#if phase}
-		<MoonPhase phase={$phase} />
-	{/if}
+	<MoonPhase phase={$phase} />
 
 	<div class="dateContainer">
 		<CurrentDate currentDate={data.moonPhase.date} />
