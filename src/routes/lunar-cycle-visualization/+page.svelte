@@ -3,11 +3,13 @@
 	import { spline } from '@georgedoescode/spline';
 	import { SVG } from '@svgdotjs/svg.js';
 	import { interpolate } from '$lib/math-utils';
+	import { onMount } from 'svelte';
 	let min = 0;
 	let max = 360;
 
-	let value: number = 0;
-	let moon: SVGSVGElement;
+	let value: number = 180;
+	let moonIllustrations: HTMLOrSVGElement;
+	let moonContainer: HTMLElement;
 	let lerpValue = 0;
 	let lerpDomain = [0, 180];
 	let lerpRange = [0, 1];
@@ -28,30 +30,96 @@
 		value
 	});
 
-	$: if (moon) moon.style.opacity = `${lerpValue}`;
+	$: if (moonIllustrations) moonIllustrations.style.opacity = `${lerpValue}`;
+
+	const random = (min, max, float = false) => {
+		const val = Math.random() * (max - min) + min;
+
+		if (float) {
+			return val;
+		}
+
+		return Math.floor(val);
+	};
+
+	let blob1: '';
+	let blob2: '';
+	let blob3: '';
+	let blob4: '';
+
+	onMount(() => {
+		const generateBlob = ({
+			initialX,
+			initialY,
+			size,
+			pullRange
+		}: {
+			initialX: number;
+			initialY: number;
+			size: number;
+			pullRange: [number, number];
+		}) => {
+			// choose a number of points
+			const numPoints = random(15, 20);
+			// step used to place each point at equal distances
+			const angleStep = (Math.PI * 2) / numPoints;
+
+			// keep track of your points
+			const points = [];
+			const [pullMin, pullMax] = pullRange;
+
+			for (let i = 1; i <= numPoints; i++) {
+				// how much randomness should be added to each point
+				const pull = random(pullMin, pullMax, true);
+
+				// x & y coordinates of the current point
+				const x = initialX + Math.cos(i * angleStep) * (size * pull);
+				const y = initialY + Math.sin(i * angleStep) * (size * pull);
+
+				// push the point to the points array
+				points.push({ x, y });
+			}
+
+			// generate a smooth continuous curve based on the point:
+			return spline(points, 1, true);
+		};
+
+		// const size = initialSize ?? random(25, 30);
+		blob1 = generateBlob({ initialX: 0, initialY: 50, size: 100, pullRange: [0.3, 0.9] });
+		blob3 = generateBlob({ initialX: 170, initialY: 30, size: 90, pullRange: [0.3, 0.75] });
+		blob2 = generateBlob({ initialX: 140, initialY: 170, size: 90, pullRange: [0.3, 0.75] });
+		// blob4 = generateBlob({ initialX: 50, initialY: 180, size: 30, pullRange: [0.5, 0.75] });
+	});
 </script>
 
 <Nav />
 <h1 hidden>Lunar Cycle Visualization</h1>
 <main class="moonVisContainer">
-	<div class="moonContainer">
-		<svg viewBox="0 0 500 500" class="moon" bind:this={moon}>
+	<div class="moonContainer" bind:this={moonContainer}>
+		<svg bind:this={moonIllustrations} viewBox="0 0 200 200" class="moon" style="filter:url(#glow)">
 			<defs>
-				<linearGradient id="fade" x2="0%" y2="100%">
-					<stop offset="0%" stop-color="#ffffff" />
-					<stop offset="50%" stop-color="#b4b5b6" />
-					<stop offset="99%" stop-color="transparent" />
-				</linearGradient>
+				<clipPath id="moonClip">
+					<circle cx="100" cy="100" r="100" />
+				</clipPath>
 
 				<filter id="glow">
-					<feGaussianBlur stdDeviation="5" result="coloredBlur" />
+					<feGaussianBlur stdDeviation="10" result="coloredBlur" />
 					<feMerge>
 						<feMergeNode in="coloredBlur" />
 						<feMergeNode in="SourceGraphic" />
 					</feMerge>
 				</filter>
 			</defs>
-			<circle fill="url(#fade)" r="240" cy="250" cx="250" style="filter:url(#glow)" />
+
+			<!-- <rect height="200" width="400" stroke="#FFF" fill="none" /> -->
+
+			<circle fill="#FFFFFF" r="100" cy="100" cx="100" />
+			<g clip-path="url(#moonClip)">
+				<path class="blob" d={blob1} fill="#B3B3B3" />
+				<path class="blob" d={blob2} fill="#E6E6E6" />
+				<path class="blob" d={blob3} fill="rgba(0, 0, 0, 0.5)" />
+				<!-- <path class="blob" d={blob4} fill="rgba(0, 0, 0, 0.5)" /> -->
+			</g>
 		</svg>
 
 		<div class="flex moonLabel">
@@ -83,6 +151,17 @@
 </main>
 
 <style>
+	/* 
+body {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+svg {
+  width: 75vmin;
+  height: 75vmin;
+} */
 	.moonCircle {
 		/* filter: linear-gradient(
 			330deg,
@@ -90,6 +169,11 @@
 			#b4b5b6 50%,
 			transparent 99%
 		); */
+	}
+
+	.moonIllustrations {
+		opacity: 0;
+		transition: opacity 0.5 ease-in-out;
 	}
 
 	.moonLabel {
@@ -108,12 +192,9 @@
 		flex-direction: column;
 		align-items: center;
 	}
-	.moonVisDetail {
-	}
-	.moon {
-		opacity: 0;
-		max-width: 100%;
-		transition: opacity 0.5 ease-in-out;
+
+	svg {
+		mix-blend-mode: luminosity;
 	}
 	.rangeContainer {
 		display: flex;
