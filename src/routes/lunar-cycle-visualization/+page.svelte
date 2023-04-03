@@ -1,14 +1,13 @@
 <script lang="ts">
-	import Nav from '../../components/Nav.svelte';
+	// @ts-ignore
 	import { spline } from '@georgedoescode/spline';
-	import { SVG } from '@svgdotjs/svg.js';
 	import { interpolate } from '$lib/math-utils';
 	import { onMount } from 'svelte';
 	let min = 0;
 	let max = 360;
 
 	let value: number = 180;
-	let moonIllustrations: HTMLOrSVGElement;
+	let moonIllustrations: SVGSVGElement;
 	let moonContainer: HTMLElement;
 	let lerpValue = 0;
 	let lerpDomain = [0, 180];
@@ -32,7 +31,7 @@
 
 	$: if (moonIllustrations) moonIllustrations.style.opacity = `${lerpValue}`;
 
-	const random = (min, max, float = false) => {
+	const random = (min: number, max: number, float = false) => {
 		const val = Math.random() * (max - min) + min;
 
 		if (float) {
@@ -92,7 +91,6 @@
 	});
 </script>
 
-<Nav />
 <h1 hidden>Lunar Cycle Visualization</h1>
 <main class="moonVisContainer">
 	<div class="moonContainer" bind:this={moonContainer}>
