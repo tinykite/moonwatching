@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import MoonPhase from '../components/MoonPhase.svelte';
-	import Nav from '../components/Nav.svelte';
 	import { getBackgroundColorScales, interpolate } from '$lib/math-utils';
 	import Color from 'colorjs.io';
 	import { backgroundColor } from '$lib/stores';
@@ -34,7 +33,6 @@
 	}
 </script>
 
-<Nav />
 <main class="moonContainer">
 	<MoonPhase phase={$phase} />
 
