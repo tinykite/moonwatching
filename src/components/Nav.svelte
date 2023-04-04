@@ -118,8 +118,8 @@
 	.nav {
 		display: flex;
 		justify-content: center;
-		margin-top: 3rem;
 		align-items: center;
+		margin-top: 3rem;
 		color: #e4edff;
 		font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 		font-weight: 500;
@@ -148,6 +148,8 @@
 		background: none;
 		border: none;
 		cursor: pointer;
+		padding: 0;
+		margin: 0;
 	}
 
 	.nav__link {
