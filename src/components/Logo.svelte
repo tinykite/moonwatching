@@ -1,4 +1,4 @@
-<div>
+<a href="/" data-sveltekit-reload>
 	<span class="sr-only">Moon Watching</span>
 	<svg
 		width="175"
@@ -57,4 +57,4 @@
 			fill="#E4EDFF"
 		/>
 	</svg>
-</div>
+</a>
