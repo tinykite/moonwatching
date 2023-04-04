@@ -40,8 +40,11 @@
 <nav class="nav">
 	<Logo />
 	<ul class="nav__list">
-		<li>
-			<button on:click={() => openEmailDialog()}>Get Moon Alerts</button>
+		<li class="nav__item">
+			<a href="/about" class="nav__link">About</a>
+		</li>
+		<li class="nav__item">
+			<button on:click={() => openEmailDialog()} class="nav__button">Get Moon Alerts</button>
 		</li>
 	</ul>
 </nav>
@@ -128,15 +131,18 @@
 		}
 	}
 
+	.nav:hover .nav__item:not(:hover) {
+		opacity: 0.65;
+	}
+
 	.nav__list {
-		display: flex;
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		display: none;
 	}
 
-	.nav__list button {
+	.nav__button {
 		color: inherit;
 		text-decoration: none;
 		background: none;
@@ -144,9 +150,17 @@
 		cursor: pointer;
 	}
 
+	.nav__link {
+		text-decoration: none;
+	}
+
+	.nav__item:not(:last-child) {
+		margin-right: 1rem;
+	}
+
 	@media (min-width: 37rem) {
 		.nav__list {
-			display: block;
+			display: flex;
 		}
 	}
 </style>
