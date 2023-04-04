@@ -148,7 +148,8 @@ h6 {
 }
 
 .form__label {
-	font-family: 'Vulf Sans';
+	font-family: 'Vulf Sans', Avenir, 'Avenir Next LT Pro', Montserrat, Corbel, 'URW Gothic',
+		source-sans-pro, sans-serif;
 	font-weight: 100;
 	font-size: 0.75rem;
 	color: #e4edff;
