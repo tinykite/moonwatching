@@ -2,8 +2,10 @@
 	import * as astronomy from '$lib/astronomy-reference';
 	import { onMount } from 'svelte';
 	import { formatDistanceToNowStrict } from 'date-fns';
+	import { animate } from 'motion';
 
 	let daysBeforeFullMoon: string;
+	let intro: HTMLElement;
 
 	onMount(() => {
 		let mq: astronomy.MoonQuarter;
@@ -19,11 +21,13 @@
 
 		daysBeforeFullMoon = formatDistanceToNowStrict(mq.time.date);
 	});
+
+	$: if (intro) animate(intro, { opacity: 1 }, { duration: 3 });
 </script>
 
 <main>
 	<article>
-		<h2>
+		<h2 class="introduction" bind:this={intro}>
 			Moon Watching was created to promote appreciation for the ebb and flow of the beautiful blob
 			above us.
 		</h2>
@@ -74,7 +78,7 @@
 		margin: 0 auto;
 	}
 
-	h2,
+	.introduction,
 	.callout {
 		text-align: center;
 		font-family: 'swear-text', serif;
@@ -82,11 +86,12 @@
 		font-style: normal;
 	}
 
-	h2 {
+	.introduction {
 		font-size: 2rem;
 		margin-top: 6rem;
 		margin-bottom: 6rem;
 		max-width: 40rem;
+		opacity: 0;
 	}
 
 	.text {
