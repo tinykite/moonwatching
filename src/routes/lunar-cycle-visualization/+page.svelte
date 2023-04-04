@@ -6,30 +6,36 @@
 	let min = 0;
 	let max = 360;
 
-	let value: number = 180;
+	let value: number = 0;
 	let moonIllustrations: SVGSVGElement;
 	let moonContainer: HTMLElement;
-	let lerpValue = 0;
-	let lerpDomain = [0, 180];
-	let lerpRange = [0, 1];
+	let blobContainer: SVGGElement;
+	let eclipticDomain = [0, 180];
+	let rotateValue = 0;
+	let scaleValue = 0;
+	let scaleRange = [0, 20];
 
 	$: if (value > 180) {
-		lerpDomain = [181, 360];
-		lerpRange = [1, 0];
+		eclipticDomain = [181, 360];
+		scaleRange = [115, 100];
 	}
 
 	$: if (value <= 180) {
-		lerpDomain = [0, 180];
-		lerpRange = [0, 1];
+		eclipticDomain = [0, 180];
+		scaleRange = [100, 115];
 	}
 
-	$: lerpValue = interpolate({
-		domain: lerpDomain,
-		range: lerpRange,
+	$: rotateValue = interpolate({
+		domain: [0, 360],
+		range: [0, 10],
 		value
 	});
 
-	$: if (moonIllustrations) moonIllustrations.style.opacity = `${lerpValue}`;
+	$: scaleValue = interpolate({
+		domain: eclipticDomain,
+		range: scaleRange,
+		value
+	});
 
 	const random = (min: number, max: number, float = false) => {
 		const val = Math.random() * (max - min) + min;
@@ -55,7 +61,7 @@
 		}: {
 			initialX: number;
 			initialY: number;
-			size: number;
+			size: [number, number];
 			pullRange: [number, number];
 		}) => {
 			// choose a number of points
@@ -66,14 +72,15 @@
 			// keep track of your points
 			const points = [];
 			const [pullMin, pullMax] = pullRange;
+			const [xSize, ySize] = size;
 
 			for (let i = 1; i <= numPoints; i++) {
 				// how much randomness should be added to each point
 				const pull = random(pullMin, pullMax, true);
 
 				// x & y coordinates of the current point
-				const x = initialX + Math.cos(i * angleStep) * (size * pull);
-				const y = initialY + Math.sin(i * angleStep) * (size * pull);
+				const x = initialX + Math.cos(i * angleStep) * (xSize * pull);
+				const y = initialY + Math.sin(i * angleStep) * (ySize * pull);
 
 				// push the point to the points array
 				points.push({ x, y });
@@ -83,12 +90,23 @@
 			return spline(points, 1, true);
 		};
 
-		// const size = initialSize ?? random(25, 30);
-		blob1 = generateBlob({ initialX: 0, initialY: 50, size: 100, pullRange: [0.3, 0.9] });
-		blob3 = generateBlob({ initialX: 170, initialY: 30, size: 90, pullRange: [0.3, 0.75] });
-		blob2 = generateBlob({ initialX: 140, initialY: 170, size: 90, pullRange: [0.3, 0.75] });
-		// blob4 = generateBlob({ initialX: 50, initialY: 180, size: 30, pullRange: [0.5, 0.75] });
+		// Top Blob
+		blob3 = generateBlob({ initialX: 170, initialY: 30, size: [140, 70], pullRange: [0.4, 0.7] });
+
+		// Middle Blob (Bottom)
+		blob1 = generateBlob({ initialX: 50, initialY: 120, size: [180, 70], pullRange: [0.5, 0.7] });
+
+		// Middle Blob (Top)
+		blob4 = generateBlob({ initialX: 15, initialY: 110, size: [90, 30], pullRange: [0.5, 0.9] });
+
+		// Bottom Blob
+		blob2 = generateBlob({ initialX: 140, initialY: 160, size: [140, 70], pullRange: [0.3, 0.6] });
 	});
+
+	$: if (blobContainer) {
+		blobContainer.style.transform = `rotate(${rotateValue}deg)`;
+		moonIllustrations.style.transform = `scale(${scaleValue}%)`;
+	}
 </script>
 
 <h1 hidden>Lunar Cycle Visualization</h1>
@@ -113,10 +131,12 @@
 
 			<circle fill="#FFFFFF" r="100" cy="100" cx="100" />
 			<g clip-path="url(#moonClip)">
-				<path class="blob" d={blob1} fill="#B3B3B3" />
-				<path class="blob" d={blob2} fill="#E6E6E6" />
-				<path class="blob" d={blob3} fill="rgba(0, 0, 0, 0.5)" />
-				<!-- <path class="blob" d={blob4} fill="rgba(0, 0, 0, 0.5)" /> -->
+				<g class="blobs" bind:this={blobContainer}>
+					<path class="blob" d={blob1} fill="#B3B3B3" />
+					<path class="blob" d={blob2} fill="#E6E6E6" />
+					<path class="blob" d={blob3} fill="rgba(0, 0, 0, 0.5)" />
+					<path class="blob" d={blob4} fill="#E6E6E6" />
+				</g>
 			</g>
 		</svg>
 
@@ -149,31 +169,14 @@
 </main>
 
 <style>
-	/* 
-body {
-  height: 100vh;
-  display: grid;
-  place-items: center;
-}
-
-svg {
-  width: 75vmin;
-  height: 75vmin;
-} */
-	.moonCircle {
-		/* filter: linear-gradient(
-			330deg,
-			hsl(217deg 100% 7%) 1%,
-			#b4b5b6 50%,
-			transparent 99%
-		); */
+	.moon {
+		max-height: 50vh;
 	}
 
-	.moonIllustrations {
-		opacity: 0;
-		transition: opacity 0.5 ease-in-out;
+	.blobs {
+		opacity: 0.5;
+		transition: all 0.2 ease-in;
 	}
-
 	.moonLabel {
 		margin-top: 2rem;
 	}
@@ -191,9 +194,6 @@ svg {
 		align-items: center;
 	}
 
-	svg {
-		mix-blend-mode: luminosity;
-	}
 	.rangeContainer {
 		display: flex;
 		margin-top: 1.5rem;
