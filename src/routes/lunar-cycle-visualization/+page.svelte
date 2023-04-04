@@ -28,13 +28,13 @@
 
 	$: rotateValue = interpolate({
 		domain: [0, 360],
-		range: [0, 10],
+		range: [0, 15],
 		value
 	});
 
 	$: translateXValue = interpolate({
 		domain: [0, 360],
-		range: [0, -10],
+		range: [0, -20],
 		value
 	});
 
@@ -54,10 +54,14 @@
 		return Math.floor(val);
 	};
 
-	let blob1: '';
-	let blob2: '';
-	let blob3: '';
-	let blob4: '';
+	const blobs = {
+		top: '',
+		topAccent: '',
+		middle: '',
+		middleAccent: '',
+		bottom: '',
+		bottomAccent: ''
+	};
 
 	onMount(() => {
 		const generateBlob = ({
@@ -97,17 +101,42 @@
 			return spline(points, 1, true);
 		};
 
-		// Top Blob
-		blob3 = generateBlob({ initialX: 170, initialY: 30, size: [140, 70], pullRange: [0.4, 0.7] });
-
-		// Middle Blob (Bottom)
-		blob1 = generateBlob({ initialX: 50, initialY: 120, size: [180, 70], pullRange: [0.5, 0.7] });
-
-		// Middle Blob (Top)
-		blob4 = generateBlob({ initialX: 15, initialY: 110, size: [90, 30], pullRange: [0.5, 0.9] });
-
-		// Bottom Blob
-		blob2 = generateBlob({ initialX: 140, initialY: 160, size: [140, 70], pullRange: [0.3, 0.6] });
+		blobs.top = generateBlob({
+			initialX: 170,
+			initialY: 30,
+			size: [140, 70],
+			pullRange: [0.4, 0.7]
+		});
+		blobs.topAccent = generateBlob({
+			initialX: 270,
+			initialY: 30,
+			size: [190, 20],
+			pullRange: [0.5, 0.9]
+		});
+		blobs.middle = generateBlob({
+			initialX: 50,
+			initialY: 120,
+			size: [180, 70],
+			pullRange: [0.5, 0.7]
+		});
+		blobs.middleAccent = generateBlob({
+			initialX: 25,
+			initialY: 115,
+			size: [90, 20],
+			pullRange: [0.5, 0.9]
+		});
+		blobs.bottom = generateBlob({
+			initialX: 140,
+			initialY: 160,
+			size: [140, 70],
+			pullRange: [0.3, 0.6]
+		});
+		blobs.bottomAccent = generateBlob({
+			initialX: 215,
+			initialY: 170,
+			size: [100, 25],
+			pullRange: [0.5, 0.9]
+		});
 	});
 
 	$: if (blobContainer) {
@@ -126,7 +155,7 @@
 				</clipPath>
 
 				<filter id="glow">
-					<feGaussianBlur stdDeviation="10" result="coloredBlur" />
+					<feGaussianBlur stdDeviation="20" result="coloredBlur" />
 					<feMerge>
 						<feMergeNode in="coloredBlur" />
 						<feMergeNode in="SourceGraphic" />
@@ -139,10 +168,12 @@
 			<circle fill="#FFFFFF" r="100" cy="100" cx="100" />
 			<g clip-path="url(#moonClip)">
 				<g class="blobs" bind:this={blobContainer}>
-					<path class="blob" d={blob1} fill="#B3B3B3" />
-					<path class="blob" d={blob2} fill="#E6E6E6" />
-					<path class="blob" d={blob3} fill="rgba(0, 0, 0, 0.5)" />
-					<path class="blob" d={blob4} fill="#E6E6E6" />
+					<path class="blob" d={blobs.middle} fill="#B3B3B3" />
+					<path class="blob" d={blobs.bottom} fill="#E6E6E6" />
+					<path class="blob" d={blobs.top} fill="rgba(0, 0, 0, 0.5)" />
+					<path class="blob" d={blobs.middleAccent} fill="#E6E6E6" />
+					<path class="blob" d={blobs.topAccent} fill="#E6E6E6" />
+					<path class="blob" d={blobs.bottomAccent} fill="#B3B3B3" />
 				</g>
 			</g>
 		</svg>
