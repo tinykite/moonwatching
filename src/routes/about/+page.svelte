@@ -66,7 +66,7 @@
 	main {
 		display: grid;
 		justify-items: center;
-		margin-bottom: 5rem;
+		padding-bottom: 5rem;
 		color: #e4edff;
 	}
 
