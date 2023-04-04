@@ -66,6 +66,14 @@ html:has(dialog[open]) {
 	overflow: hidden;
 }
 
+/*
+  3. Allow percentage-based heights in the application
+*/
+html,
+body {
+	height: 100%;
+}
+
 body {
 	margin: 0;
 	padding: 0;
