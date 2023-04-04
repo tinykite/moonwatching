@@ -227,7 +227,7 @@ h6 {
 	width: 10rem;
 	height: 3rem;
 	color: #d0d0d0;
-	font-family: 'Vulf Mono', monotype;
+	font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 	text-transform: uppercase;
 }
 

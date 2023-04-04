@@ -64,7 +64,7 @@
 		background: none;
 		border: none;
 		cursor: pointer;
-		font-family: 'Vulf Mono';
+		font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 		font-style: italic;
 		font-size: 0.875rem;
 		color: #b6cfff;
