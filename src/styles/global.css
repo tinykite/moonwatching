@@ -115,12 +115,12 @@ h5,
 h6 {
 	overflow-wrap: break-word;
 }
-/*
-	8. Create a root stacking context
-  */
-#root,
-#__next {
-	isolation: isolate;
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+	color: inherit;
 }
 
 .sr-only {
