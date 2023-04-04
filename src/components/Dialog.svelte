@@ -34,6 +34,7 @@
 	}
 </script>
 
+<!-- Aria-hidden is unnecessary for clients that support the inert property -->
 <dialog
 	inert={isOpen ? undefined : true}
 	aria-hidden={isOpen ? undefined : true}
