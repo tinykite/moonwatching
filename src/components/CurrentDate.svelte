@@ -46,7 +46,7 @@
 <style>
 	.date {
 		text-align: center;
-		font-family: 'Vulf Mono';
+		font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 		font-size: 1.25rem;
 		font-weight: 700;
 		color: #e4edff;

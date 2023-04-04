@@ -127,7 +127,7 @@
 		margin-top: 3rem;
 		align-items: center;
 		color: #e4edff;
-		font-family: 'Vulf Mono';
+		font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 		font-weight: 500;
 	}
 
