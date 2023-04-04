@@ -14,20 +14,27 @@
 	let rotateValue = 0;
 	let scaleValue = 0;
 	let scaleRange = [0, 20];
+	let translateXValue = 0;
 
 	$: if (value > 180) {
 		eclipticDomain = [181, 360];
-		scaleRange = [115, 100];
+		scaleRange = [105, 100];
 	}
 
 	$: if (value <= 180) {
 		eclipticDomain = [0, 180];
-		scaleRange = [100, 115];
+		scaleRange = [100, 105];
 	}
 
 	$: rotateValue = interpolate({
 		domain: [0, 360],
 		range: [0, 10],
+		value
+	});
+
+	$: translateXValue = interpolate({
+		domain: [0, 360],
+		range: [0, -10],
 		value
 	});
 
@@ -104,7 +111,7 @@
 	});
 
 	$: if (blobContainer) {
-		blobContainer.style.transform = `rotate(${rotateValue}deg)`;
+		blobContainer.style.transform = `rotate(${rotateValue}deg) translateX(${translateXValue}%)`;
 		moonIllustrations.style.transform = `scale(${scaleValue}%)`;
 	}
 </script>
