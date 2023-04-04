@@ -61,6 +61,10 @@
 		position: fixed;
 		inset: 0;
 		background-color: #e4edff;
+	}
+
+	.dialog:not([open]) {
+		pointer-events: none;
 		opacity: 0;
 	}
 
