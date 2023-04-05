@@ -21,14 +21,15 @@ export const GET: RequestHandler = async ({ fetch, url }) => {
 	const phase = isMoonAlert ? searchParams.get('phase') : null;
 
 	// Retrieve random moon image
-	const moonImageRes = await fetch('/images');
-	const moonImage = await moonImageRes.json();
+	// Commented out for now
+	// const moonImageRes = await fetch('/images');
+	// const moonImage = await moonImageRes.json();
 
-	if (!moonImageRes.ok) {
-		throw error(404, moonImage.message);
-	}
+	// if (!moonImageRes.ok) {
+	// 	throw error(404, moonImage.message);
+	// }
 
-	const emailProps = { templateName, moonImage, ...(isMoonAlert && { time, phase }) };
+	const emailProps = { templateName, ...(isMoonAlert && { time, phase }) };
 
 	// Retrieve a rendered email template, using the random moon image
 	// Template name refers to which email template to use
