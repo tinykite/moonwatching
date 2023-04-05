@@ -28,7 +28,7 @@
 
 	$: rotateValue = interpolate({
 		domain: [0, 360],
-		range: [0, 15],
+		range: [0, 5],
 		value
 	});
 
@@ -60,7 +60,8 @@
 		middle: '',
 		middleAccent: '',
 		bottom: '',
-		bottomAccent: ''
+		bottomAccent: '',
+		middleTertiary: ''
 	};
 
 	onMount(() => {
@@ -125,6 +126,12 @@
 			size: [90, 20],
 			pullRange: [0.5, 0.9]
 		});
+		blobs.middleTertiary = generateBlob({
+			initialX: 0,
+			initialY: 115,
+			size: [90, 8],
+			pullRange: [0.6, 0.7]
+		});
 		blobs.bottom = generateBlob({
 			initialX: 140,
 			initialY: 160,
@@ -163,8 +170,6 @@
 				</filter>
 			</defs>
 
-			<!-- <rect height="200" width="400" stroke="#FFF" fill="none" /> -->
-
 			<circle fill="#FFFFFF" r="100" cy="100" cx="100" />
 			<g clip-path="url(#moonClip)">
 				<g class="blobs" bind:this={blobContainer}>
@@ -174,6 +179,7 @@
 					<path class="blob" d={blobs.middleAccent} fill="#E6E6E6" />
 					<path class="blob" d={blobs.topAccent} fill="#E6E6E6" />
 					<path class="blob" d={blobs.bottomAccent} fill="#B3B3B3" />
+					<path class="blob" d={blobs.middleTertiary} fill="#B3B3B3" />
 				</g>
 			</g>
 		</svg>
