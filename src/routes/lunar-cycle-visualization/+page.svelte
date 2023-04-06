@@ -247,6 +247,10 @@
 			);
 			moonPhaseMask.setAttribute('d', newPath);
 		}
+
+		if (value >= 360) {
+			moonPhaseMask.setAttribute('d', paths.newMoonB);
+		}
 	}
 </script>
 
