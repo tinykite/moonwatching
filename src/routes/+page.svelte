@@ -45,13 +45,13 @@
 <style>
 	.moonContainer {
 		display: grid;
-		margin: 8vh auto 0;
+		margin: 6vh auto 0;
 		align-items: center;
 	}
 
 	@media (min-width: 1440px) {
 		.moonContainer {
-			margin: 15vh auto 2rem;
+			margin: 12vh auto 2rem;
 		}
 	}
 
@@ -61,7 +61,7 @@
 
 	@media (min-width: 1441px) {
 		.dateContainer {
-			margin-top: 6.5rem;
+			margin-top: 4rem;
 		}
 	}
 </style>
