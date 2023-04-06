@@ -63,7 +63,6 @@
 			class="form"
 			id="alertForm"
 			method="POST"
-			action="/"
 			use:enhance={() => {
 				status = 'loading';
 				return async ({ update, result }) => {
