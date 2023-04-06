@@ -170,7 +170,8 @@ a:active {
 }
 
 .form__input {
-	border-width: 0 0 2px 0;
+	border-width: 0 0 3px 0;
+	border-color: #d0d0d0;
 	margin-top: 0.25rem;
 	font-size: 1.25rem;
 	font-family: 'Vulf Mono';
@@ -185,6 +186,8 @@ a:active {
 }
 
 .form__input--light {
+	border-width: 0 0 2px 0;
+	border-color: #000e24;
 	color: #000e24;
 	color-scheme: light;
 	mix-blend-mode: multiply;
