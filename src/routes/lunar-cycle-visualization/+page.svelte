@@ -1,46 +1,74 @@
 <script lang="ts">
 	import { spline } from '$lib/spline';
-	import { interpolate } from '$lib/math-utils';
+	import { interpolate as vanillaInterpolate } from '$lib/math-utils';
 	import { onMount } from 'svelte';
+	// @ts-ignore
+	import { interpolate } from 'flubber';
 
 	let min = 0;
 	let max = 360;
 
 	let value: number = 0;
+	let moonPhaseMask: SVGPathElement;
 	let moonIllustrations: SVGSVGElement;
 	let moonContainer: HTMLElement;
 	let blobContainer: SVGGElement;
 	let eclipticDomain = [0, 180];
+	let opacityRange = [0, 1];
 	let rotateValue = 0;
 	let scaleValue = 0;
 	let scaleRange = [0, 20];
 	let translateXValue = 0;
+	let blobOpacityValue = 0;
 
 	$: if (value > 180) {
 		eclipticDomain = [181, 360];
 		scaleRange = [105, 100];
+		opacityRange = [1, 0];
 	}
 
 	$: if (value <= 180) {
 		eclipticDomain = [0, 180];
 		scaleRange = [100, 105];
+		opacityRange = [0, 1];
 	}
 
-	$: rotateValue = interpolate({
+	$: rotateValue = vanillaInterpolate({
 		domain: [0, 360],
 		range: [0, 5],
 		value
 	});
 
-	$: translateXValue = interpolate({
+	$: translateXValue = vanillaInterpolate({
 		domain: [0, 360],
 		range: [0, -20],
 		value
 	});
 
-	$: scaleValue = interpolate({
+	const paths = {
+		newMoonA: 'M0,0 L0,201',
+		newMoonB: 'M201,0 L201, 201',
+		waxingCrescent:
+			'M80.849 3.5272C50.855 16.483 10.9711 52.0284 11.4579 100.965C11.9191 146.315 46.9093 188.701 96.9563 200C42.1352 197.13 -0.541396 151.371 0.00519188 98.6677C0.534699 49.0904 39.1802 5.97831 90.3716 0C88.0059 0.734478 84.6922 1.87036 80.849 3.5272Z',
+		firstQuarter:
+			'M102 0.0195925C101.335 0.00653088 100.668 5.84175e-08 100 0C44.7715 -4.82823e-06 4.82823e-06 44.7715 0 100C-4.82822e-06 155.228 44.7715 200 100 200C100.668 200 101.335 199.993 102 199.98L102 0.0195925Z',
+		fullMoon:
+			'M200 100C200 155.228 155.228 200 100 200C44.7715 200 0 155.228 0 100C0 44.7715 44.7715 0 100 0C155.228 0 200 44.7715 200 100Z',
+		lastQuarter:
+			'M99 201C154.505 201 199.5 156.005 199.5 100.5C199.5 44.9954 154.505 4.85237e-06 99 0L99 201Z',
+		waningCrescent:
+			'M116.115 3.5272C146.122 16.483 186.024 52.0284 185.537 100.965C185.076 146.315 150.07 188.701 100 200C154.846 197.13 197.542 151.371 196.995 98.6677C196.465 49.0904 157.802 5.97831 106.588 0C108.954 0.734478 112.27 1.87036 116.115 3.5272Z'
+	};
+
+	$: scaleValue = vanillaInterpolate({
 		domain: eclipticDomain,
 		range: scaleRange,
+		value
+	});
+
+	$: blobOpacityValue = vanillaInterpolate({
+		domain: [0, 360],
+		range: opacityRange,
 		value
 	});
 
@@ -146,9 +174,79 @@
 		});
 	});
 
+	let newMoonToWaxingCrescent = interpolate(paths.newMoonA, paths.waxingCrescent);
+	let waxingCrescentToFirstQuarter = interpolate(paths.waxingCrescent, paths.firstQuarter);
+	let firstQuarterToFullMoon = interpolate(paths.firstQuarter, paths.fullMoon);
+	let fullMoonToLastQuarter = interpolate(paths.fullMoon, paths.lastQuarter);
+	let lastQuarterToWaningCrescent = interpolate(paths.lastQuarter, paths.waningCrescent);
+	let waningCrescentToNewMoon = interpolate(paths.waningCrescent, paths.newMoonB);
+
 	$: if (blobContainer) {
+		blobContainer.style.opacity = `${blobOpacityValue}`;
 		blobContainer.style.transform = `rotate(${rotateValue}deg) translateX(${translateXValue}%)`;
 		moonIllustrations.style.transform = `scale(${scaleValue}%)`;
+
+		let newPath;
+
+		if (value < 45) {
+			newPath = newMoonToWaxingCrescent(value / 45);
+			moonPhaseMask.setAttribute('d', newPath);
+		}
+
+		if (value >= 45 && value < 90) {
+			newPath = waxingCrescentToFirstQuarter(
+				vanillaInterpolate({
+					domain: [45, 90],
+					range: [0, 1],
+					value
+				})
+			);
+			moonPhaseMask.setAttribute('d', newPath);
+		}
+
+		if (value >= 90 && value < 180) {
+			newPath = firstQuarterToFullMoon(
+				vanillaInterpolate({
+					domain: [90, 180],
+					range: [0, 1],
+					value
+				})
+			);
+			moonPhaseMask.setAttribute('d', newPath);
+		}
+
+		if (value >= 180 && value < 270) {
+			newPath = fullMoonToLastQuarter(
+				vanillaInterpolate({
+					domain: [180, 270],
+					range: [0, 1],
+					value
+				})
+			);
+			moonPhaseMask.setAttribute('d', newPath);
+		}
+
+		if (value >= 270 && value < 315) {
+			newPath = lastQuarterToWaningCrescent(
+				vanillaInterpolate({
+					domain: [270, 315],
+					range: [0, 1],
+					value
+				})
+			);
+			moonPhaseMask.setAttribute('d', newPath);
+		}
+
+		if (value >= 315 && value < 360) {
+			newPath = waningCrescentToNewMoon(
+				vanillaInterpolate({
+					domain: [315, 360],
+					range: [0, 1],
+					value
+				})
+			);
+			moonPhaseMask.setAttribute('d', newPath);
+		}
 	}
 </script>
 
@@ -161,6 +259,14 @@
 					<circle cx="100" cy="100" r="100" />
 				</clipPath>
 
+				<clipPath id="moonPhase">
+					<path bind:this={moonPhaseMask} d={paths.newMoonA} />
+				</clipPath>
+
+				<filter id="moonBlur" x="0" y="0">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="20" />
+				</filter>
+
 				<filter id="glow">
 					<feGaussianBlur stdDeviation="20" result="coloredBlur" />
 					<feMerge>
@@ -170,8 +276,15 @@
 				</filter>
 			</defs>
 
-			<circle fill="#FFFFFF" r="100" cy="100" cx="100" />
 			<g clip-path="url(#moonClip)">
+				<circle
+					fill="#FFFFFF"
+					clip-path="url(#moonPhase)"
+					style="filter:url(#moonBlur)"
+					r="100"
+					cy="100"
+					cx="100"
+				/>
 				<g class="blobs" bind:this={blobContainer}>
 					<path class="blob" d={blobs.middle} fill="#B3B3B3" />
 					<path class="blob" d={blobs.bottom} fill="#E6E6E6" />
