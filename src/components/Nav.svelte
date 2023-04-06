@@ -44,7 +44,7 @@
 			<a href="/about" class="nav__link">About</a>
 		</li>
 		<li class="nav__item">
-			<button on:click={() => openEmailDialog()} class="nav__button">Get Moon Alerts</button>
+			<button on:click={() => openEmailDialog()} class="nav__button">Moon Alerts</button>
 		</li>
 	</ul>
 </nav>
@@ -156,7 +156,7 @@
 	}
 
 	.nav__item:not(:last-child) {
-		margin-right: 1rem;
+		margin-right: 1.5rem;
 	}
 
 	@media (min-width: 37rem) {
