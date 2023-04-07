@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { spline } from '$lib/spline';
-	import { interpolate as interpolate } from '$lib/math-utils';
+	import { interpolate } from '$lib/math-utils';
 	import { onMount } from 'svelte';
-	// @ts-ignore
 	import * as flubber from 'flubber';
 
 	let min = 0;
@@ -59,6 +58,8 @@
 		waningCrescent:
 			'M116.115 3.5272C146.122 16.483 186.024 52.0284 185.537 100.965C185.076 146.315 150.07 188.701 100 200C154.846 197.13 197.542 151.371 196.995 98.6677C196.465 49.0904 157.802 5.97831 106.588 0C108.954 0.734478 112.27 1.87036 116.115 3.5272Z'
 	};
+
+	let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
 
 	$: scaleValue = interpolate({
 		domain: eclipticDomain,
@@ -174,12 +175,12 @@
 		});
 	});
 
-	let newMoonToWaxingCrescent = flubber.interpolate(paths.newMoonA, paths.waxingCrescent);
-	let waxingCrescentToFirstQuarter = flubber.interpolate(paths.waxingCrescent, paths.firstQuarter);
-	let firstQuarterToFullMoon = flubber.interpolate(paths.firstQuarter, paths.fullMoon);
-	let fullMoonToLastQuarter = flubber.interpolate(paths.fullMoon, paths.lastQuarter);
-	let lastQuarterToWaningCrescent = flubber.interpolate(paths.lastQuarter, paths.waningCrescent);
-	let waningCrescentToNewMoon = flubber.interpolate(paths.waningCrescent, paths.newMoonB);
+	let newMoonToWaxingCrescent = flubberInterpolate(paths.newMoonA, paths.waxingCrescent);
+	let waxingCrescentToFirstQuarter = flubberInterpolate(paths.waxingCrescent, paths.firstQuarter);
+	let firstQuarterToFullMoon = flubberInterpolate(paths.firstQuarter, paths.fullMoon);
+	let fullMoonToLastQuarter = flubberInterpolate(paths.fullMoon, paths.lastQuarter);
+	let lastQuarterToWaningCrescent = flubberInterpolate(paths.lastQuarter, paths.waningCrescent);
+	let waningCrescentToNewMoon = flubberInterpolate(paths.waningCrescent, paths.newMoonB);
 
 	$: if (blobContainer) {
 		blobContainer.style.opacity = `${blobOpacityValue}`;
