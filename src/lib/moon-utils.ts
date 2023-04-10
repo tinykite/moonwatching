@@ -42,10 +42,11 @@ export const calculatePhase = ({ nextQuarter, date }: { nextQuarter: any; date: 
 	const nextQuarterDate = format(time.date, 'MM/dd/yyyy');
 	const currentDate = format(date, 'MM/dd/yyyy');
 
-	// If the next quarter is the same day as the current date, return the current quarter
+	// If the next quarter falls on the same day as the current date, return that phase as the current one
 	if (nextQuarterDate === currentDate) {
 		return getCurrentQuarter(quarter);
 	}
 
+	// Otherwise return the previous phase
 	return getPreviousQuarter(quarter);
 };
