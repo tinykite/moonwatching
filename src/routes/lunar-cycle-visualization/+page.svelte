@@ -25,9 +25,9 @@
 	let min = 0;
 	let max = 360;
 
-	let value: number = 0;
 	let chosenDate: number = currentDate;
 	let chosenPhase: string = phasesByDate[chosenDate].phase;
+	let value: number = phasesByDate[chosenDate].ecliptic_longitude;
 
 	let moonPhaseMask: SVGPathElement;
 	let moonIllustrations: SVGSVGElement;
@@ -323,6 +323,7 @@
 			</g>
 		</svg>
 
+		<!-- TODO: Remove this when no longer needed for testing  -->
 		<!-- <div class="flex moonLabel">
 			<label for="ecliptic">Ecliptic Longitude</label>: {value}
 		</div>
@@ -333,8 +334,10 @@
 		</div> -->
 
 		<div class="flex moonLabel">
-			<p class="currentPhase">{chosenPhase}</p>
-			<label class="currentDate" for="date">{currentMonth} {chosenDate}</label>
+			<p class="currentPhase">{phasesByDate[chosenDate].phase}</p>
+			<p>
+				<label class="currentDate" for="date">{currentMonth} {chosenDate}</label>
+			</p>
 		</div>
 		<div class="rangeContainer">
 			<p class="rangeLabel">{currentMonth} {dateMin}</p>
