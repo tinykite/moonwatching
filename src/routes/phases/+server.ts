@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 
 // // This endpoint returns data manually collected from the Griffifth Observatory website
 // It is only intended for use by a Netlify function for sending automated emails
-// For all other purposes, use the /dynamicPhases endpoint
+// For all other purposes, use the /dynamicPhase and /dynamicPhases endpoints
 export const GET = (async ({ url, fetch }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const cronRequest = searchParams.has('scheduledFunction');
