@@ -20,6 +20,10 @@
 	let translateXValue = 0;
 	let blobOpacityValue = 0;
 
+	export let data: PageData;
+
+	console.log(data);
+
 	$: if (value > 180) {
 		eclipticDomain = [181, 360];
 		scaleRange = [105, 100];
