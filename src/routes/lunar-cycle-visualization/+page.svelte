@@ -27,7 +27,8 @@
 
 	let chosenDate: number = currentDate;
 	let chosenPhase: string = phasesByDate[chosenDate].phase;
-	let value: number = phasesByDate[chosenDate].ecliptic_longitude;
+	let value: number = 0;
+	$: value = phasesByDate[chosenDate].ecliptic_longitude;
 
 	let moonPhaseMask: SVGPathElement;
 	let moonIllustrations: SVGSVGElement;
