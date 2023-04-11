@@ -1,23 +1,8 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { supabase } from '$lib/supabaseClient';
-import { endOfMonth, startOfMonth, sub, format, add } from 'date-fns';
-
-const getMonthRange = () => {
-	const date = new Date();
-	const monthStart = startOfMonth(date);
-	const monthEnd = endOfMonth(date);
-
-	const adjustedStartDate = sub(monthStart, {
-		days: 1
-	});
-
-	const adjustedEndDate = add(monthEnd, {
-		days: 1
-	});
-
-	return { startRange: adjustedStartDate, endRange: adjustedEndDate };
-};
+import { getMonthRange } from '$lib/moon-utils';
+import { format } from 'date-fns';
 
 export const GET = (async ({ url }) => {
 	const searchParams = new URLSearchParams(url.search);

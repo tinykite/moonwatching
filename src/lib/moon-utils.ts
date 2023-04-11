@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, startOfMonth, endOfMonth, sub, add } from 'date-fns';
 
 export const getCurrentQuarter = (quarter: number) => {
 	if (quarter === 0) {
@@ -49,4 +49,20 @@ export const calculatePhase = ({ nextQuarter, date }: { nextQuarter: any; date: 
 
 	// Otherwise return the previous phase
 	return getPreviousQuarter(quarter);
+};
+
+export const getMonthRange = () => {
+	const date = new Date();
+	const monthStart = startOfMonth(date);
+	const monthEnd = endOfMonth(date);
+
+	const adjustedStartDate = sub(monthStart, {
+		days: 1
+	});
+
+	const adjustedEndDate = add(monthEnd, {
+		days: 1
+	});
+
+	return { startRange: adjustedStartDate, endRange: adjustedEndDate };
 };
