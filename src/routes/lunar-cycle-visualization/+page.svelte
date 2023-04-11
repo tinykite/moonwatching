@@ -3,11 +3,30 @@
 	import { interpolate } from '$lib/math-utils';
 	import { onMount } from 'svelte';
 	import * as flubber from 'flubber';
+	import { getDate, format } from 'date-fns';
+	import type { MoonPhase } from '$lib/moon-utils';
+
+	export let data: PageData;
+	let phasesByDate = data.moonPhases.reduce(
+		(phases: Recor<string, MoonPhase>, currentPhase: MoonPhase) => {
+			const date = parseInt(currentPhase.date.split('-')[2]);
+			return { ...phases, [date]: currentPhase };
+		},
+		{}
+	);
+
+	let dateMin = 1;
+	let dateMax = data.moonPhases.length;
+	const date = new Date();
+	const currentDate = getDate(date);
+	const currentMonth = format(date, 'MMMM');
 
 	let min = 0;
 	let max = 360;
 
 	let value: number = 0;
+	let chosenDate: number = currentDate;
+
 	let moonPhaseMask: SVGPathElement;
 	let moonIllustrations: SVGSVGElement;
 	let moonContainer: HTMLElement;
@@ -19,10 +38,6 @@
 	let scaleRange = [0, 20];
 	let translateXValue = 0;
 	let blobOpacityValue = 0;
-
-	export let data: PageData;
-
-	console.log(data);
 
 	$: if (value > 180) {
 		eclipticDomain = [181, 360];
@@ -313,6 +328,22 @@
 			<p>{min}</p>
 			<input bind:value type="range" id="ecliptic" name="ecliptic" {min} {max} />
 			<p>{max}</p>
+		</div>
+
+		<div class="flex moonLabel">
+			<label for="date">{currentMonth} {chosenDate}</label>
+		</div>
+		<div class="rangeContainer">
+			<p>{currentMonth} {dateMin}</p>
+			<input
+				bind:value={chosenDate}
+				type="range"
+				id="date"
+				name="date"
+				min={dateMin}
+				max={dateMax}
+			/>
+			<p>{currentMonth} {dateMax}</p>
 		</div>
 	</div>
 	<div class="moonVisDetail" hidden>

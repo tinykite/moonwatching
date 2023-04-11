@@ -1,5 +1,19 @@
 import { format, startOfMonth, endOfMonth, sub, add } from 'date-fns';
 
+export interface MoonPhase {
+	phase:
+		| 'New Moon'
+		| 'Third Quarter'
+		| 'Full Moon'
+		| 'First Quarter'
+		| 'Waxing Crescent'
+		| 'Waning Crescent'
+		| 'Waning Gibbous'
+		| 'Waxing Gibbous';
+	ecliptic_longitude: number;
+	date: string;
+}
+
 export const getCurrentQuarter = (quarter: number) => {
 	if (quarter === 0) {
 		return 'New Moon';

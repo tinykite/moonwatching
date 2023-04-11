@@ -1,11 +1,8 @@
 import type { PageLoad } from './$types';
 import { error } from '@sveltejs/kit';
-export const load = (async ({ fetch }) => {
-	const date = new Date();
-	// the value for months returned by the date API is zero-indexed
-	const month = date.getMonth() + 1;
 
-	const res = await fetch(`/dynamicPhases?month=${month}`);
+export const load = (async ({ fetch }) => {
+	const res = await fetch(`/dynamicPhases?month=true`);
 	const moonPhases = await res.json();
 
 	if (res.ok) {
