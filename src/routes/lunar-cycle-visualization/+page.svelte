@@ -8,7 +8,7 @@
 
 	export let data: PageData;
 	let phasesByDate = data.moonPhases.reduce(
-		(phases: Recor<string, MoonPhase>, currentPhase: MoonPhase) => {
+		(phases: Record<string, MoonPhase>, currentPhase: MoonPhase) => {
 			const date = parseInt(currentPhase.date.split('-')[2]);
 			return { ...phases, [date]: currentPhase };
 		},
@@ -17,6 +17,7 @@
 
 	let dateMin = 1;
 	let dateMax = data.moonPhases.length;
+
 	const date = new Date();
 	const currentDate = getDate(date);
 	const currentMonth = format(date, 'MMMM');
@@ -26,6 +27,7 @@
 
 	let value: number = 0;
 	let chosenDate: number = currentDate;
+	let chosenPhase: string = phasesByDate[chosenDate].phase;
 
 	let moonPhaseMask: SVGPathElement;
 	let moonIllustrations: SVGSVGElement;
@@ -321,20 +323,21 @@
 			</g>
 		</svg>
 
-		<div class="flex moonLabel">
+		<!-- <div class="flex moonLabel">
 			<label for="ecliptic">Ecliptic Longitude</label>: {value}
 		</div>
 		<div class="rangeContainer">
 			<p>{min}</p>
 			<input bind:value type="range" id="ecliptic" name="ecliptic" {min} {max} />
 			<p>{max}</p>
-		</div>
+		</div> -->
 
 		<div class="flex moonLabel">
-			<label for="date">{currentMonth} {chosenDate}</label>
+			<p class="currentPhase">{chosenPhase}</p>
+			<label class="currentDate" for="date">{currentMonth} {chosenDate}</label>
 		</div>
 		<div class="rangeContainer">
-			<p>{currentMonth} {dateMin}</p>
+			<p class="rangeLabel">{currentMonth} {dateMin}</p>
 			<input
 				bind:value={chosenDate}
 				type="range"
@@ -343,7 +346,7 @@
 				min={dateMin}
 				max={dateMax}
 			/>
-			<p>{currentMonth} {dateMax}</p>
+			<p class="rangeLabel">{currentMonth} {dateMax}</p>
 		</div>
 	</div>
 	<div class="moonVisDetail" hidden>
@@ -366,6 +369,24 @@
 </main>
 
 <style>
+	.rangeLabel {
+		color: #e4edff;
+		font-size: 0.875rem;
+	}
+	.currentPhase {
+		font-size: 3rem;
+		font-family: 'swear-display', serif;
+		font-weight: 500;
+		font-style: normal;
+		line-height: 1.25;
+		color: #d4dae4;
+	}
+
+	.currentDate {
+		color: rgba(212, 218, 228, 0.8);
+		font-size: 1.125rem;
+	}
+
 	.moon {
 		max-height: 50vh;
 	}
@@ -376,6 +397,7 @@
 	}
 	.moonLabel {
 		margin-top: 2rem;
+		text-align: center;
 	}
 	.moonVisContainer {
 		display: grid;
@@ -393,7 +415,7 @@
 
 	.rangeContainer {
 		display: flex;
-		margin-top: 1.5rem;
+		margin-top: 2.5rem;
 	}
 
 	/* https://www.smashingmagazine.com/2021/12/create-custom-range-input-consistent-browsers/ */
@@ -404,7 +426,7 @@
 		background: transparent;
 		cursor: pointer;
 		width: 15rem;
-		margin: 0 1rem;
+		margin: 0 1.125rem;
 	}
 
 	/* Removes default focus */
@@ -415,7 +437,7 @@
 	/* Chrome, Safari, Opera and Edge Chromium styles */
 	/* slider track */
 	input[type='range']::-webkit-slider-runnable-track {
-		background-color: #053a5f;
+		background-color: #426e90;
 		border-radius: 0.5rem;
 		height: 0.5rem;
 	}
@@ -427,21 +449,22 @@
 		margin-top: -12px; /* Centers thumb on the track */
 
 		/*custom styles*/
-		background-color: #5cd5eb;
+		background-color: #e4edff;
 		height: 2rem;
 		width: 1rem;
+		border-radius: 3px;
 	}
 
 	input[type='range']:focus::-webkit-slider-thumb {
-		border: 1px solid #053a5f;
-		outline: 3px solid #053a5f;
+		border: 1px solid #e4edff;
+		outline: 3px solid #e4edff;
 		outline-offset: 0.125rem;
 	}
 
 	/* Firefox styles */
 	/* slider track */
 	input[type='range']::-moz-range-track {
-		background-color: #053a5f;
+		background-color: #426e90;
 		border-radius: 0.5rem;
 		height: 0.5rem;
 	}
@@ -449,12 +472,12 @@
 	/* slider thumb */
 	input[type='range']::-moz-range-thumb {
 		border: none; /*Removes extra border that FF applies*/
-		border-radius: 0; /*Removes default border-radius that FF applies*/
 
 		/*custom styles*/
-		background-color: #5cd5eb;
+		background-color: #e4edff;
 		height: 2rem;
 		width: 1rem;
+		border-radius: 3px;
 	}
 
 	input[type='range']:focus::-moz-range-thumb {
