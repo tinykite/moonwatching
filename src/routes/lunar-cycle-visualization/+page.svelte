@@ -5,6 +5,7 @@
 	import * as flubber from 'flubber';
 	import { getDate, format } from 'date-fns';
 	import type { MoonPhase } from '$lib/moon-utils';
+	import { animate } from 'motion';
 
 	export let data: PageData;
 	let phasesByDate = data.moonPhases.reduce(
@@ -30,6 +31,7 @@
 	let value: number = 0;
 	$: value = phasesByDate[chosenDate].ecliptic_longitude;
 
+	let currentPhaseRef: HTMLElement;
 	let moonPhaseMask: SVGPathElement;
 	let moonIllustrations: SVGSVGElement;
 	let moonContainer: HTMLElement;
@@ -275,6 +277,15 @@
 			moonPhaseMask.setAttribute('d', paths.newMoonB);
 		}
 	}
+
+	const updatePhase = async (nextValue) => {
+		const nextPhase = phasesByDate[nextValue].phase;
+		if (nextPhase !== chosenPhase) {
+			await animate(currentPhaseRef, { opacity: 0, duration: 0.3 }).finished;
+			chosenPhase = nextPhase;
+			animate(currentPhaseRef, { opacity: 1 }).finished;
+		}
+	};
 </script>
 
 <h1 hidden>Lunar Cycle Visualization</h1>
@@ -335,7 +346,7 @@
 		</div> -->
 
 		<div class="flex moonLabel">
-			<p class="currentPhase">{phasesByDate[chosenDate].phase}</p>
+			<p class="currentPhase" bind:this={currentPhaseRef}>{chosenPhase}</p>
 			<p>
 				<label class="currentDate" for="date">{currentMonth} {chosenDate}</label>
 			</p>
@@ -349,6 +360,9 @@
 				name="date"
 				min={dateMin}
 				max={dateMax}
+				on:input={(e) => {
+					updatePhase(e.target.value);
+				}}
 			/>
 			<p class="rangeLabel">{currentMonth} {dateMax}</p>
 		</div>
