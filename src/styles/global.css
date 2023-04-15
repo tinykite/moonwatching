@@ -196,7 +196,7 @@ a:active {
 .form__input:focus {
 	background-color: none;
 	outline: none;
-	border-width: 0 0 2px 0;
+	border-width: 0 0 3px 0;
 	border-color: #86c2f6;
 }
 
