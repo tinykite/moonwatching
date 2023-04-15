@@ -178,6 +178,7 @@ a:active {
 	color: #e4edff;
 	font-size: 1.25rem;
 	font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
+	border-radius: 0; /* Necessary to avoid default iOS input border rounding */
 }
 
 .form__input--sm {
