@@ -48,44 +48,43 @@
 	};
 </script>
 
-{#if $indeterminateDate}
-	<form
-		class="custom-date-lookup"
-		transition:fade
-		on:submit={(event) => {
-			onSubmit(event);
-		}}
-	>
-		<div class="input-group">
-			<label for="date" class="form__label">Date (MM/DD/YYYY)</label>
-			<input
-				bind:this={dateInput}
-				type="text"
-				id="date"
-				class="form__input"
-				bind:value={userDate}
-				required
-				title="Please enter a date in the format MM/DD/YYYY"
-				pattern={String.raw`^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$`}
-				maxLength={10}
-			/>
-		</div>
-	</form>
-	{#if error}
-		<p class="custom-date-lookup__error">{errorMessage}</p>
-	{/if}
+<form
+	class="dateInputContainer"
+	on:submit={(event) => {
+		onSubmit(event);
+	}}
+>
+	<div class="input-group">
+		<label for="date">Date (MM/DD/YYYY)</label>
+		<input
+			bind:this={dateInput}
+			type="text"
+			id="date"
+			class="form__input"
+			bind:value={userDate}
+			required
+			title="Please enter a date in the format MM/DD/YYYY"
+			pattern={String.raw`^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$`}
+			maxLength={10}
+		/>
+	</div>
+</form>
+{#if error}
+	<p class="custom-date-lookup__error">{errorMessage}</p>
 {/if}
 
 <style>
-	.custom-date-lookup {
-		margin: 1.5rem auto 0;
+	.dateInputContainer {
 		display: flex;
 		justify-content: center;
+		grid-row: 1;
+		grid-column: 1 / 1;
+		transform: translateX(100%);
+		opacity: 0;
 	}
 
 	.input-group {
 		display: flex;
 		flex-direction: column;
-		margin-right: 1rem;
 	}
 </style>

@@ -9,6 +9,7 @@
 	import CurrentDate from '../components/CurrentDate.svelte';
 	import { phase } from '$lib/stores';
 	import { animate } from 'motion';
+	import { timeline } from 'motion';
 
 	export let data: PageData;
 
@@ -31,13 +32,24 @@
 		document.body.style.backgroundColor = $backgroundColor;
 		animate('.illustrationWrapper', { opacity: 1 }, { duration: 1 });
 	}
+
+	const toggleDateInput = () => {
+		timeline([
+			['.currentDateContainer', { transform: 'translateX(-100%)', opacity: 0 }, { duration: 0.5 }],
+			[
+				'.dateInputContainer',
+				{ transform: 'translateX(0)', opacity: 1 },
+				{ duration: 0.5, at: '-0.5 }' }
+			]
+		]);
+	};
 </script>
 
 <main class="moonContainer">
 	<MoonPhase phase={$phase} />
 
 	<div class="dateContainer">
-		<CurrentDate currentDate={data.moonPhase.date} />
+		<CurrentDate currentDate={data.moonPhase.date} handleToggle={() => toggleDateInput()} />
 		<DateInput />
 	</div>
 </main>
@@ -56,7 +68,12 @@
 	}
 
 	.dateContainer {
-		margin-top: 3rem;
+		margin: 3rem auto;
+		display: grid;
+		position: relative;
+		width: max-content;
+		height: max-content;
+		overflow: hidden;
 	}
 
 	@media (min-width: 1441px) {
