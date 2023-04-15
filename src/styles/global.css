@@ -172,7 +172,7 @@ a:active {
 .form__input {
 	background: none;
 	border-color: #d0d0d0;
-	border-width: 0 0 3px 0;
+	border-width: 0 0 2px 0;
 	padding: 0.125rem 0.5rem 0.125rem 0;
 	margin-top: 0.25rem;
 	color: #e4edff;
@@ -196,7 +196,7 @@ a:active {
 .form__input:focus {
 	background-color: none;
 	outline: none;
-	border-width: 0 0 3px 0;
+	border-width: 0 0 2px 0;
 	border-color: #86c2f6;
 }
 
