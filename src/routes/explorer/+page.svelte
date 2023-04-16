@@ -291,7 +291,7 @@
 <h1 hidden>Lunar Cycle Visualization</h1>
 <main class="moonVisContainer">
 	<div class="moonContainer" bind:this={moonContainer}>
-		<svg bind:this={moonIllustrations} viewBox="0 0 200 200" class="moon" style="filter:url(#glow)">
+		<svg bind:this={moonIllustrations} viewBox="0 0 200 200" class="moon">
 			<defs>
 				<clipPath id="moonClip">
 					<circle cx="100" cy="100" r="100" />
@@ -314,7 +314,7 @@
 				</filter>
 			</defs>
 
-			<g clip-path="url(#moonClip)">
+			<g clip-path="url(#moonClip)" filter="url(#glow)">
 				<circle
 					fill="#FFFFFF"
 					clip-path="url(#moonPhase)"
@@ -406,7 +406,13 @@
 	}
 
 	.moon {
-		max-height: 50vh;
+		width: 80%;
+	}
+
+	@media (min-width: 48rem) {
+		.moon {
+			max-height: 50vh;
+		}
 	}
 
 	.blobs {
@@ -423,7 +429,13 @@
 		grid-gap: 2rem;
 		margin: 2rem auto;
 		align-items: center;
-		max-width: 40rem;
+		width: 80%;
+	}
+
+	@media (min-width: 48rem) {
+		.moonVisContainer {
+			max-width: 40rem;
+		}
 	}
 	.moonContainer {
 		display: flex;
@@ -443,8 +455,13 @@
 		appearance: none;
 		background: transparent;
 		cursor: pointer;
-		width: 15rem;
 		margin: 0 1.125rem;
+	}
+
+	@media (min-width: 48rem) {
+		input[type='range'] {
+			width: 15rem;
+		}
 	}
 
 	/* Removes default focus */
