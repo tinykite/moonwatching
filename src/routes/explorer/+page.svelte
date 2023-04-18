@@ -288,10 +288,9 @@
 	};
 </script>
 
-<h1 hidden>Lunar Cycle Visualization</h1>
 <main class="moonVisContainer">
 	<div class="moonContainer" bind:this={moonContainer}>
-		<svg bind:this={moonIllustrations} viewBox="0 0 200 200" class="moon">
+		<svg bind:this={moonIllustrations} viewBox="0 0 200 200" class="moon" aria-hidden="true">
 			<defs>
 				<clipPath id="moonClip">
 					<circle cx="100" cy="100" r="100" />
@@ -366,23 +365,6 @@
 			/>
 			<p class="rangeLabel">{currentMonth} {dateMax}</p>
 		</div>
-	</div>
-	<div class="moonVisDetail" hidden>
-		<article>
-			<p>Current Phase:</p>
-			<h2>Waxing Crescent</h2>
-			<details>
-				<summary>Details</summary>
-				<p>
-					This is the invisible phase of the Moon, with the illuminated side of the Moon facing the
-					Sun and the night side facing Earth. In this phase, the Moon is in the same part of the
-					sky as the Sun and rises and sets with the Sun. Not only is the illuminated side facing
-					away from the Earth, it’s also up during the day! Remember, in this phase, the Moon
-					doesn’t usually pass directly between Earth and the Sun, due to the inclination of the
-					Moon’s orbit. It only passes near the Sun from our perspective on Earth.
-				</p>
-			</details>
-		</article>
 	</div>
 </main>
 
