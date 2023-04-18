@@ -44,10 +44,10 @@
 			<a href="/about" class="nav__link">About</a>
 		</li>
 		<li class="nav__item">
-			<a href="/explorer" class="nav__link">Lunar Cycle Explorer</a>
+			<a href="/explorer" class="nav__link">Explorer</a>
 		</li>
 		<li class="nav__item">
-			<button on:click={() => openEmailDialog()} class="nav__button">Moon Alerts</button>
+			<button on:click={() => openEmailDialog()} class="nav__button">Alerts</button>
 		</li>
 	</ul>
 </nav>
