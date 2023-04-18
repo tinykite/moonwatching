@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { spline } from '$lib/spline';
-	import { interpolate } from '$lib/math-utils';
+	import { interpolate, getRandomNumber } from '$lib/math-utils';
 	import { onMount } from 'svelte';
 	import * as flubber from 'flubber';
 	import { getDate, format } from 'date-fns';
 	import type { MoonPhase } from '$lib/moon-utils';
 	import { animate } from 'motion';
+	import { moonPaths } from '$lib/consts';
 
 	export let data: PageData;
 	let phasesByDate = data.moonPhases.reduce(
@@ -68,21 +69,6 @@
 		value
 	});
 
-	const paths = {
-		newMoonA: 'M0,0 L0,201',
-		newMoonB: 'M201,0 L201, 201',
-		waxingCrescent:
-			'M80.849 3.5272C50.855 16.483 10.9711 52.0284 11.4579 100.965C11.9191 146.315 46.9093 188.701 96.9563 200C42.1352 197.13 -0.541396 151.371 0.00519188 98.6677C0.534699 49.0904 39.1802 5.97831 90.3716 0C88.0059 0.734478 84.6922 1.87036 80.849 3.5272Z',
-		firstQuarter:
-			'M102 0.0195925C101.335 0.00653088 100.668 5.84175e-08 100 0C44.7715 -4.82823e-06 4.82823e-06 44.7715 0 100C-4.82822e-06 155.228 44.7715 200 100 200C100.668 200 101.335 199.993 102 199.98L102 0.0195925Z',
-		fullMoon:
-			'M200 100C200 155.228 155.228 200 100 200C44.7715 200 0 155.228 0 100C0 44.7715 44.7715 0 100 0C155.228 0 200 44.7715 200 100Z',
-		lastQuarter:
-			'M99 201C154.505 201 199.5 156.005 199.5 100.5C199.5 44.9954 154.505 4.85237e-06 99 0L99 201Z',
-		waningCrescent:
-			'M116.115 3.5272C146.122 16.483 186.024 52.0284 185.537 100.965C185.076 146.315 150.07 188.701 100 200C154.846 197.13 197.542 151.371 196.995 98.6677C196.465 49.0904 157.802 5.97831 106.588 0C108.954 0.734478 112.27 1.87036 116.115 3.5272Z'
-	};
-
 	let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
 
 	$: scaleValue = interpolate({
@@ -97,17 +83,7 @@
 		value
 	});
 
-	const random = (min: number, max: number, float = false) => {
-		const val = Math.random() * (max - min) + min;
-
-		if (float) {
-			return val;
-		}
-
-		return Math.floor(val);
-	};
-
-	const blobs = {
+	let blobs = {
 		top: '',
 		topAccent: '',
 		middle: '',
@@ -130,7 +106,7 @@
 			pullRange: [number, number];
 		}) => {
 			// choose a number of points
-			const numPoints = random(15, 20);
+			const numPoints = getRandomNumber(15, 20);
 			// step used to place each point at equal distances
 			const angleStep = (Math.PI * 2) / numPoints;
 
@@ -141,7 +117,7 @@
 
 			for (let i = 1; i <= numPoints; i++) {
 				// how much randomness should be added to each point
-				const pull = random(pullMin, pullMax, true);
+				const pull = getRandomNumber(pullMin, pullMax, true);
 
 				// x & y coordinates of the current point
 				const x = initialX + Math.cos(i * angleStep) * (xSize * pull);
@@ -199,12 +175,18 @@
 		});
 	});
 
-	let newMoonToWaxingCrescent = flubberInterpolate(paths.newMoonA, paths.waxingCrescent);
-	let waxingCrescentToFirstQuarter = flubberInterpolate(paths.waxingCrescent, paths.firstQuarter);
-	let firstQuarterToFullMoon = flubberInterpolate(paths.firstQuarter, paths.fullMoon);
-	let fullMoonToLastQuarter = flubberInterpolate(paths.fullMoon, paths.lastQuarter);
-	let lastQuarterToWaningCrescent = flubberInterpolate(paths.lastQuarter, paths.waningCrescent);
-	let waningCrescentToNewMoon = flubberInterpolate(paths.waningCrescent, paths.newMoonB);
+	let newMoonToWaxingCrescent = flubberInterpolate(moonPaths.newMoonA, moonPaths.waxingCrescent);
+	let waxingCrescentToFirstQuarter = flubberInterpolate(
+		moonPaths.waxingCrescent,
+		moonPaths.firstQuarter
+	);
+	let firstQuarterToFullMoon = flubberInterpolate(moonPaths.firstQuarter, moonPaths.fullMoon);
+	let fullMoonToLastQuarter = flubberInterpolate(moonPaths.fullMoon, moonPaths.lastQuarter);
+	let lastQuarterToWaningCrescent = flubberInterpolate(
+		moonPaths.lastQuarter,
+		moonPaths.waningCrescent
+	);
+	let waningCrescentToNewMoon = flubberInterpolate(moonPaths.waningCrescent, moonPaths.newMoonB);
 
 	$: if (blobContainer) {
 		blobContainer.style.opacity = `${blobOpacityValue}`;
@@ -274,7 +256,7 @@
 		}
 
 		if (value >= 360) {
-			moonPhaseMask.setAttribute('d', paths.newMoonB);
+			moonPhaseMask.setAttribute('d', moonPaths.newMoonB);
 		}
 	}
 
@@ -297,7 +279,7 @@
 				</clipPath>
 
 				<clipPath id="moonPhase">
-					<path bind:this={moonPhaseMask} d={paths.newMoonA} />
+					<path bind:this={moonPhaseMask} d={moonPaths.newMoonA} />
 				</clipPath>
 
 				<filter id="moonBlur" x="0" y="0">
