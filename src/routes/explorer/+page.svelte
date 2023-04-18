@@ -356,7 +356,7 @@
 		font-size: 0.875rem;
 	}
 	.currentPhase {
-		font-size: 3rem;
+		font-size: 1.5rem;
 		font-family: 'swear-display', serif;
 		font-weight: 500;
 		font-style: normal;
@@ -364,9 +364,21 @@
 		color: #d4dae4;
 	}
 
+	@media (min-width: 48rem) {
+		.currentPhase {
+			font-size: 3rem;
+		}
+	}
+
 	.currentDate {
 		color: rgba(212, 218, 228, 0.8);
-		font-size: 1.125rem;
+		font-size: 1rem;
+	}
+
+	@media (min-width: 48rem) {
+		.currentDate {
+			font-size: 1.125rem;
+		}
 	}
 
 	.moon {
@@ -391,7 +403,7 @@
 		display: grid;
 		grid-template-columns: 1fr;
 		grid-gap: 2rem;
-		margin: 2rem auto;
+		margin: 4rem auto;
 		align-items: center;
 		width: 80%;
 	}
@@ -399,6 +411,7 @@
 	@media (min-width: 48rem) {
 		.moonVisContainer {
 			max-width: 40rem;
+			margin: 6rem auto;
 		}
 	}
 	.moonContainer {
