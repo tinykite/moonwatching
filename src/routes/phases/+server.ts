@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 // // This endpoint returns data manually collected from the Griffifth Observatory website
 // It is only intended for use by a Netlify function for sending automated emails
 // For all other purposes, use the /dynamicPhase and /dynamicPhases endpoints
+// In the near future, these endpoints will be renamed for clarity
 export const GET = (async ({ url, fetch }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const cronRequest = searchParams.has('scheduledFunction');
@@ -17,7 +18,7 @@ export const GET = (async ({ url, fetch }) => {
 
 	const { data: moonData } = await supabase
 		.from('phases')
-		.select('phase, date, ecliptic_longitude')
+		.select('phase, date, time, time_format')
 		.eq('date', date)
 		.single();
 
@@ -25,7 +26,6 @@ export const GET = (async ({ url, fetch }) => {
 		return json('No major moon phases ocurring today');
 	}
 
-	// Commenting out for testing
 	const moonAlertDay = cronRequest && functionTriggers.includes(moonData?.phase);
 
 	if (moonAlertDay) {
