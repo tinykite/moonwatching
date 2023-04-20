@@ -1,5 +1,5 @@
 <a href="/" data-sveltekit-reload>
-	<span class="sr-only">Moon Watching</span>
+	<span class="u-sr-only">Moon Watching</span>
 	<svg
 		width="29"
 		height="60"
