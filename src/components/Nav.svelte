@@ -190,10 +190,20 @@
 	}
 
 	.nav__item:not(:last-child) {
-		margin-right: 1.75rem;
+		margin-right: 0.75rem;
+	}
+
+	@media (min-width: 23.5rem) {
+		.nav__item:not(:last-child) {
+			margin-right: 1rem;
+		}
 	}
 
 	@media (min-width: 37rem) {
+		.nav__item:not(:last-child) {
+			margin-right: 1.75rem;
+		}
+
 		.nav__list {
 			margin: 0;
 		}
