@@ -8,8 +8,7 @@
 	import DateInput from '../components/DateInput.svelte';
 	import CurrentDate from '../components/CurrentDate.svelte';
 	import { phase } from '$lib/stores';
-	import { animate } from 'motion';
-	import { timeline } from 'motion';
+	import { animate, timeline } from 'motion';
 
 	export let data: PageData;
 
