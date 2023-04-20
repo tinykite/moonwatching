@@ -1,11 +1,14 @@
 <script lang="ts">
 	import type { SvelteComponent } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import Logo from './Logo.svelte';
 	import Dialog from './Dialog.svelte';
 	import { enhance, applyAction } from '$app/forms';
 	import { page } from '$app/stores';
 	import classNames from 'classnames';
 	import HalfMoon from './illustrations/HalfMoon.svelte';
+	import Menu from './Menu.svelte';
+	import { browser } from '$app/environment';
 
 	type Form = {
 		email?: string;
@@ -13,13 +16,13 @@
 		success?: string;
 	};
 
+	let nav: HTMLElement;
 	let emailDialog: SvelteComponent;
 
 	// The $: beneath these variables is necessary to subscribe to a built-in store
 	// And trigger a re-render when the store updates.
 
 	let form: Form;
-
 	$: form = $page?.form;
 
 	let error: string | undefined;
@@ -35,16 +38,40 @@
 	function closeEmailDialog() {
 		emailDialog.close();
 	}
+
+	// TODO: Decide if a mobile flyout nav is necessary
+	// let isMenuOpen: boolean = false;
+	// let toggleMenu = () => {
+	// 	isMenuOpen = !isMenuOpen;
+	// };
+
+	// let mediaQuery;
+	// let isMinDesktop: boolean | undefined;
+
+	// const setMatches = () => {
+	// 	isMinDesktop = mediaQuery.matches;
+	// };
+
+	// onMount(() => {
+	// 	mediaQuery = window.matchMedia('(min-width: 800px)');
+	// 	setMatches();
+	// 	mediaQuery.addEventListener('change', () => setMatches());
+	// });
+
+	// onDestroy(() => {
+	// 	mediaQuery && mediaQuery.removeEventListener('change', () => setMatches());
+	// });
 </script>
 
-<nav class="nav">
+<nav class="nav" bind:this={nav}>
 	<Logo />
 	<ul class="nav__list">
 		<li class="nav__item">
 			<a href="/about" class="nav__link">About</a>
 		</li>
+
 		<li class="nav__item">
-			<a href="/explorer" class="nav__link">Explorer</a>
+			<a href="/phases-by-month" class="nav__link">Phases by Month</a>
 		</li>
 		<li class="nav__item">
 			<button on:click={() => openEmailDialog()} class="nav__button">Alerts</button>
@@ -103,7 +130,7 @@
 				>
 				<button class="form__button">
 					{#if status === 'loading'}
-						<span class="sr-only">Loading</span>
+						<span class="u-sr-only">Loading</span>
 						<div class="form__dot" />
 						<div class="form__dot" />
 						<div class="form__dot" />
@@ -119,17 +146,21 @@
 <style>
 	.nav {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		margin-top: 3rem;
 		color: #e4edff;
 		font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 		font-weight: 500;
+		font-size: 0.875rem;
 	}
 
 	@media (min-width: 37rem) {
 		.nav {
 			justify-content: space-between;
+			flex-direction: row;
+			font-size: 1rem;
 		}
 	}
 
@@ -138,10 +169,10 @@
 	}
 
 	.nav__list {
+		display: flex;
 		list-style: none;
-		margin: 0;
+		margin: 1.5rem auto 0;
 		padding: 0;
-		display: none;
 	}
 
 	.nav__button {
@@ -159,12 +190,12 @@
 	}
 
 	.nav__item:not(:last-child) {
-		margin-right: 1.5rem;
+		margin-right: 1.75rem;
 	}
 
 	@media (min-width: 37rem) {
 		.nav__list {
-			display: flex;
+			margin: 0;
 		}
 	}
 </style>
