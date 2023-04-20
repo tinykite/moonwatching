@@ -23,7 +23,8 @@
 </button>
 
 <style>
-	.mobileNav {
+	/* TODO: Decide if mobile nav is necessary */
+	/* .mobileNav {
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -32,7 +33,7 @@
 		width: 100%;
 		height: 100%;
 		background: #d7e4ff;
-	}
+	} */
 
 	.navButton {
 		border: none;
