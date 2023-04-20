@@ -154,6 +154,7 @@
 		font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 		font-weight: 500;
 		font-size: 0.875rem;
+		color: #d4dae4;
 	}
 
 	@media (min-width: 37rem) {
