@@ -12,7 +12,7 @@
 	}
 
 	function lightDismiss({ target }: { target: any }) {
-		if (target.nodeName === 'DIALOG') {
+		if (target.classList.contains('dialog')) {
 			dialog.close('dismiss');
 			isOpen = false;
 		}
@@ -62,6 +62,7 @@
 		position: fixed;
 		inset: 0;
 		background-color: #e4edff;
+		border: none;
 	}
 
 	.dialog:not([open]) {
