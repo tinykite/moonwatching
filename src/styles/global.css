@@ -1,11 +1,11 @@
-/* @font-face {
+@font-face {
 	font-family: 'Vulf Mono Light';
 	src: url('/fonts/Vulf_Mono-Light_web.woff2') format('woff2'),
 		url('/fonts/Vulf_Mono-Light_web-Web.woff') format('woff');
 	font-weight: 100;
 	font-style: normal;
 	font-display: block;
-} */
+}
 
 /* TODO: Resolve FOUT a better way instead of font-display: block;
 There are currently fallback fonts in-place but they have a dramatically smaller x-height than Vulf Mono */
@@ -282,7 +282,7 @@ a:active {
 	}
 }
 
-.u-sr-only {
+.u-visuallyHidden {
 	border: 0;
 	clip: rect(0 0 0 0);
 	clip-path: polygon(0px 0px, 0px 0px, 0px 0px);

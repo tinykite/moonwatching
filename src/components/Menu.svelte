@@ -6,7 +6,7 @@
 </script>
 
 <button aria-hasPopup="true" on:click={() => handleClick()} class="navButton">
-	<span class="u-sr-only">Open Navigation Menu</span>
+	<span class="u-visuallyHidden">Open Navigation Menu</span>
 	<svg
 		class="menuIcon"
 		width="24"

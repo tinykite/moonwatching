@@ -4,7 +4,7 @@
 </script>
 
 <div class="illustrationWrapper">
-	<p class="u-sr-only">Current Moon Phase: {phase}</p>
+	<p class="u-visuallyHidden">Current Moon Phase: {phase}</p>
 	<MoonIllustration {phase} />
 </div>
 

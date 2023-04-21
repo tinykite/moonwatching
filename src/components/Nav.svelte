@@ -130,7 +130,7 @@
 				>
 				<button class="form__button">
 					{#if status === 'loading'}
-						<span class="u-sr-only">Loading</span>
+						<span class="u-visuallyHidden">Loading</span>
 						<div class="form__dot" />
 						<div class="form__dot" />
 						<div class="form__dot" />
