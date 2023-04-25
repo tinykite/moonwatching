@@ -44,7 +44,7 @@
 	};
 </script>
 
-<main class="moonContainer">
+<main class="pageMain">
 	<MoonPhase phase={$phase} />
 
 	<div class="dateContainer">
@@ -54,14 +54,14 @@
 </main>
 
 <style>
-	.moonContainer {
+	.pageMain {
 		display: grid;
 		margin: 6vh auto 0;
 		align-items: center;
 	}
 
 	@media (min-width: 1440px) {
-		.moonContainer {
+		.pageMain {
 			margin: 12vh auto 2rem;
 		}
 	}
