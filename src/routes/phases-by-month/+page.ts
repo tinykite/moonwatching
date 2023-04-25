@@ -2,7 +2,7 @@ import type { PageLoad } from './$types';
 import { error } from '@sveltejs/kit';
 
 export const load = (async ({ fetch }) => {
-	const res = await fetch(`/api/phases?month=true`);
+	const res = await fetch(`/api/dynamicPhases?month=true`);
 	const moonPhases = await res.json();
 
 	if (res.ok) {

@@ -3,6 +3,7 @@ import type { RequestHandler } from './$types';
 import { eachDayOfInterval, isValid, addYears } from 'date-fns';
 import { error } from '@sveltejs/kit';
 
+// This is an internal route used to calculate an entire years worth of dates.
 export const GET = (async ({ url }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const query = searchParams.get('date');
