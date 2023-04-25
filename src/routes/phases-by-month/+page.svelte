@@ -34,7 +34,7 @@
 
 	let currentPhaseRef: HTMLElement;
 	let moonPhaseMask: SVGPathElement;
-	let moonIllustrations: SVGSVGElement;
+	let moonIllustrationRef: SVGSVGElement;
 	let moonContainer: HTMLElement;
 	let blobContainer: SVGGElement;
 	let eclipticDomain = [0, 180];
@@ -191,7 +191,7 @@
 	$: if (blobContainer) {
 		blobContainer.style.opacity = `${blobOpacityValue}`;
 		blobContainer.style.transform = `rotate(${rotateValue}deg) translateX(${translateXValue}%)`;
-		moonIllustrations.style.transform = `scale(${scaleValue}%)`;
+		moonIllustrationRef.style.transform = `scale(${scaleValue}%)`;
 
 		let newPath;
 
@@ -270,9 +270,9 @@
 	};
 </script>
 
-<main class="moonVisContainer">
+<main class="pageMain">
 	<div class="moonContainer" bind:this={moonContainer}>
-		<svg bind:this={moonIllustrations} viewBox="0 0 200 200" class="moon" aria-hidden="true">
+		<svg bind:this={moonIllustrationRef} viewBox="0 0 200 200" class="moon" aria-hidden="true">
 			<defs>
 				<clipPath id="moonClip">
 					<circle cx="100" cy="100" r="100" />
@@ -316,17 +316,7 @@
 			</g>
 		</svg>
 
-		<!-- TODO: Remove this when no longer needed for testing  -->
-		<!-- <div class="flex moonLabel">
-			<label for="ecliptic">Ecliptic Longitude</label>: {value}
-		</div>
-		<div class="rangeContainer">
-			<p>{min}</p>
-			<input bind:value type="range" id="ecliptic" name="ecliptic" {min} {max} />
-			<p>{max}</p>
-		</div> -->
-
-		<div class="flex moonLabel">
+		<div class="moonLabel">
 			<p class="currentPhase" bind:this={currentPhaseRef}>{chosenPhase}</p>
 			<p>
 				<label class="currentDate" for="date">{currentMonth} {chosenDate}</label>
@@ -351,10 +341,47 @@
 </main>
 
 <style>
-	.rangeLabel {
-		color: #e4edff;
-		font-size: 0.875rem;
+	.pageMain {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-gap: 2rem;
+		margin: 4rem auto;
+		align-items: center;
+		width: 80%;
 	}
+
+	@media (min-width: 48rem) {
+		.pageMain {
+			max-width: 40rem;
+			margin: 6rem auto;
+		}
+	}
+	.moonContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.moon {
+		width: 80%;
+	}
+
+	@media (min-width: 48rem) {
+		.moon {
+			max-height: 50vh;
+		}
+	}
+
+	.blobs {
+		opacity: 0.5;
+		transition: all 0.2 ease-in;
+	}
+
+	.moonLabel {
+		margin-top: 2rem;
+		text-align: center;
+	}
+
 	.currentPhase {
 		font-size: 1.5rem;
 		font-family: 'swear-display', serif;
@@ -381,48 +408,14 @@
 		}
 	}
 
-	.moon {
-		width: 80%;
-	}
-
-	@media (min-width: 48rem) {
-		.moon {
-			max-height: 50vh;
-		}
-	}
-
-	.blobs {
-		opacity: 0.5;
-		transition: all 0.2 ease-in;
-	}
-	.moonLabel {
-		margin-top: 2rem;
-		text-align: center;
-	}
-	.moonVisContainer {
-		display: grid;
-		grid-template-columns: 1fr;
-		grid-gap: 2rem;
-		margin: 4rem auto;
-		align-items: center;
-		width: 80%;
-	}
-
-	@media (min-width: 48rem) {
-		.moonVisContainer {
-			max-width: 40rem;
-			margin: 6rem auto;
-		}
-	}
-	.moonContainer {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
 	.rangeContainer {
 		display: flex;
 		margin-top: 2.5rem;
+	}
+
+	.rangeLabel {
+		color: #e4edff;
+		font-size: 0.875rem;
 	}
 
 	/* https://www.smashingmagazine.com/2021/12/create-custom-range-input-consistent-browsers/ */
