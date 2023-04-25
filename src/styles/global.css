@@ -237,16 +237,27 @@ a:active {
 	color: #000e24;
 }
 
-.form__button--inverse {
+.form__button--secondary {
 	border: 1px solid #000e24;
 	background: none;
 	color: #000e24;
 }
 
-.form__button--inverse:hover {
+.form__button--secondary:hover {
 	border: 2px solid #000e24;
 	color: #d0d0d0;
 	background: #000e24;
+}
+
+.form__button--tertiary {
+	border: 1px solid white;
+	color: white;
+}
+
+.form__button--tertiary:hover {
+	border: 1px solid white;
+	background: white;
+	color: #000e24;
 }
 
 .form__dot {

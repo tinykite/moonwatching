@@ -40,43 +40,47 @@
 	}
 
 	// TODO: Decide if a mobile flyout nav is necessary
-	// let isMenuOpen: boolean = false;
-	// let toggleMenu = () => {
-	// 	isMenuOpen = !isMenuOpen;
-	// };
+	let isMenuOpen: boolean = false;
+	let toggleMenu = () => {
+		isMenuOpen = !isMenuOpen;
+	};
 
-	// let mediaQuery;
-	// let isMinDesktop: boolean | undefined;
+	let mediaQuery;
+	let isMinDesktop: boolean | undefined;
 
-	// const setMatches = () => {
-	// 	isMinDesktop = mediaQuery.matches;
-	// };
+	const setMatches = () => {
+		isMinDesktop = mediaQuery.matches;
+	};
 
-	// onMount(() => {
-	// 	mediaQuery = window.matchMedia('(min-width: 800px)');
-	// 	setMatches();
-	// 	mediaQuery.addEventListener('change', () => setMatches());
-	// });
+	onMount(() => {
+		mediaQuery = window.matchMedia('(min-width: 800px)');
+		setMatches();
+		mediaQuery.addEventListener('change', () => setMatches());
+	});
 
-	// onDestroy(() => {
-	// 	mediaQuery && mediaQuery.removeEventListener('change', () => setMatches());
-	// });
+	onDestroy(() => {
+		mediaQuery && mediaQuery.removeEventListener('change', () => setMatches());
+	});
 </script>
 
 <nav class="nav" bind:this={nav}>
 	<Logo />
-	<ul class="nav__list">
-		<li class="nav__item">
-			<a href="/about" class="nav__link">About</a>
-		</li>
+	{#if isMinDesktop}
+		<ul class="nav__list">
+			<li class="nav__item">
+				<a href="/about" class="nav__link">About</a>
+			</li>
 
-		<li class="nav__item">
-			<a href="/phases-by-month" class="nav__link">Phases by Month</a>
-		</li>
-		<li class="nav__item">
-			<button on:click={() => openEmailDialog()} class="nav__button">Alerts</button>
-		</li>
-	</ul>
+			<li class="nav__item">
+				<a href="/phases-by-month" class="nav__link">Phases by Month</a>
+			</li>
+			<li class="nav__item">
+				<button on:click={() => openEmailDialog()} class="nav__button">Alerts</button>
+			</li>
+		</ul>
+	{:else if mediaQuery}
+		<Menu />
+	{/if}
 </nav>
 
 <Dialog
@@ -125,7 +129,7 @@
 			</div>
 
 			<div class="u-marginTop-xs u-marginAuto u-flex u-justifyContent-center">
-				<button class="form__button form__button--inverse" on:click={() => closeEmailDialog()}
+				<button class="form__button form__button--secondary" on:click={() => closeEmailDialog()}
 					>Close</button
 				>
 				<button class="form__button">
@@ -146,23 +150,14 @@
 <style>
 	.nav {
 		display: flex;
-		flex-direction: column;
-		justify-content: center;
+		justify-content: space-between;
 		align-items: center;
 		margin-top: 3rem;
 		color: #e4edff;
 		font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 		font-weight: 500;
-		font-size: 0.875rem;
+		font-size: 1rem;
 		color: #d4dae4;
-	}
-
-	@media (min-width: 37rem) {
-		.nav {
-			justify-content: space-between;
-			flex-direction: row;
-			font-size: 1rem;
-		}
 	}
 
 	.nav:hover .nav__item:not(:hover) {
