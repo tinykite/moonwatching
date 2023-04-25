@@ -3,13 +3,13 @@
 	import MoonIllustration from './MoonIllustration.svelte';
 </script>
 
-<div class="illustrationWrapper">
+<div class="illustrationContainer">
 	<p class="u-visuallyHidden">Current Moon Phase: {phase}</p>
 	<MoonIllustration {phase} />
 </div>
 
 <style>
-	.illustrationWrapper {
+	.illustrationContainer {
 		display: flex;
 		justify-content: center;
 		align-items: center;
