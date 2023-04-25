@@ -39,7 +39,7 @@ export const POST = (async ({ request, fetch }) => {
 
 	// Retrieve rendered html email
 	const emailRes = await fetch(
-		`/emails?templateName=MoonAlertBasicTemplate&time=${formattedTime}&phase=${phase}`
+		`/api/emails?templateName=MoonAlertBasicTemplate&time=${formattedTime}&phase=${phase}`
 	);
 	const html = await emailRes.json();
 

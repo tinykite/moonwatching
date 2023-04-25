@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
 import { error } from '@sveltejs/kit';
 export const load = (async ({ fetch }) => {
-	const res = await fetch(`/dynamicPhase`);
+	const res = await fetch(`/api/phase`);
 	const moonPhase = await res.json();
 
 	if (res.ok) {

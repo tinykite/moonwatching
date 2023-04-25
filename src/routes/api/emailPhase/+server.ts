@@ -6,8 +6,7 @@ import { format } from 'date-fns';
 
 // // This endpoint returns data manually collected from the Griffifth Observatory website
 // It is only intended for use by a Netlify function for sending automated emails
-// For all other purposes, use the /dynamicPhase and /dynamicPhases endpoints
-// In the near future, these endpoints will be renamed for clarity
+// For all other purposes, use the /phases and /phase endpoints
 export const GET = (async ({ url, fetch }) => {
 	const searchParams = new URLSearchParams(url.search);
 	const cronRequest = searchParams.has('scheduledFunction');
@@ -29,7 +28,7 @@ export const GET = (async ({ url, fetch }) => {
 	const moonAlertDay = cronRequest && functionTriggers.includes(moonData?.phase);
 
 	if (moonAlertDay) {
-		const alert = await fetch('/alerts', {
+		const alert = await fetch('/api/alerts', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
