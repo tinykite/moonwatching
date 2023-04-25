@@ -29,7 +29,7 @@
 
 	$: if (browser && phase) {
 		document.body.style.backgroundColor = $backgroundColor;
-		animate('.illustrationWrapper', { opacity: 1 }, { duration: 1 });
+		animate('.illustrationContainer', { opacity: 1 }, { duration: 1 });
 	}
 
 	const toggleDateInput = () => {
@@ -46,7 +46,6 @@
 
 <main class="pageMain">
 	<MoonPhase phase={$phase} />
-
 	<div class="dateContainer">
 		<CurrentDate currentDate={data.moonPhase.date} handleToggle={() => toggleDateInput()} />
 		<DateInput />
