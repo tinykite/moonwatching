@@ -1,8 +1,6 @@
 # Hello!
 
-🚧 This service is still an in-progress experiment with SvelteKit 1.0. Please expect lots of design and code flaws 🚧
-
-Welcome to Moon Watching, a website that visualizes the current moon phase and lets folks sign up for email updates on the New and Full Moon.
+Welcome to Moon Watching, a website that visualizes moon phases and lets folks sign up for email updates on the New and Full Moon.
 
 The main website is built with [SvelteKit](https://kit.svelte.dev/). Other relevant details:
 
