@@ -173,6 +173,7 @@
 			size: [100, 25],
 			pullRange: [0.5, 0.9]
 		});
+		animate('.moon', { opacity: 1 }, { duration: 1 });
 	});
 
 	let newMoonToWaxingCrescent = flubberInterpolate(moonPaths.newMoonA, moonPaths.waxingCrescent);
@@ -364,6 +365,7 @@
 
 	.moon {
 		width: 80%;
+		opacity: 0;
 	}
 
 	@media (min-width: 48rem) {
