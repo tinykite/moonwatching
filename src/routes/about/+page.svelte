@@ -70,8 +70,14 @@
 	main {
 		display: grid;
 		justify-items: center;
-		padding-bottom: 5rem;
+		padding-bottom: 1rem;
 		color: #e4edff;
+	}
+
+	@media (min-width: 46rem) {
+		main {
+			padding-bottom: 5rem;
+		}
 	}
 
 	article {
@@ -87,11 +93,17 @@
 	}
 
 	.introduction {
-		font-size: 2rem;
-		margin-top: 6rem;
-		margin-bottom: 6rem;
+		font-size: 1.5rem;
+		margin: 2rem auto;
 		max-width: 40rem;
 		opacity: 0;
+	}
+
+	@media (min-width: 46rem) {
+		.introduction {
+			font-size: 2rem;
+			margin: 6rem auto;
+		}
 	}
 
 	.text {
@@ -115,9 +127,16 @@
 	}
 
 	.callout {
-		font-size: 1.75rem;
-		margin: 3rem auto 3rem;
-		max-width: 60%;
+		font-size: 1.25rem;
+		margin: 1.5rem auto 1.5rem;
+	}
+
+	@media (min-width: 46rem) {
+		.callout {
+			max-width: 60%;
+			font-size: 1.75rem;
+			margin: 3rem auto 3rem;
+		}
 	}
 
 	.callout--emphasis {
@@ -125,14 +144,4 @@
 		font-weight: 600;
 		font-style: italic;
 	}
-
-	/* .button {
-		outline: none;
-		border: 1px solid #e4edff;
-		background: none;
-		border-radius: 100px;
-		padding: 0.5rem 1rem 0.55rem;
-		margin: 3rem auto 0;
-		cursor: pointer;
-	} */
 </style>
