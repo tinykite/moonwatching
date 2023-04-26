@@ -56,8 +56,8 @@
 
 		<p class="text">
 			We probably wouldn’t remember that at the right moment if we tried. But that’s what our
-			friendly moon robot, Simon, is made for. And they’d love to help you discover just a little
-			more magic in your universe.
+			friendly moon robot is made for. And they’d love to help you discover just a little more magic
+			in your universe.
 		</p>
 
 		<p class="text text--emphasis">
