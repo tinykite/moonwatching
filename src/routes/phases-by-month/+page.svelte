@@ -362,6 +362,7 @@
 		flex-direction: column;
 		align-items: center;
 		position: relative;
+		overflow: hidden;
 	}
 
 	.moonContainer::before {
@@ -371,19 +372,12 @@
 		top: 0;
 		left: 50%;
 		transform: translate(-50%);
-		width: 30vh;
-		height: 30vh;
+		width: 60vh;
+		height: 60vh;
 		background: url('/moon-poles.jpg') no-repeat center center;
 		opacity: 0.2;
 		mix-blend-mode: color-burn;
 		z-index: 1;
-	}
-
-	@media (min-width: 48rem) {
-		.moonContainer::before {
-			width: 50vh;
-			height: 50vh;
-		}
 	}
 
 	.moon {
