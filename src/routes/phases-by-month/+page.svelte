@@ -388,6 +388,7 @@
 
 	@media (min-width: 48rem) {
 		.moon {
+			padding-top: 2rem;
 			max-height: 50vh;
 		}
 	}
@@ -431,6 +432,7 @@
 	.rangeContainer {
 		display: flex;
 		margin-top: 2.5rem;
+		padding-bottom: 2.5rem;
 	}
 
 	.rangeLabel {
@@ -446,6 +448,7 @@
 		background: transparent;
 		cursor: pointer;
 		margin: 0 1.125rem;
+		width: 25vw;
 	}
 
 	@media (min-width: 48rem) {
