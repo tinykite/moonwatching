@@ -8,7 +8,6 @@
 	import classNames from 'classnames';
 	import HalfMoon from './illustrations/HalfMoon.svelte';
 	import Menu from './Menu.svelte';
-	import { browser } from '$app/environment';
 
 	type Form = {
 		email?: string;
@@ -89,7 +88,7 @@
 	title="Sign up for email updates on the new and full moon"
 >
 	<span slot="icon" class="u-marginAuto">
-		<HalfMoon />
+		<HalfMoon variant="dark" />
 	</span>
 
 	<div slot="form" class="u-marginTop-sm">
