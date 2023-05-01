@@ -3,8 +3,7 @@
 	import DateToggle from './DateToggle.svelte';
 	export let currentDate: string;
 	export let handleToggle: () => void;
-
-	const formattedDate = format(new Date(currentDate), 'MMMM do, yyyy');
+	const formattedDate = format(new Date(`${currentDate}T06:00:00`), 'MMMM do, yyyy');
 </script>
 
 <div class="currentDateContainer">
