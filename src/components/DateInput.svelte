@@ -27,9 +27,9 @@
 		const nextQuarter = astronomy.SearchMoonQuarter(date);
 		const newPhase = calculatePhase({ nextQuarter, date });
 
-		await animate('.illustrationWrapper', { opacity: 0 }, { duration: 0.75 }).finished;
+		await animate('.illustrationContainer', { opacity: 0 }, { duration: 0.75 }).finished;
 		phase.set(newPhase);
-		animate('.illustrationWrapper', { opacity: 1 }, { duration: 0.75 });
+		animate('.illustrationContainer', { opacity: 1 }, { duration: 0.75 });
 	};
 
 	$: if (userDate && validDateFormat.test(userDate)) {
