@@ -1,36 +1,30 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import MoonPhase from '../components/MoonPhase.svelte';
-	import { getBackgroundColorScales, interpolate } from '$lib/math-utils';
-	import Color from 'colorjs.io';
-	import { backgroundColor } from '$lib/stores';
-	import { browser } from '$app/environment';
 	import DateInput from '../components/DateInput.svelte';
 	import CurrentDate from '../components/CurrentDate.svelte';
 	import { phase } from '$lib/stores';
 	import { animate, timeline } from 'motion';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
 
 	phase.set(data.moonPhase.phase);
 
-	const { eclipticDomain, lightnessRange } = getBackgroundColorScales(
-		data.moonPhase.ecliptic_longitude
-	);
+	// TODO: Refactor to transition the opacity of a background color layer
+	// instead of the background color itself for performance.
+	// const { eclipticDomain, lightnessRange } = getBackgroundColorScales(
+	// 	data.moonPhase.ecliptic_longitude
+	// );
 
-	const backgroundOffset = interpolate({
-		domain: eclipticDomain,
-		range: lightnessRange,
-		value: data.moonPhase.ecliptic_longitude
-	});
-	const color = new Color('#001D4A');
-	color.lch.l *= backgroundOffset;
-	backgroundColor.set(color.toString({ format: 'hex' }));
-
-	$: if (browser && phase) {
-		document.body.style.backgroundColor = $backgroundColor;
-		animate('.illustrationContainer', { opacity: 1 }, { duration: 1 });
-	}
+	// const backgroundOffset = interpolate({
+	// 	domain: eclipticDomain,
+	// 	range: lightnessRange,
+	// 	value: data.moonPhase.ecliptic_longitude
+	// });
+	// const color = new Color('#001D4A');
+	// color.lch.l *= backgroundOffset;
+	// backgroundColor.set(color.toString({ format: 'hex' }));
 
 	const toggleDateInput = () => {
 		timeline([
