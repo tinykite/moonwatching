@@ -362,7 +362,6 @@
 		flex-direction: column;
 		align-items: center;
 		position: relative;
-		overflow: hidden;
 	}
 
 	.moonContainer::before {
@@ -372,12 +371,19 @@
 		top: 0;
 		left: 50%;
 		transform: translate(-50%);
-		width: 60vh;
-		height: 60vh;
+		width: 30vh;
+		height: 30vh;
 		background: url('/moon-poles.jpg') no-repeat center center;
 		opacity: 0.2;
 		mix-blend-mode: color-burn;
 		z-index: 1;
+	}
+
+	@media (min-width: 48rem) {
+		.moonContainer::before {
+			width: 50vh;
+			height: 50vh;
+		}
 	}
 
 	.moon {
@@ -388,7 +394,6 @@
 
 	@media (min-width: 48rem) {
 		.moon {
-			padding-top: 2rem;
 			max-height: 50vh;
 		}
 	}
@@ -432,7 +437,6 @@
 	.rangeContainer {
 		display: flex;
 		margin-top: 2.5rem;
-		padding-bottom: 2.5rem;
 	}
 
 	.rangeLabel {
@@ -448,7 +452,6 @@
 		background: transparent;
 		cursor: pointer;
 		margin: 0 1.125rem;
-		width: 25vw;
 	}
 
 	@media (min-width: 48rem) {
