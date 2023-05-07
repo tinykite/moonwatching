@@ -273,49 +273,62 @@
 
 <main class="pageMain">
 	<div class="moonContainer" bind:this={moonContainer}>
-		<svg bind:this={moonIllustrationRef} viewBox="0 0 200 200" class="moon" aria-hidden="true">
-			<defs>
-				<clipPath id="moonClip">
-					<circle cx="100" cy="100" r="100" />
-				</clipPath>
+		<div class="moonGroup">
+			<svg bind:this={moonIllustrationRef} viewBox="0 0 200 200" class="moon" aria-hidden="true">
+				<defs>
+					<filter id="moonTexture">
+						<feImage href="/moon-poles.jpg" result="texture-img" />
+						<feBlend in="SourceGraphic" in2="texture-img" mode="color-burn" />
+					</filter>
 
-				<clipPath id="moonPhase">
-					<path bind:this={moonPhaseMask} d={moonPaths.newMoonA} />
-				</clipPath>
+					<clipPath id="moonClip">
+						<circle cx="100" cy="100" r="100" />
+					</clipPath>
 
-				<filter id="moonBlur" x="0" y="0">
-					<feGaussianBlur in="SourceGraphic" stdDeviation="20" />
-				</filter>
+					<clipPath id="moonPhase">
+						<path bind:this={moonPhaseMask} d={moonPaths.newMoonA} />
+					</clipPath>
 
-				<filter id="glow">
-					<feGaussianBlur stdDeviation="20" result="coloredBlur" />
-					<feMerge>
-						<feMergeNode in="coloredBlur" />
-						<feMergeNode in="SourceGraphic" />
-					</feMerge>
-				</filter>
-			</defs>
+					<filter id="moonBlur" x="0" y="0">
+						<feGaussianBlur in="SourceGraphic" stdDeviation="20" />
+					</filter>
 
-			<g clip-path="url(#moonClip)" filter="url(#glow)">
-				<circle
-					fill="#FFFFFF"
-					clip-path="url(#moonPhase)"
-					style="filter:url(#moonBlur)"
-					r="100"
-					cy="100"
-					cx="100"
-				/>
-				<g class="blobs" bind:this={blobContainer}>
-					<path class="blob" d={blobs.middle} fill="#B3B3B3" />
-					<path class="blob" d={blobs.bottom} fill="#E6E6E6" />
-					<path class="blob" d={blobs.top} fill="rgba(0, 0, 0, 0.5)" />
-					<path class="blob" d={blobs.middleAccent} fill="#E6E6E6" />
-					<path class="blob" d={blobs.topAccent} fill="#E6E6E6" />
-					<path class="blob" d={blobs.bottomAccent} fill="#B3B3B3" />
-					<path class="blob" d={blobs.middleTertiary} fill="#B3B3B3" />
+					<filter id="glow">
+						<feGaussianBlur stdDeviation="20" result="coloredBlur" />
+						<feMerge>
+							<feMergeNode in="coloredBlur" />
+							<feMergeNode in="SourceGraphic" />
+						</feMerge>
+					</filter>
+				</defs>
+
+				<g clip-path="url(#moonClip)" filter="url(#glow)">
+					<circle
+						fill="#FFFFFF"
+						clip-path="url(#moonPhase)"
+						style="filter:url(#moonBlur)"
+						r="100"
+						cy="100"
+						cx="100"
+					/>
+					<g class="blobs" bind:this={blobContainer}>
+						<path class="blob" d={blobs.middle} fill="#B3B3B3" />
+						<path class="blob" d={blobs.bottom} fill="#E6E6E6" />
+						<path class="blob" d={blobs.top} fill="rgba(0, 0, 0, 0.5)" />
+						<path class="blob" d={blobs.middleAccent} fill="#E6E6E6" />
+						<path class="blob" d={blobs.topAccent} fill="#E6E6E6" />
+						<path class="blob" d={blobs.bottomAccent} fill="#B3B3B3" />
+						<path class="blob" d={blobs.middleTertiary} fill="#B3B3B3" />
+					</g>
 				</g>
-			</g>
-		</svg>
+			</svg>
+
+			<svg viewBox="0 0 200 200" class="moonTexture">
+				<g clip-path="url(#moonClip)" filter="url(#moonTexture)">
+					<circle r="100" cy="100" cx="100" fill="white" />
+				</g>
+			</svg>
+		</div>
 
 		<div class="moonLabel">
 			<p class="currentPhase" bind:this={currentPhaseRef}>{chosenPhase}</p>
@@ -364,21 +377,6 @@
 		position: relative;
 	}
 
-	.moonContainer::before {
-		content: '';
-		display: block;
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translate(-50%);
-		width: 30vh;
-		height: 30vh;
-		background: url('/moon-poles.jpg') no-repeat center center;
-		opacity: 0.2;
-		mix-blend-mode: color-burn;
-		z-index: 1;
-	}
-
 	@media (min-width: 48rem) {
 		.moonContainer::before {
 			width: 50vh;
@@ -386,15 +384,33 @@
 		}
 	}
 
+	.moonGroup {
+		display: grid;
+		justify-items: center;
+		align-items: center;
+		width: 100%;
+		position: relative;
+	}
+
 	.moon {
 		width: 80%;
 		opacity: 0;
-		position: relative;
+	}
+
+	.moonTexture {
+		width: 85%;
+		opacity: 0.2;
+		position: absolute;
+		mix-blend-mode: color-burn;
 	}
 
 	@media (min-width: 48rem) {
 		.moon {
 			max-height: 50vh;
+		}
+
+		.moonTexture {
+			max-height: 53vh;
 		}
 	}
 
