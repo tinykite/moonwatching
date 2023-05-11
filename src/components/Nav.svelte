@@ -15,12 +15,10 @@
 		success?: string;
 	};
 
-	let nav: HTMLElement;
 	let emailDialog: SvelteComponent;
 
 	// The $: beneath these variables is necessary to subscribe to a built-in store
 	// And trigger a re-render when the store updates.
-
 	let form: Form;
 	$: form = $page?.form;
 
@@ -30,19 +28,13 @@
 	let status: string | undefined;
 	$: status = $page?.form?.status;
 
-	function openEmailDialog() {
+	export function openEmailDialog() {
 		emailDialog.open();
 	}
 
-	function closeEmailDialog() {
+	export function closeEmailDialog() {
 		emailDialog.close();
 	}
-
-	// TODO: Decide if a mobile flyout nav is necessary
-	let isMenuOpen: boolean = false;
-	let toggleMenu = () => {
-		isMenuOpen = !isMenuOpen;
-	};
 
 	let mediaQuery;
 	let isMinDesktop: boolean | undefined;
@@ -62,7 +54,7 @@
 	});
 </script>
 
-<nav class="nav" bind:this={nav}>
+<nav class="nav">
 	<Logo />
 	{#if isMinDesktop}
 		<ul class="nav__list">

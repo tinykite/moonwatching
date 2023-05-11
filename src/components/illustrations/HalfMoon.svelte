@@ -1,16 +1,36 @@
 <script lang="ts">
 	export let variant: string;
+	export let size: number;
 	const color = variant === 'light' ? '#d1d1d1' : '#000E24';
+	const iconSize = size ? size : 48;
 </script>
 
-<svg width="48" height="50" viewBox="0 0 48 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-	<path
-		d="M46 25C46 38.2565 35.4715 49 22.5112 49C22.3316 49 22.1658 49 22 48.9859V1.01412C22.152 1 22.3316 1 22.5112 1C35.4715 1 46 11.7435 46 25Z"
-		fill={color}
-	/>
-	<path
-		d="M46.1872 25C46.1872 38.0226 36.0625 48.5704 23.5936 48.5704C23.4242 48.5704 23.2547 48.5704 23.0994 48.5556C10.8423 48.2905 1 37.8459 1 25C1 12.1542 10.8423 1.70959 23.0994 1.44442C23.2547 1.42969 23.4242 1.42969 23.5936 1.42969C36.0625 1.42969 46.1872 11.9774 46.1872 25Z"
+<svg
+	width={iconSize}
+	height={iconSize}
+	viewBox={`0 0 ${iconSize} ${iconSize}`}
+	fill="none"
+	xmlns="http://www.w3.org/2000/svg"
+>
+	<defs>
+		<clipPath id="moonClip">
+			<circle r={iconSize / 2} cx={iconSize / 2} cy={iconSize / 2} />
+		</clipPath>
+	</defs>
+	<circle
+		r={(iconSize - 2) / 2}
+		cx={iconSize / 2}
+		cy={iconSize / 2}
 		stroke={color}
 		stroke-width="2"
+		clip-path="url(#moonClip)"
+	/>
+	<rect
+		fill={color}
+		x={iconSize / 2}
+		y={0}
+		width={iconSize}
+		height={iconSize}
+		clip-path="url(#moonClip)"
 	/>
 </svg>
