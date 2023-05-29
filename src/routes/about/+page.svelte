@@ -4,7 +4,6 @@
 	import { formatDistanceToNowStrict } from 'date-fns';
 	import { animate } from 'motion';
 	import { getContext } from 'svelte';
-	import HalfMoon from '../../components/illustrations/HalfMoon.svelte';
 
 	let daysBeforeFullMoon: string;
 	let intro: HTMLElement;

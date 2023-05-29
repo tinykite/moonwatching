@@ -7,6 +7,7 @@
 	import type { MoonPhase } from '$lib/moon-utils';
 	import { animate } from 'motion';
 	import { moonPaths } from '$lib/consts';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 	let phasesByDate = data.moonPhases.reduce(
