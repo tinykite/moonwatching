@@ -13,7 +13,7 @@
 	xmlns="http://www.w3.org/2000/svg"
 >
 	<defs>
-		<clipPath id="moonClip">
+		<clipPath id="halfmoonClip">
 			<circle r={iconSize / 2} cx={iconSize / 2} cy={iconSize / 2} />
 		</clipPath>
 	</defs>
@@ -23,7 +23,7 @@
 		cy={iconSize / 2}
 		stroke={color}
 		stroke-width="2"
-		clip-path="url(#moonClip)"
+		clip-path="url(#halfmoonClip)"
 	/>
 	<rect
 		fill={color}
@@ -31,6 +31,6 @@
 		y={0}
 		width={iconSize}
 		height={iconSize}
-		clip-path="url(#moonClip)"
+		clip-path="url(#halfmoonClip)"
 	/>
 </svg>
