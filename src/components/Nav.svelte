@@ -36,7 +36,7 @@
 		emailDialog.close();
 	}
 
-	let mediaQuery;
+	let mediaQuery: MediaQueryList;
 	let isMinDesktop: boolean | undefined;
 
 	const setMatches = () => {
@@ -80,7 +80,7 @@
 	title="Sign up for email updates on the new and full moon"
 >
 	<span slot="icon" class="u-marginAuto">
-		<HalfMoon variant="dark" />
+		<HalfMoon variant="dark" size={48} />
 	</span>
 
 	<div slot="form" class="u-marginTop-sm">
