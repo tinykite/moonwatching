@@ -1,13 +1,13 @@
 <script lang="ts">
 	import * as astronomy from '$lib/astronomy-reference';
-	import { onMount } from 'svelte';
+	import { SvelteComponent, onMount } from 'svelte';
 	import { formatDistanceToNowStrict } from 'date-fns';
 	import { animate } from 'motion';
 	import { getContext } from 'svelte';
 
 	let daysBeforeFullMoon: string;
 	let intro: HTMLElement;
-	let dialog = getContext('dialog');
+	let dialog = getContext('dialog') as SvelteStore<SvelteComponent>;
 
 	const toggleDialog = () => {
 		if (!dialog) return;
