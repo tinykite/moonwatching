@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { indeterminateDate } from '$lib/stores';
-	import { fade } from 'svelte/transition';
 	import * as astronomy from '$lib/astronomy-reference';
 	import { phase } from '$lib/stores';
 	import { calculatePhase } from '$lib/moon-utils';
@@ -16,7 +14,19 @@
 	const onSubmitCustomDate = async () => {
 		error = false;
 		errorMessage = '';
-		const date = new Date(userDate);
+
+		const dateParams = userDate.split('/');
+		const month = parseInt(dateParams[0]) - 1;
+		const day = parseInt(dateParams[1]);
+		const year = parseInt(dateParams[2]);
+
+		// TODO: Find a more efficient way to set this
+		// Date object will not accept a string literal as valid date arguments
+		// Passing a full date string is not recommended
+		const date = new Date();
+		date.setFullYear(year);
+		date.setMonth(month);
+		date.setDate(day);
 
 		if (!date) {
 			error = true;

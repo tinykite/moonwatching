@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { format } from 'date-fns';
 	import DateToggle from './DateToggle.svelte';
 	export let currentDate: string;
 	export let handleToggle: () => void;
