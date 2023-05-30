@@ -95,7 +95,7 @@
 			Sign up for moon alerts</button
 		>
 
-		<h2 class="heading">Methodology</h2>
+		<h2 class="heading">Data & Methodology</h2>
 		<!-- 
 		<h3 class="subheading">Website</h3> -->
 		<p class="text">
@@ -118,9 +118,10 @@
 			>
 			which was prepared using USNO MICA software and the NASA/JPL Horizons Web Portal.
 		</p>
-		<h2 class="heading">Colophon</h2>
+		<h2 class="heading">Credits</h2>
 		<p class="text">
-			Moon Watching is a <a href="https://postlight.com/labs">Postlight Labs</a> project by
+			Moon Watching is a <a href="https://postlight.com/labs">Postlight Labs</a> project designed
+			and developed by
 			<a href="https://www.tinykitelab.com/"> Dakota Sexton</a>. Built with Netlify, Svelte,
 			Supabase (Postgres) and Postmark. And featuring the incredibly typography of the
 			<a href="https://ohnotype.co/">OH No Type Company</a>
