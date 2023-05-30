@@ -4,17 +4,17 @@ import { supabase } from '$lib/supabaseClient';
 import { format } from 'date-fns';
 
 export const GET = (async () => {
-	const date = format(new Date(), 'yyyy-MM-dd');
+	const date = new Date();
 
 	const { data: moonData } = await supabase
 		.from('dynamic_phases')
 		.select('phase, date, ecliptic_longitude')
-		.eq('date', date)
+		.eq('date', format(date, 'yyyy-MM-dd'))
 		.single();
 
 	if (!moonData) {
 		throw error(500, 'Could not calculate moon phase');
 	}
 
-	return json(moonData);
+	return json({ ...moonData, date: format(date, 'MMMM do, yyyy') });
 }) satisfies RequestHandler;
