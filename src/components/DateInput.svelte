@@ -16,6 +16,8 @@
 		errorMessage = '';
 
 		const dateParams = userDate.split('/');
+
+		// Javascript months are zero-indexed. So January is 0
 		const month = parseInt(dateParams[0]) - 1;
 		const day = parseInt(dateParams[1]);
 		const year = parseInt(dateParams[2]);
