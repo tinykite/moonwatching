@@ -1,14 +1,18 @@
 import { fail } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { postmarkClient } from '$lib/postmarkClient';
+import { emailRegExp } from '$lib/consts';
 
-// As per the HTML Specification
-const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const validateEmail = (email?: string) => {
+	if (!email || typeof email !== 'string') {
+		return false;
+	}
+	return emailRegExp.test(email.toLowerCase());
+};
 
 export const newsletterSignup = async ({ request, fetch }) => {
 	const data = await request.formData();
 	const email = data.get('email') ?? '';
-	const isValid = emailRegExp.test(email?.toString());
 
 	if (!email) {
 		return fail(422, {
@@ -16,6 +20,8 @@ export const newsletterSignup = async ({ request, fetch }) => {
 			error: 'Your email is required'
 		});
 	}
+
+	const isValid = validateEmail(email);
 
 	// Should be caught by the browser (based on type="email"), but just in case input type is removed
 	if (!isValid) {
@@ -75,3 +81,5 @@ export const newsletterSignup = async ({ request, fetch }) => {
 		success: 'Your email was successsfully subscribed!'
 	};
 };
+
+export { validateEmail };

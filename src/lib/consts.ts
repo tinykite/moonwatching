@@ -1,3 +1,7 @@
+// As per the HTML Specification
+// Commented out because it validates foo@bar as a valid address
+// export const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+export const emailRegExp = /^[^\s]+@[^\s]+\.[^\s]+$/;
 export const moonPaths = {
 	newMoonA: 'M0,0 L0,201',
 	newMoonB: 'M201,0 L201, 201',
