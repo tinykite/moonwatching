@@ -66,11 +66,26 @@ html:has(dialog[open]) {
 	overflow: hidden;
 }
 
+:root {
+	--c-white: #fff;
+	--c-offBlack: #000916;
+	--c-blueBlack: #000e24;
+	--c-offWhite: #e4edff;
+	--c-gray: #d0d0d0;
+	--c-blue: #86c2f6;
+	--c-red: #d51b0c;
+
+	--c-primaryBackground: var(--c-offBlack);
+	--c-primaryText: var(--c-offWhite);
+	--c-error: var(--c-red);
+	--c-focus: var(--c-blue);
+}
+
 body {
 	margin: 0;
 	padding: 0;
 	color: white;
-	background: #000916;
+	background: var(--c-primaryBackground);
 	font-family: 'Volf Mono', monospace;
 	color-scheme: dark; /* https://web.dev/color-scheme/ */
 	line-height: 1.5;
@@ -139,20 +154,20 @@ a:active {
 		source-sans-pro, sans-serif;
 	font-weight: 100;
 	font-size: 0.75rem;
-	color: #e4edff;
+	color: var(--c-primaryText);
 }
 
 .form__label--light {
-	color: #000e24;
+	color: var(--c-blueBlack);
 }
 
 .form__input {
 	background: none;
-	border-color: #d0d0d0;
+	border-color: var(--c-gray);
 	border-width: 0 0 2px 0;
 	padding: 0.125rem 0.5rem 0.125rem 0;
 	margin-top: 0.25rem;
-	color: #e4edff;
+	color: var(--c-primaryText);
 	font-size: 1.25rem;
 	font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 	border-radius: 0; /* Necessary to avoid default iOS input border rounding */
@@ -164,8 +179,8 @@ a:active {
 
 .form__input--light {
 	border-width: 0 0 2px 0;
-	border-color: #000e24;
-	color: #000e24;
+	border-color: var(--c-blueBlack);
+	color: var(--c-blueBlack);
 	color-scheme: light;
 	mix-blend-mode: multiply;
 }
@@ -174,13 +189,13 @@ a:active {
 	background-color: none;
 	outline: none;
 	border-width: 0 0 2px 0;
-	border-color: #86c2f6;
+	border-color: var(--c-error);
 }
 
 .form__input--invalid {
 	outline: none;
 	border-width: 0 0 2px 0;
-	border-color: #d51b0c;
+	border-color: var(--c-error);
 }
 
 .form__input-group {
@@ -190,7 +205,7 @@ a:active {
 }
 
 .form__errorMessage {
-	color: #d51b0c;
+	color: var(--c-error);
 	margin: 0.5rem 0 0 0;
 	opacity: 0;
 	transition: opacity 0.5s ease-in;
@@ -204,12 +219,12 @@ a:active {
 
 .form__successMessage {
 	text-align: center;
-	color: #000e24;
+	color: var(--c-blueBlack);
 }
 
 .form__button {
-	border: 1px solid #000e24;
-	background: #000e24;
+	border: 1px solid var(--c-blueBlack);
+	background: var(--c-blueBlack);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -217,44 +232,44 @@ a:active {
 	cursor: pointer;
 	width: 10rem;
 	height: 3rem;
-	color: #d0d0d0;
+	color: var(--c-gray);
 	font-family: 'Vulf Mono', 'Nimbus Mono PS', 'Courier New', 'Cutive Mono', monospace;
 	text-transform: uppercase;
 }
 
 .form__button:hover {
-	border: 1px solid #000e24;
+	border: 1px solid var(--c-blueBlack);
 	background: none;
-	color: #000e24;
+	color: var(--c-blueBlack);
 }
 
 .form__button--secondary {
-	border: 1px solid #000e24;
+	border: 1px solid var(--c-blueBlack);
 	background: none;
-	color: #000e24;
+	color: var(--c-blueBlack);
 }
 
 .form__button--secondary:hover {
-	border: 2px solid #000e24;
-	color: #d0d0d0;
-	background: #000e24;
+	border: 2px solid var(--c-blueBlack);
+	color: var(--c-gray);
+	background: var(--c-primaryBackground);
 }
 
 .form__button--tertiary {
-	border: 1px solid white;
-	color: white;
+	border: 1px solid var(--c-white);
+	color: var(--c-white);
 }
 
 .form__button--tertiary:hover {
-	border: 1px solid white;
-	background: white;
-	color: #000e24;
+	border: 1px solid var(--c-white);
+	background: var(--c-white);
+	color: var(--c-blueBlack);
 }
 
 .form__dot {
 	height: 0.5rem;
 	width: 0.5rem;
-	background-color: #fff;
+	background-color: var(--c-white);
 	border-radius: 50%;
 
 	animation: dotFade 2s linear infinite;
