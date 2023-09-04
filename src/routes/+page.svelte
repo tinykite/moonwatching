@@ -4,27 +4,11 @@
 	import DateInput from '../components/DateInput.svelte';
 	import CurrentDate from '../components/CurrentDate.svelte';
 	import { phase } from '$lib/stores';
-	import { animate, timeline } from 'motion';
-	import { onMount } from 'svelte';
+	import { timeline } from 'motion';
 
 	export let data: PageData;
 
 	phase.set(data.moonPhase.phase);
-
-	// TODO: Refactor to transition the opacity of a background color layer
-	// instead of the background color itself for performance.
-	// const { eclipticDomain, lightnessRange } = getBackgroundColorScales(
-	// 	data.moonPhase.ecliptic_longitude
-	// );
-
-	// const backgroundOffset = interpolate({
-	// 	domain: eclipticDomain,
-	// 	range: lightnessRange,
-	// 	value: data.moonPhase.ecliptic_longitude
-	// });
-	// const color = new Color('#001D4A');
-	// color.lch.l *= backgroundOffset;
-	// backgroundColor.set(color.toString({ format: 'hex' }));
 
 	const toggleDateInput = () => {
 		timeline([
