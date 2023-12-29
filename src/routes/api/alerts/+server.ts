@@ -1,5 +1,5 @@
 import { json, error } from '@sveltejs/kit';
-import { supabasePrivate } from '$lib/supabaseClient';
+import { supabasePrivate } from '$lib/supabaseClientPrivate';
 import { postmarkClient } from '$lib/postmarkClient';
 import type { RequestHandler } from './$types';
 import { ALERT_KEY } from '$env/static/private';

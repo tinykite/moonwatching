@@ -1,6 +1,6 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { supabasePrivate } from '$lib/supabaseClient';
+import { supabasePrivate } from '$lib/supabaseClientPrivate';
 
 export const POST: RequestHandler = async ({ request }) => {
 	const postmarkData = await request.json();
