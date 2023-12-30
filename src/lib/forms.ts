@@ -2,6 +2,7 @@ import { fail } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { postmarkClient } from '$lib/postmarkClient';
 import { emailRegExp } from '$lib/consts';
+import { getHashFromStringNode } from './crypto';
 
 const validateEmail = (email?: string) => {
 	if (!email || typeof email !== 'string') {
@@ -13,6 +14,7 @@ const validateEmail = (email?: string) => {
 export const newsletterSignup = async ({ request, fetch }) => {
 	const data = await request.formData();
 	const email = data.get('email') ?? '';
+	const uniqueHashIdentifier = getHashFromStringNode(email)
 
 	if (!email) {
 		return fail(422, {
@@ -40,7 +42,7 @@ export const newsletterSignup = async ({ request, fetch }) => {
 		});
 	}
 
-	const emailRes = await fetch('/emails?templateName=Confirmation');
+	const emailRes = await fetch('/api/emails?templateName=Confirmation');
 	const html = await emailRes.json();
 
 	if (!emailRes.ok) {
@@ -52,7 +54,7 @@ export const newsletterSignup = async ({ request, fetch }) => {
 
 	try {
 		await postmarkClient.sendEmail({
-			From: 'dakota@moon-watching.com',
+			From: 'info@moon-watching.com',
 			To: `${email}`,
 			Subject: 'You are now subscribed to Moon Watching alerts',
 			HtmlBody: html,
@@ -68,7 +70,7 @@ export const newsletterSignup = async ({ request, fetch }) => {
 		return fail(500, { email, error: errorMessage });
 	}
 
-	const { error } = await supabase.from('subscribers').insert({ email });
+	const { error } = await supabase.from('subscribers').insert({ email, active: true, subscription_hash: uniqueHashIdentifier });
 
 	if (error) {
 		return fail(500, {
