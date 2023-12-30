@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance, applyAction } from '$app/forms';
+	import type { SvelteComponent } from 'svelte';
 	import { page } from '$app/stores';
 	import classNames from 'classnames';
 	import HalfMoon from '../../components/illustrations/HalfMoon.svelte';
@@ -27,7 +28,7 @@
 </script>
 
 <div class="formContainer">
-	<HalfMoon variant="light" />
+	<HalfMoon variant="light" size={48} />
 	<h1 class="formContainer__heading">Signup for email updates on the new and full Moon</h1>
 	<form
 		class="form u-marginTop-sm"
