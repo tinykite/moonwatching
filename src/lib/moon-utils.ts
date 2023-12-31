@@ -14,6 +14,13 @@ export interface MoonPhase {
 	date: string;
 }
 
+// New Moon: 0
+// FirstQuarter: 50
+// Full Moon: 100
+// Last Quarter: 50
+// Waxing Crescent and Waning Crescent: 0-50
+// Waxing Gibbous and Waning Gibbous: 50-100
+
 export const getCurrentQuarter = (quarter: number) => {
 	if (quarter === 0) {
 		return 'New Moon';
