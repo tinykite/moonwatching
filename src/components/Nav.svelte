@@ -62,9 +62,9 @@
 				<a href="/about" class="nav__link">About</a>
 			</li>
 
-			<li class="nav__item">
+			<!-- <li class="nav__item">
 				<a href="/phases-by-month" class="nav__link">Phases by Month</a>
-			</li>
+			</li> -->
 			<li class="nav__item">
 				<button on:click={() => openEmailDialog()} class="nav__button">Alerts</button>
 			</li>

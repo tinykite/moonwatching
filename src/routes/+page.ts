@@ -6,5 +6,7 @@ export const load = (async ({ fetch }) => {
 
 	if (res.ok) {
 		return { moonPhase };
-	} else throw error(404, moonPhase.message);
+	} else {
+		return null;
+	}
 }) satisfies PageLoad;
