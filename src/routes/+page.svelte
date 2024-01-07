@@ -6,7 +6,7 @@
 	import { phase } from '$lib/stores';
 	import { timeline } from 'motion';
 
-	export let data: PageData;
+	// export let data: PageData;
 
 	// phase.set(data?.moonPhase.phase);
 

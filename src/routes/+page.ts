@@ -1,12 +1,12 @@
-import type { PageLoad } from './$types';
-import { error } from '@sveltejs/kit';
-export const load = (async ({ fetch }) => {
-	const res = await fetch(`/api/dynamicPhase`);
-	const moonPhase = await res.json();
+// import type { PageLoad } from './$types';
+// import { error } from '@sveltejs/kit';
+// export const load = (async ({ fetch }) => {
+// 	const res = await fetch(`/api/dynamicPhase`);
+// 	const moonPhase = await res.json();
 
-	if (res.ok) {
-		return { moonPhase };
-	} else {
-		return null;
-	}
-}) satisfies PageLoad;
+// 	if (res.ok) {
+// 		return { moonPhase };
+// 	} else {
+// 		return null;
+// 	}
+// }) satisfies PageLoad;
