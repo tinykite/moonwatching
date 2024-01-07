@@ -28,10 +28,11 @@
 			<CurrentDate currentDate={data.moonPhase.date} handleToggle={() => toggleDateInput()} />
 			<DateInput />
 		</div> -->
-	<h1 class="pageMain__heading">Under maintenance</h1>
+	<h1 class="pageMain__heading">We'll Be Back Soon</h1>
 	<p class="pageMain__text">
-		The Moon Watching website is being redeveloped for 2024. Moon alerts will still continue to
-		function!
+		The Moon Watching website is being redeveloped to rely on annual data provided by the
+		Astronomical Applications Department of the US Naval Observatory. Moon alerts will still
+		continue to function as usual during the process.
 	</p>
 </main>
 
@@ -50,9 +51,19 @@
 		}
 	}
 
+	.pageMain__heading {
+		font-family: 'swear-display', serif;
+		font-size: 2rem;
+		font-weight: 500;
+	}
+
 	.pageMain__text {
 		margin-top: 1rem;
-		max-width: 50rem;
+		max-width: 30rem;
+		line-height: 1.5;
+		font-size: 1rem;
+		font-family: Avenir, 'Avenir Next LT Pro', Montserrat, Corbel, 'URW Gothic', source-sans-pro,
+			sans-serif;
 	}
 
 	/* .dateContainer {
