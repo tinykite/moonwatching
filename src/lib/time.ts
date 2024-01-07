@@ -15,13 +15,13 @@ export const getHour = ({ time, isPM }: { time: string; isPM: boolean }) => {
 	// Don't translate anything else: leave as-is
 	return hour;
 };
-export const getFormattedTime = ({ time, timeFormat }: { time: string; timeFormat: string }) => {
+export const getFormattedTime = ({ time, timeFormat }: { time: string; timeFormat?: string }) => {
 	const unformattedTime = time.split(':');
 	const isPM = parseInt(unformattedTime[0]) >= 12;
 	const hour = getHour({ time: unformattedTime[0], isPM });
 	const minute = unformattedTime[1];
 
-	const formattedTime = `${hour}:${minute} ${isPM ? 'PM' : 'AM'} ${timeFormat}`;
+	const formattedTime = `${hour}:${minute} ${isPM ? 'PM' : 'AM'} ${timeFormat && timeFormat}`;
 
 	return formattedTime;
 };

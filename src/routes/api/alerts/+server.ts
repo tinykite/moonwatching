@@ -25,7 +25,7 @@ export const POST = (async ({ request, fetch }) => {
 		throw error(500, 'Alert already sent');
 	}
 
-	const formattedTime = getFormattedTime({ time, timeFormat: time_format });
+	const formattedTime = getFormattedTime({ time });
 
 	// Fetch list of subscribers
 	const { data: subscribers, error: supabaseError } = await supabasePrivate
@@ -55,7 +55,7 @@ export const POST = (async ({ request, fetch }) => {
 			To: subscriber.email,
 			Subject: emailSubject,
 			HtmlBody: html,
-			TextBody: `It's the ${phase}! There will be a ${phase} beginning at ${formattedTime}, according to the Astronomical Applications Department of the U.S. Naval Observatory.`,
+			TextBody: `It's the ${phase}! There will be a ${phase} on ${formattedTime}, according to the Astronomical Applications Department of the U.S. Naval Observatory.`,
 			MessageStream: 'broadcast'
 		};
 	});
