@@ -87,3 +87,99 @@ export const getMonthRange = () => {
 
 	return { startRange: adjustedStartDate, endRange: adjustedEndDate };
 };
+
+
+const getMajorMoonPhases = (allPhases, majorPhases) => {
+	return allPhases.map(phase => {
+	const phaseData = majorPhases.find(majorPhase => majorPhase.date === phase.date)
+	if (phaseData) {
+
+		return {
+			...phase, 
+			major_moon_phase: phaseData.moon_phase
+		}
+
+	}
+
+	return phase
+  })
+}
+
+const getPreviousDay = (date: Date, subtractDays: number) => {
+	const previousDay = sub(date, { days: subtractDays})
+	return formatISO(previousDay, { representation: 'date' })
+}
+
+const getPreviousMoonPhase = (phase, primaryPhaseData) => {
+	const prevDate = phase.date.split('-')
+	const formattedDate = new Date(prevDate[0], prevDate[1], prevDate[2])
+	let numberDaysInPast = 1
+	let foundPreviousPhase = false
+
+	while (foundPreviousPhase === false) {
+		const dayInPast = getPreviousDay(formattedDate, numberDaysInPast)
+		const moonPhaseData = primaryPhaseData.find(phase => phase.date === dayInPast)
+
+		if (moonPhaseData?.major_moon_phase) {
+			foundPreviousPhase = true
+			return moonPhaseData
+		}
+
+		else {
+			numberDaysInPast += 1;
+		}
+	}
+}
+
+const getMinorMoonPhase = (pastPhase) => {
+	if (pastPhase === "New Moon") {
+		return "Waxing Crescent"
+	} 
+
+	if (pastPhase === "First Quarter") 
+	{
+		return "Waxing Gibbous"
+	}
+
+	if (pastPhase === "Full Moon") {
+		return "Waning Gibbous"
+	}
+
+	if (pastPhase === "Last Quarter") {
+		return "Waning Crescent"
+	}
+}
+
+const getAllPhaseData = (majorMoonPhaseData) => {
+	return majorMoonPhaseData.map(phase => {
+		if (phase.major_moon_phase) {
+			return {
+				...phase, 
+				source: "astronomical_applications_dept"
+			}
+		}
+	
+		else {
+			const previousMoonPhase = getPreviousMoonPhase(phase, primaryPhaseData)
+			const minorMoonPhase = getMinorMoonPhase(previousMoonPhase.major_moon_phase)
+			return {
+				...phase, 
+				minor_moon_phase: minorMoonPhase,
+				source: "moonwatching"
+			}
+		}
+	})
+}
+
+const getSimplifiedPhaseData = (phases) => {
+	return phases.map(phase => {
+		return {
+			date: phase.date, 
+			moon_phase_float: phase.moon_phase_float,
+			month: phase.month,
+			year: phase.year,
+			source: phase.source,
+			moon_phase_name: phase?.minor_moon_phase ? phase.minor_moon_phase : phase.major_moon_phase
+		}
+	})
+}
