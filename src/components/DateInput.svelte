@@ -1,5 +1,4 @@
 <script lang="ts">
-	import * as astronomy from '$lib/astronomy-reference';
 	import { phase } from '$lib/stores';
 	import { calculatePhase } from '$lib/moon-utils';
 	import { animate } from 'motion';
