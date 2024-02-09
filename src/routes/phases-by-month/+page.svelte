@@ -277,7 +277,7 @@
 	};
 </script>
 
-<main class="pageMain">
+<!-- <main class="pageMain">
 	<div class="moonContainer" bind:this={moonContainer}>
 		<div class="moonGroup">
 			<svg bind:this={moonIllustrationRef} viewBox="0 0 200 200" class="moon" aria-hidden="true">
@@ -538,4 +538,4 @@
 		outline: 3px solid #053a5f;
 		outline-offset: 0.125rem;
 	}
-</style>
+</style> -->
