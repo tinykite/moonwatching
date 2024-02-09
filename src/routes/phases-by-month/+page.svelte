@@ -10,7 +10,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	let phasesByDate = data.moonPhases.reduce(
+	let phasesByDate = data.moonData.reduce(
 		(phases: Record<string, MoonPhase>, currentPhase: MoonPhase) => {
 			const date = parseInt(currentPhase.date.split('-')[2]);
 			return { ...phases, [date]: currentPhase };
@@ -19,7 +19,7 @@
 	);
 
 	let dateMin = 1;
-	let dateMax = data.moonPhases.length;
+	let dateMax = data.moonData.length;
 
 	const date = new Date();
 	const currentDate = getDate(date);
@@ -29,8 +29,11 @@
 	let max = 360;
 
 	let chosenDate: number = currentDate;
-	let chosenPhase: string = phasesByDate[chosenDate].phase;
+
+	let chosenPhase: string = phasesByDate[chosenDate].moon_phase;
 	let value: number = 0;
+
+	// Note: Not currently provided
 	$: value = phasesByDate[chosenDate].ecliptic_longitude;
 
 	let currentPhaseRef: HTMLElement;
@@ -197,6 +200,8 @@
 
 		let newPath;
 
+		let value = 90
+
 		if (value < 45) {
 			newPath = newMoonToWaxingCrescent(value / 45);
 			moonPhaseMask.setAttribute('d', newPath);
@@ -263,7 +268,7 @@
 	}
 
 	const updatePhase = async (nextValue) => {
-		const nextPhase = phasesByDate[nextValue].phase;
+		const nextPhase = phasesByDate[nextValue].moon_phase;
 		if (nextPhase !== chosenPhase) {
 			await animate(currentPhaseRef, { opacity: 0, duration: 0.3 }).finished;
 			chosenPhase = nextPhase;
