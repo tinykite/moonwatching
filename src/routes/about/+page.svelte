@@ -1,5 +1,4 @@
 <script lang="ts">
-	import * as astronomy from '$lib/astronomy-reference';
 	import { SvelteComponent, onMount } from 'svelte';
 	import { formatDistanceToNowStrict } from 'date-fns';
 	import { animate } from 'motion';
@@ -14,20 +13,20 @@
 		$dialog.openEmailDialog();
 	};
 
-	onMount(() => {
-		let mq: astronomy.MoonQuarter;
-		const date = new Date();
+	// onMount(() => {
+	// 	let mq: astronomy.MoonQuarter;
+	// 	const date = new Date();
 
-		// Find next immediate moon quarter
-		mq = astronomy.SearchMoonQuarter(date);
+	// 	// Find next immediate moon quarter
+	// 	mq = astronomy.SearchMoonQuarter(date);
 
-		// Search for the next full moon quarter
-		while (mq.quarter !== 2) {
-			mq = astronomy.NextMoonQuarter(mq);
-		}
+	// 	// Search for the next full moon quarter
+	// 	while (mq.quarter !== 2) {
+	// 		mq = astronomy.NextMoonQuarter(mq);
+	// 	}
 
-		daysBeforeFullMoon = formatDistanceToNowStrict(mq.time.date);
-	});
+	// 	daysBeforeFullMoon = formatDistanceToNowStrict(mq.time.date);
+	// });
 
 	$: if (intro) animate(intro, { opacity: 1 }, { duration: 3 });
 </script>
@@ -53,7 +52,7 @@
 			My hope is that this makes it easier to develop an appreciation for your own backyard — in
 			addition, of course, to the sky above.
 		</p>
-		<p class="text">
+		<!-- <p class="text">
 			It also gives me an opportunity to share my nerdiest, most wonderful knowledge. For example:
 		</p>
 
@@ -62,13 +61,13 @@
 				it is currently <span class="callout--emphasis">{daysBeforeFullMoon}</span> before the moon is
 				brightest
 			</p>
-		{/if}
+		{/if} -->
 
-		<p class="text">
+		<!-- <p class="text">
 			I probably wouldn’t remember that at the right moment if I tried. But that’s what my friendly
 			moon robot is made for. And they’d love to help you discover just a little more magic in your
 			universe.
-		</p>
+		</p> -->
 
 		<button class="button" on:click={() => toggleDialog()}>
 			<svg
