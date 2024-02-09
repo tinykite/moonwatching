@@ -6,34 +6,28 @@
 	import { phase } from '$lib/stores';
 	import { timeline } from 'motion';
 
-	// export let data: PageData;
+	export let data: PageData;
 
-	// phase.set(data?.moonPhase.phase);
+	phase.set(data?.moon_phase);
 
-	// const toggleDateInput = () => {
-	// 	timeline([
-	// 		['.currentDateContainer', { transform: 'translateX(-100%)', opacity: 0 }, { duration: 0.5 }],
-	// 		[
-	// 			'.dateInputContainer',
-	// 			{ transform: 'translateX(0)', opacity: 1 },
-	// 			{ duration: 0.5, at: '-0.5 }' }
-	// 		]
-	// 	]);
-	// };
+	const toggleDateInput = () => {
+		timeline([
+			['.currentDateContainer', { transform: 'translateX(-100%)', opacity: 0 }, { duration: 0.5 }],
+			[
+				'.dateInputContainer',
+				{ transform: 'translateX(0)', opacity: 1 },
+				{ duration: 0.5, at: '-0.5 }' }
+			]
+		]);
+	};
 </script>
 
 <main class="pageMain">
-	<!-- <MoonPhase phase={$phase} />
-		<div class="dateContainer">
+	<MoonPhase phase={$phase} />
+		<!-- <div class="dateContainer">
 			<CurrentDate currentDate={data.moonPhase.date} handleToggle={() => toggleDateInput()} />
 			<DateInput />
 		</div> -->
-	<h1 class="pageMain__heading">We'll Be Back Soon</h1>
-	<p class="pageMain__text">
-		The Moon Watching website is being redeveloped to rely on annual data provided by the
-		Astronomical Applications Department of the US Naval Observatory. Moon alerts will still
-		continue to function as usual during the process.
-	</p>
 </main>
 
 <style>

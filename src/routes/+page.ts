@@ -1,28 +1,21 @@
 import type { PageLoad } from './$types';
 import { json, error } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
-import { format, sub, formatISO, monthsInQuarter } from "date-fns";
+import { formatISO } from "date-fns";
 
-export const load = (async ({ fetch }) => {    
-    // const { data: allPhases, error: allPhasesError } = await supabase
-    // .from('all_phases')
-    // .select('*')  
+export const load = (async () => {    
+    const date = formatISO(new Date(),  { representation: 'date' })
 
-    // if (allPhasesError) {
-    //     throw error
-    // }
+    const { data: moonData, error: moonDataError } = await supabase
+    .from('all_phases')
+    .select('moon_phase, date')
+    .eq('date', date)
+    .single();
 
-    // const { data: primaryPhases, error: primaryPhasesError } = await supabase
-    // .from('primary_phases')
-    // .select('*')  
+    if (moonDataError) {
+        throw error(400, moonDataError)
+    }
 
-    // if (primaryPhasesError) {
-    //     throw error
-    // }
-    // return {
-
-    // }
-    return {}
+    return moonData
 
 }) satisfies PageLoad;
