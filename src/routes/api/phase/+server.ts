@@ -14,7 +14,7 @@ export const GET = (async ({ url, fetch }) => {
 	const date = format(new Date(), 'yyyy-MM-dd');
 
 	const { data: moonData } = await supabase
-		.from('all_phases')
+		.from('primary_phases')
 		.select('moon_phase, date, time')
 		.eq('date', date)
 		.single();
