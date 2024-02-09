@@ -1,11 +1,19 @@
 import type { PageLoad } from './$types';
 import { error } from '@sveltejs/kit';
+import { supabase } from '$lib/supabaseClient';
+import { format } from 'date-fns';
 
-export const load = (async ({ fetch }) => {
-	const res = await fetch(`/api/dynamicPhases?month=true`);
-	const moonPhases = await res.json();
+export const load = (async () => {
+	const currentMonth = format(new Date(), "MMMM")
 
-	if (res.ok) {
-		return { moonPhases };
-	} else throw error(404, moonPhases.message);
+	const { data: moonData, error: moonDataError } = await supabase
+    .from('all_phases')
+    .select('moon_phase, date, moon_phase_float')
+    .eq('month', currentMonth)
+
+    if (moonDataError) {
+        throw error(400, moonDataError)
+    }
+
+    return { moonData }
 }) satisfies PageLoad;
