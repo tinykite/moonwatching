@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import MoonPhase from '../components/MoonPhase.svelte';
-	import DateInput from '../components/DateInput.svelte';
+	// import DateInput from '../components/DateInput.svelte';
 	import CurrentDate from '../components/CurrentDate.svelte';
 	import { phase } from '$lib/stores';
 	import { timeline } from 'motion';
+	import { format } from 'date-fns';
 
 	export let data: PageData;
 
@@ -24,10 +25,10 @@
 
 <main class="pageMain">
 	<MoonPhase phase={$phase} />
-		<!-- <div class="dateContainer">
-			<CurrentDate currentDate={data.moonPhase.date} handleToggle={() => toggleDateInput()} />
-			<DateInput />
-		</div> -->
+	 <div class="dateContainer">
+			<CurrentDate currentDate={format(new Date(), "MMMM d, y")} handleToggle={() => toggleDateInput()} />
+			<!-- <DateInput /> -->
+	</div>
 </main>
 
 <style>
@@ -45,22 +46,7 @@
 		}
 	}
 
-	.pageMain__heading {
-		font-family: 'swear-display', serif;
-		font-size: 2rem;
-		font-weight: 500;
-	}
-
-	.pageMain__text {
-		margin-top: 1rem;
-		max-width: 30rem;
-		line-height: 1.5;
-		font-size: 1rem;
-		font-family: Avenir, 'Avenir Next LT Pro', Montserrat, Corbel, 'URW Gothic', source-sans-pro,
-			sans-serif;
-	}
-
-	/* .dateContainer {
+	.dateContainer {
 		margin: 3rem auto;
 		display: grid;
 		position: relative;
@@ -73,5 +59,5 @@
 		.dateContainer {
 			margin-top: 4rem;
 		}
-	} */
+	}
 </style>

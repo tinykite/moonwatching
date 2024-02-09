@@ -9,7 +9,7 @@
 		{currentDate}
 	</p>
 
-	<DateToggle {handleToggle} />
+	<!-- <DateToggle {handleToggle} /> -->
 </div>
 
 <style>
