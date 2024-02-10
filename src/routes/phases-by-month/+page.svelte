@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { spline } from '$lib/spline';
-	import { interpolate, getRandomNumber } from '$lib/math-utils';
+	import { interpolate } from '$lib/math-utils';
 	import { onMount } from 'svelte';
-	import * as flubber from 'flubber';
 	import { getDate, format } from 'date-fns';
 	import type { MoonPhase } from '$lib/moon-utils';
 	import { animate } from 'motion';
-	import { moonPaths } from '$lib/consts';
 	import type { PageData } from './$types';
+	import { generateBlob } from '$lib/creative-utils';
+	import { moonPaths } from '$lib/consts';
+	import { newMoonToWaxingCrescent, waxingCrescentToFirstQuarter, firstQuarterToFullMoon, fullMoonToLastQuarter, lastQuarterToWaningCrescent, waningCrescentToNewMoon} from '$lib/creative-utils'
 
 	export let data: PageData;
 	let phasesByDate = data.moonData.reduce(
@@ -24,9 +24,6 @@
 	const date = new Date();
 	const currentDate = getDate(date);
 	const currentMonth = format(date, 'MMMM');
-
-	let min = 0;
-	let max = 360;
 
 	let chosenDate: number = currentDate;
 
@@ -73,8 +70,6 @@
 		value
 	});
 
-	let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
-
 	$: scaleValue = interpolate({
 		domain: eclipticDomain,
 		range: scaleRange,
@@ -98,43 +93,6 @@
 	};
 
 	onMount(() => {
-		const generateBlob = ({
-			initialX,
-			initialY,
-			size,
-			pullRange
-		}: {
-			initialX: number;
-			initialY: number;
-			size: [number, number];
-			pullRange: [number, number];
-		}) => {
-			// choose a number of points
-			const numPoints = getRandomNumber(15, 20);
-			// step used to place each point at equal distances
-			const angleStep = (Math.PI * 2) / numPoints;
-
-			// keep track of your points
-			const points = [];
-			const [pullMin, pullMax] = pullRange;
-			const [xSize, ySize] = size;
-
-			for (let i = 1; i <= numPoints; i++) {
-				// how much randomness should be added to each point
-				const pull = getRandomNumber(pullMin, pullMax, true);
-
-				// x & y coordinates of the current point
-				const x = initialX + Math.cos(i * angleStep) * (xSize * pull);
-				const y = initialY + Math.sin(i * angleStep) * (ySize * pull);
-
-				// push the point to the points array
-				points.push({ x, y });
-			}
-
-			// generate a smooth continuous curve based on the point:
-			return spline(points, 1, true);
-		};
-
 		blobs.top = generateBlob({
 			initialX: 170,
 			initialY: 30,
@@ -179,19 +137,6 @@
 		});
 		animate('.moon', { opacity: 1 }, { duration: 1 });
 	});
-
-	let newMoonToWaxingCrescent = flubberInterpolate(moonPaths.newMoonA, moonPaths.waxingCrescent);
-	let waxingCrescentToFirstQuarter = flubberInterpolate(
-		moonPaths.waxingCrescent,
-		moonPaths.firstQuarter
-	);
-	let firstQuarterToFullMoon = flubberInterpolate(moonPaths.firstQuarter, moonPaths.fullMoon);
-	let fullMoonToLastQuarter = flubberInterpolate(moonPaths.fullMoon, moonPaths.lastQuarter);
-	let lastQuarterToWaningCrescent = flubberInterpolate(
-		moonPaths.lastQuarter,
-		moonPaths.waningCrescent
-	);
-	let waningCrescentToNewMoon = flubberInterpolate(moonPaths.waningCrescent, moonPaths.newMoonB);
 
 	$: if (blobContainer) {
 		blobContainer.style.opacity = `${blobOpacityValue}`;
@@ -277,7 +222,7 @@
 	};
 </script>
 
-<!-- <main class="pageMain">
+<main class="pageMain">
 	<div class="moonContainer" bind:this={moonContainer}>
 		<div class="moonGroup">
 			<svg bind:this={moonIllustrationRef} viewBox="0 0 200 200" class="moon" aria-hidden="true">
@@ -538,4 +483,4 @@
 		outline: 3px solid #053a5f;
 		outline-offset: 0.125rem;
 	}
-</style> -->
+</style>
