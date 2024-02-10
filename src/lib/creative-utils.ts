@@ -54,3 +54,22 @@ export const lastQuarterToWaningCrescent = flubberInterpolate(
 	moonPaths.waningCrescent
 );
 export const waningCrescentToNewMoon = flubberInterpolate(moonPaths.waningCrescent, moonPaths.newMoonB);
+
+export const getMoonPath = (phase) => {
+	switch (phase) {
+		case 'Full Moon':
+			return moonPaths.fullMoon
+		case 'New Moon':
+			return moonPaths.newMoonA
+		case 'Waxing Crescent': 
+			return moonPaths.waxingCrescent
+		case "Waning Crescent":
+			return moonPaths.waningCrescent
+		case 'First Quarter':
+			return moonPaths.firstQuarter
+		case 'Last Quarter':
+			return moonPaths.lastQuarter
+		default: 
+			return moonPaths.newMoonA
+	}
+}

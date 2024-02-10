@@ -5,7 +5,7 @@
 	import type { MoonPhase } from '$lib/moon-utils';
 	import { animate, timeline } from 'motion';
 	import type { PageData } from './$types';
-	import { generateBlob } from '$lib/creative-utils';
+	import { generateBlob, getMoonPath } from '$lib/creative-utils';
 	import { moonPaths } from '$lib/consts';
 	import { newMoonToWaxingCrescent, waxingCrescentToFirstQuarter, firstQuarterToFullMoon, fullMoonToLastQuarter, lastQuarterToWaningCrescent, waningCrescentToNewMoon} from '$lib/creative-utils'
 
@@ -70,27 +70,6 @@
 		middleTertiary: ''
 	};
 
-	const getMoonPath = (phase) => {
-		switch (phase) {
-			case 'Full Moon':
-				return moonPaths.fullMoon
-			case 'New Moon':
-				return moonPaths.newMoonA
-			case 'Waxing Crescent': 
-				return moonPaths.waxingCrescent
-			case "Waning Crescent":
-				return moonPaths.waningCrescent
-			case 'First Quarter':
-				return moonPaths.firstQuarter
-			case 'Last Quarter':
-				return moonPaths.lastQuarter
-			default: 
-				return moonPaths.newMoonA
-		}
-	}
-
-	const initialPath = getMoonPath(chosenPhase)
-
 	onMount(() => {
 		blobs.top = generateBlob({
 			initialX: 170,
@@ -134,7 +113,6 @@
 			size: [100, 25],
 			pullRange: [0.5, 0.9]
 		});
-		moonPhaseMask.setAttribute('d', initialPath);
 		animate('.moon', { opacity: 1 }, { duration: 1 });
 	});
 
@@ -171,7 +149,7 @@
 					</clipPath>
 
 					<clipPath id="moonPhase">
-						<path bind:this={moonPhaseMask} d={moonPaths.newMoonA} />
+						<path bind:this={moonPhaseMask} d={getMoonPath(chosenPhase)} />
 					</clipPath>
 
 					<filter id="moonBlur" x="0" y="0">
