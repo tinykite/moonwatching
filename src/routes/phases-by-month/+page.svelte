@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { getDate, format } from 'date-fns';
 	import type { MoonPhase } from '$lib/moon-utils';
-	import { animate } from 'motion';
+	import { animate, timeline } from 'motion';
 	import type { PageData } from './$types';
 	import { generateBlob } from '$lib/creative-utils';
 	import { moonPaths } from '$lib/consts';
@@ -119,8 +119,7 @@
 		animate('.moon', { opacity: 1 }, { duration: 1 });
 	});
 
-	$: if (blobContainer) {
-		blobContainer.style.opacity = value;
+	$: if (blobContainer) {		
 		// blobContainer.style.transform = `rotate(${rotateValue}deg) translateX(${translateXValue}%)`;
 		// moonIllustrationRef.style.transform = `scale(${scaleValue}%)`;
 		// let newPath;
@@ -195,9 +194,15 @@
 	const updatePhase = async (nextValue) => {
 		const nextPhase = phasesByDate[nextValue].moon_phase;
 		if (nextPhase !== chosenPhase) {
-			await animate(currentPhaseTextRef, { opacity: 0, duration: 0.3 }).finished;
-			chosenPhase = nextPhase;
-			animate(currentPhaseTextRef, { opacity: 1 }).finished;
+		
+		const sequence = [ 
+			[currentPhaseTextRef, { opacity: 0 }, { duration: 0.3 }],
+			[blobContainer, { opacity: value }, { duration: 0.3, at: "<" }], 
+		]
+		
+		await timeline(sequence).finished
+		chosenPhase = nextPhase;
+		animate(currentPhaseTextRef, { opacity: 1 })
 		}
 	};
 </script>
