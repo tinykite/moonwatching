@@ -30,15 +30,14 @@
 	let chosenPhase: string = phasesByDate[chosenDate].moon_phase;
 	let value: number = 0;
 
-	// Note: Not currently provided
-	$: value = phasesByDate[chosenDate].ecliptic_longitude;
+	$: value = phasesByDate[chosenDate].moon_phase_float;
+	$: console.log(value)
 
-	let currentPhaseRef: HTMLElement;
+	let currentPhaseTextRef: HTMLElement;
 	let moonPhaseMask: SVGPathElement;
 	let moonIllustrationRef: SVGSVGElement;
 	let moonContainer: HTMLElement;
 	let blobContainer: SVGGElement;
-	let eclipticDomain = [0, 180];
 	let opacityRange = [0, 1];
 	let rotateValue = 0;
 	let scaleValue = 0;
@@ -46,39 +45,21 @@
 	let translateXValue = 0;
 	let blobOpacityValue = 0;
 
-	$: if (value > 180) {
-		eclipticDomain = [181, 360];
-		scaleRange = [105, 100];
-		opacityRange = [1, 0];
-	}
-
-	$: if (value <= 180) {
-		eclipticDomain = [0, 180];
-		scaleRange = [100, 105];
-		opacityRange = [0, 1];
-	}
-
 	$: rotateValue = interpolate({
-		domain: [0, 360],
+		domain: [0, 1],
 		range: [0, 5],
 		value
 	});
 
 	$: translateXValue = interpolate({
-		domain: [0, 360],
+		domain: [0, 1],
 		range: [0, -20],
 		value
 	});
 
 	$: scaleValue = interpolate({
-		domain: eclipticDomain,
+		domain: [0, 1],
 		range: scaleRange,
-		value
-	});
-
-	$: blobOpacityValue = interpolate({
-		domain: [0, 360],
-		range: opacityRange,
 		value
 	});
 
@@ -139,85 +120,84 @@
 	});
 
 	$: if (blobContainer) {
-		blobContainer.style.opacity = `${blobOpacityValue}`;
-		blobContainer.style.transform = `rotate(${rotateValue}deg) translateX(${translateXValue}%)`;
-		moonIllustrationRef.style.transform = `scale(${scaleValue}%)`;
+		blobContainer.style.opacity = value;
+		// blobContainer.style.transform = `rotate(${rotateValue}deg) translateX(${translateXValue}%)`;
+		// moonIllustrationRef.style.transform = `scale(${scaleValue}%)`;
+		// let newPath;
 
-		let newPath;
+		// let value = 90
 
-		let value = 90
+		// if (value < 45) {
+		// 	newPath = newMoonToWaxingCrescent(value / 45);
+		// 	moonPhaseMask.setAttribute('d', newPath);
+		// }
 
-		if (value < 45) {
-			newPath = newMoonToWaxingCrescent(value / 45);
-			moonPhaseMask.setAttribute('d', newPath);
-		}
+		// if (value >= 45 && value < 90) {
+		// 	newPath = waxingCrescentToFirstQuarter(
+		// 		interpolate({
+		// 			domain: [45, 90],
+		// 			range: [0, 1],
+		// 			value
+		// 		})
+		// 	);
+		// 	moonPhaseMask.setAttribute('d', newPath);
+		// }
 
-		if (value >= 45 && value < 90) {
-			newPath = waxingCrescentToFirstQuarter(
-				interpolate({
-					domain: [45, 90],
-					range: [0, 1],
-					value
-				})
-			);
-			moonPhaseMask.setAttribute('d', newPath);
-		}
+		// if (value >= 90 && value < 180) {
+		// 	newPath = firstQuarterToFullMoon(
+		// 		interpolate({
+		// 			domain: [90, 180],
+		// 			range: [0, 1],
+		// 			value
+		// 		})
+		// 	);
+		// 	moonPhaseMask.setAttribute('d', newPath);
+		// }
 
-		if (value >= 90 && value < 180) {
-			newPath = firstQuarterToFullMoon(
-				interpolate({
-					domain: [90, 180],
-					range: [0, 1],
-					value
-				})
-			);
-			moonPhaseMask.setAttribute('d', newPath);
-		}
+		// if (value >= 180 && value < 270) {
+		// 	newPath = fullMoonToLastQuarter(
+		// 		interpolate({
+		// 			domain: [180, 270],
+		// 			range: [0, 1],
+		// 			value
+		// 		})
+		// 	);
+		// 	moonPhaseMask.setAttribute('d', newPath);
+		// }
 
-		if (value >= 180 && value < 270) {
-			newPath = fullMoonToLastQuarter(
-				interpolate({
-					domain: [180, 270],
-					range: [0, 1],
-					value
-				})
-			);
-			moonPhaseMask.setAttribute('d', newPath);
-		}
+		// if (value >= 270 && value < 315) {
+		// 	newPath = lastQuarterToWaningCrescent(
+		// 		interpolate({
+		// 			domain: [270, 315],
+		// 			range: [0, 1],
+		// 			value
+		// 		})
+		// 	);
+		// 	moonPhaseMask.setAttribute('d', newPath);
+		// }
 
-		if (value >= 270 && value < 315) {
-			newPath = lastQuarterToWaningCrescent(
-				interpolate({
-					domain: [270, 315],
-					range: [0, 1],
-					value
-				})
-			);
-			moonPhaseMask.setAttribute('d', newPath);
-		}
+		// if (value >= 315 && value < 360) {
+		// 	newPath = waningCrescentToNewMoon(
+		// 		interpolate({
+		// 			domain: [315, 360],
+		// 			range: [0, 1],
+		// 			value
+		// 		})
+		// 	);
+		// 	moonPhaseMask.setAttribute('d', newPath);
+		// }
 
-		if (value >= 315 && value < 360) {
-			newPath = waningCrescentToNewMoon(
-				interpolate({
-					domain: [315, 360],
-					range: [0, 1],
-					value
-				})
-			);
-			moonPhaseMask.setAttribute('d', newPath);
-		}
-
-		if (value >= 360) {
-			moonPhaseMask.setAttribute('d', moonPaths.newMoonB);
-		}
+		// if (value >= 360) {
+		// 	moonPhaseMask.setAttribute('d', moonPaths.newMoonB);
+		// }
 	}
 
 	const updatePhase = async (nextValue) => {
 		const nextPhase = phasesByDate[nextValue].moon_phase;
 		if (nextPhase !== chosenPhase) {
-			await animate(currentPhaseRef, { opacity: 0, duration: 0.3 }).finished;
+			await animate(currentPhaseTextRef, { opacity: 0, duration: 0.3 }).finished;
 			chosenPhase = nextPhase;
-			animate(currentPhaseRef, { opacity: 1 }).finished;
+			animate(currentPhaseTextRef, { opacity: 1 }).finished;
 		}
 	};
 </script>
@@ -282,7 +262,7 @@
 		</div>
 
 		<div class="moonLabel">
-			<p class="currentPhase" bind:this={currentPhaseRef}>{chosenPhase}</p>
+			<p class="currentPhase" bind:this={currentPhaseTextRef}>{chosenPhase}</p>
 			<p>
 				<label class="currentDate" for="date">{currentMonth} {chosenDate}</label>
 			</p>
