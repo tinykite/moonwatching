@@ -1,6 +1,5 @@
 import { spline } from './spline';
 import { getRandomNumber } from './math-utils';
-import * as flubber from 'flubber';
 import { moonPaths } from '$lib/consts';
 
 export const generateBlob = ({
@@ -39,21 +38,6 @@ export const generateBlob = ({
 	// generate a smooth continuous curve based on the point:
 	return spline(points, 1, true);
 };
-
-let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
-
-export const newMoonToWaxingCrescent = flubberInterpolate(moonPaths.newMoonA, moonPaths.waxingCrescent);
-export const waxingCrescentToFirstQuarter = flubberInterpolate(
-	moonPaths.waxingCrescent,
-	moonPaths.firstQuarter
-);
-export const firstQuarterToFullMoon = flubberInterpolate(moonPaths.firstQuarter, moonPaths.fullMoon);
-export const fullMoonToLastQuarter = flubberInterpolate(moonPaths.fullMoon, moonPaths.lastQuarter);
-export const lastQuarterToWaningCrescent = flubberInterpolate(
-	moonPaths.lastQuarter,
-	moonPaths.waningCrescent
-);
-export const waningCrescentToNewMoon = flubberInterpolate(moonPaths.waningCrescent, moonPaths.newMoonB);
 
 export const getMoonPath = (phase) => {
 	switch (phase) {

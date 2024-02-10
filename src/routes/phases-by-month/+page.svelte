@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { interpolate } from '$lib/math-utils';
+	import * as flubber from "flubber"
 	import { onMount } from 'svelte';
 	import { getDate, format } from 'date-fns';
 	import type { MoonPhase } from '$lib/moon-utils';
 	import { animate, timeline } from 'motion';
 	import type { PageData } from './$types';
 	import { generateBlob, getMoonPath } from '$lib/creative-utils';
-	import { moonPaths } from '$lib/consts';
-	import { newMoonToWaxingCrescent, waxingCrescentToFirstQuarter, firstQuarterToFullMoon, fullMoonToLastQuarter, lastQuarterToWaningCrescent, waningCrescentToNewMoon} from '$lib/creative-utils'
 
 	export let data: PageData;
 	let phasesByDate = data.moonData.reduce(
@@ -17,6 +16,7 @@
 		},
 		{}
 	);
+	let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
 
 	let dateMin = 1;
 	let dateMax = data.moonData.length;
@@ -121,12 +121,15 @@
 		const nextPhase = phasesByDate[nextValue].moon_phase;
 
 		if (nextPhase !== chosenPhase) {
-		moonPhaseMask.setAttribute('d', getMoonPath(nextPhase));
+		const newPath = getMoonPath(nextPhase)
+		const mixPaths = flubberInterpolate(moonPhaseMask.getAttribute("d"), newPath);
+
 		const sequence = [ 
 			[currentPhaseTextRef, { opacity: 0 }, { duration: 0.3 }],
 			[blobContainer, { opacity: value }, { duration: 0.3, at: "<" }], 
-		]
+		] as any
 		
+		animate((progress) => moonPhaseMask.setAttribute("d", mixPaths(progress)), { duration: 0.3});
 		await timeline(sequence).finished
 		chosenPhase = nextPhase;
 		animate(currentPhaseTextRef, { opacity: 1 })
