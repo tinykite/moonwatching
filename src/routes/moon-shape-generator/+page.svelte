@@ -10,8 +10,12 @@
 	let moonIllustrationRef: SVGSVGElement;
 	let moonContainer: HTMLElement;
 
+	const steps = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1
+	]
+
 	let startPhase = "Full Moon"
-	let endPhase = "New Moon"
+	let endPhase = "Full Moon"
+	let step = steps[0]
 
 	const moonPhaseOptions = [
 		{
@@ -46,6 +50,13 @@
 
 
 	const interpolateShape = () => {
+		const oldPath = getMoonPath(startPhase)
+		const newPath = getMoonPath(endPhase)
+		const mixPaths = flubberInterpolate(oldPath, newPath, {
+    maxSegmentLength: 0.1
+  });
+
+		animate(() => moonPhaseMask.setAttribute("d", mixPaths(step)), { duration: 0.3});
 	};
 </script>
 
@@ -82,6 +93,13 @@
 	<select name="end_phase" id="end_phase" bind:value={endPhase}>
 		{#each moonPhaseOptions as phaseOption}
 			<option value={phaseOption.name}>{phaseOption.name}</option>
+		{/each}
+	</select>
+
+	<label for="step">Step</label>
+	<select name="step" id="step" bind:value={step}>
+		{#each steps as step}
+			<option value={step}>{step * 10}</option>
 		{/each}
 	</select>
 

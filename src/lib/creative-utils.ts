@@ -97,6 +97,7 @@ export const generateMoonBlobs = () => {
 	return blobs;
 }
 
+// TODO: Fix the crescent shapes, that were flip-flopped
 export const getMoonPath = (phase) => {
 	switch (phase) {
 		case 'Full Moon':
@@ -104,9 +105,9 @@ export const getMoonPath = (phase) => {
 		case 'New Moon':
 			return moonPaths.newMoonA
 		case 'Waxing Crescent': 
-			return moonPaths.waxingCrescent
-		case "Waning Crescent":
 			return moonPaths.waningCrescent
+		case "Waning Crescent":
+			return moonPaths.waxingCrescent
 		case 'First Quarter':
 			return moonPaths.firstQuarter
 		case 'Last Quarter':
