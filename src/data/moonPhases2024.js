@@ -1,4 +1,4 @@
-export const phases = [
+[
     {
         "date": "2024-01-01",
         "moon_phase_float": 0.74,
