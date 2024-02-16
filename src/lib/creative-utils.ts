@@ -39,6 +39,64 @@ export const generateBlob = ({
 	return spline(points, 1, true);
 };
 
+export const defaultBlobs = {
+		top: '',
+		topAccent: '',
+		middle: '',
+		middleAccent: '',
+		middleTertiary: '',
+		bottom: '', 
+		bottomAccent: ''
+}
+
+export const generateMoonBlobs = () => {
+	let blobs = {...defaultBlobs}
+
+	blobs.top = generateBlob({
+		initialX: 170,
+		initialY: 30,
+		size: [140, 70],
+		pullRange: [0.4, 0.7]
+	});
+	blobs.topAccent = generateBlob({
+		initialX: 270,
+		initialY: 30,
+		size: [190, 20],
+		pullRange: [0.5, 0.9]
+	});
+	blobs.middle = generateBlob({
+		initialX: 50,
+		initialY: 120,
+		size: [180, 70],
+		pullRange: [0.5, 0.7]
+	});
+	blobs.middleAccent = generateBlob({
+		initialX: 25,
+		initialY: 115,
+		size: [90, 20],
+		pullRange: [0.5, 0.9]
+	});
+	blobs.middleTertiary = generateBlob({
+		initialX: 0,
+		initialY: 115,
+		size: [90, 8],
+		pullRange: [0.6, 0.7]
+	});
+	blobs.bottom = generateBlob({
+		initialX: 140,
+		initialY: 160,
+		size: [140, 70],
+		pullRange: [0.3, 0.6]
+	});
+	blobs.bottomAccent = generateBlob({
+		initialX: 215,
+		initialY: 170,
+		size: [100, 25],
+		pullRange: [0.5, 0.9]
+	});
+	return blobs;
+}
+
 export const getMoonPath = (phase) => {
 	switch (phase) {
 		case 'Full Moon':

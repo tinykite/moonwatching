@@ -6,7 +6,7 @@
 	import type { MoonPhase } from '$lib/moon-utils';
 	import { animate, timeline } from 'motion';
 	import type { PageData } from './$types';
-	import { generateBlob, getMoonPath } from '$lib/creative-utils';
+	import { defaultBlobs, generateMoonBlobs, getMoonPath } from '$lib/creative-utils';
 
 	export let data: PageData;
 	let phasesByDate = data.moonData.reduce(
@@ -60,59 +60,10 @@
 		value
 	});
 
-	let blobs = {
-		top: '',
-		topAccent: '',
-		middle: '',
-		middleAccent: '',
-		bottom: '',
-		bottomAccent: '',
-		middleTertiary: ''
-	};
+	let blobs = defaultBlobs
 
 	onMount(() => {
-		blobs.top = generateBlob({
-			initialX: 170,
-			initialY: 30,
-			size: [140, 70],
-			pullRange: [0.4, 0.7]
-		});
-		blobs.topAccent = generateBlob({
-			initialX: 270,
-			initialY: 30,
-			size: [190, 20],
-			pullRange: [0.5, 0.9]
-		});
-		blobs.middle = generateBlob({
-			initialX: 50,
-			initialY: 120,
-			size: [180, 70],
-			pullRange: [0.5, 0.7]
-		});
-		blobs.middleAccent = generateBlob({
-			initialX: 25,
-			initialY: 115,
-			size: [90, 20],
-			pullRange: [0.5, 0.9]
-		});
-		blobs.middleTertiary = generateBlob({
-			initialX: 0,
-			initialY: 115,
-			size: [90, 8],
-			pullRange: [0.6, 0.7]
-		});
-		blobs.bottom = generateBlob({
-			initialX: 140,
-			initialY: 160,
-			size: [140, 70],
-			pullRange: [0.3, 0.6]
-		});
-		blobs.bottomAccent = generateBlob({
-			initialX: 215,
-			initialY: 170,
-			size: [100, 25],
-			pullRange: [0.5, 0.9]
-		});
+		blobs = generateMoonBlobs()
 		animate('.moon', { opacity: 1 }, { duration: 1 });
 	});
 
