@@ -1,0 +1,140 @@
+<script lang="ts">
+	import * as flubber from "flubber"
+	import { onMount } from 'svelte';
+	import { animate } from 'motion';
+	import { getMoonPath } from '$lib/creative-utils';
+
+	let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
+
+	let moonPhaseMask: SVGPathElement;
+	let moonIllustrationRef: SVGSVGElement;
+	let moonContainer: HTMLElement;
+
+	let startPhase = "Full Moon"
+	let endPhase = "New Moon"
+
+	const moonPhaseOptions = [
+		{
+			slug: "fullMoon",
+			name: "Full Moon"
+		},
+		{
+			slug: "waxingCrescent",
+			name: "Waxing Crescent"
+		}, 
+		{
+			slug: "waningCrescent",
+			name: "Waning Crescent"
+		}, 
+		{
+			slug: "newMoon",
+			name: "New Moon"
+		},
+		{
+			slug: "firstQuarter",
+			name: "First Quarter"
+		},
+		{
+			slug: "lastQuarter", 
+			name: "Last Quarter"
+		}
+	]
+
+	onMount(() => {
+		animate('.moon', { opacity: 1 }, { duration: 1 });
+	});
+
+
+	const interpolateShape = () => {
+	};
+</script>
+
+<main class="pageMain">
+	<div class="moonContainer" bind:this={moonContainer}>
+		<div class="moonGroup">
+			<svg bind:this={moonIllustrationRef} viewBox="0 0 200 200" class="moon" aria-hidden="true">
+				<defs>
+					<clipPath id="moonPhase">
+						<path bind:this={moonPhaseMask} d={getMoonPath(startPhase)} />
+					</clipPath>
+				</defs>
+
+		
+					<circle
+						fill="#FFFFFF"
+						clip-path="url(#moonPhase)"
+						r="100"
+						cy="100"
+						cx="100"
+					/>
+			</svg>
+		</div>
+	</div>
+
+	<label for="start_phase">Starting Phase</label>
+	<select name="start_phase" id="start_phase" bind:value={startPhase}>
+		{#each moonPhaseOptions as phaseOption}
+			<option value={phaseOption.name}>{phaseOption.name}</option>
+		{/each}
+	</select>
+
+	<label for="end_phase">Ending Phase</label>
+	<select name="end_phase" id="end_phase" bind:value={endPhase}>
+		{#each moonPhaseOptions as phaseOption}
+			<option value={phaseOption.name}>{phaseOption.name}</option>
+		{/each}
+	</select>
+
+	<button on:click={() => interpolateShape()}>Morph</button>
+
+</main>
+
+<style>
+	.pageMain {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-gap: 2rem;
+		margin: 4rem auto;
+		align-items: center;
+		width: 80%;
+	}
+
+	@media (min-width: 48rem) {
+		.pageMain {
+			max-width: 40rem;
+			margin: 6rem auto;
+		}
+	}
+	.moonContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		position: relative;
+	}
+
+	@media (min-width: 48rem) {
+		.moonContainer::before {
+			width: 50vh;
+			height: 50vh;
+		}
+	}
+
+	.moonGroup {
+		display: grid;
+		justify-items: center;
+		align-items: center;
+		width: 100%;
+		position: relative;
+	}
+
+	.moon {
+		width: 80%;
+		opacity: 0;
+	}
+
+	@media (min-width: 48rem) {
+		.moon {
+			max-height: 50vh;
+		}
+	}
+</style>
