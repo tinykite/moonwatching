@@ -38,7 +38,7 @@
 		"@svgdotjs/svg.js": "^3.1.2",
 		"classnames": "^2.3.2",
 		"colorjs.io": "^0.4.3",
-		"d3": "^7.8.5",
+		"d3-array": "^3.2.4",
 		"date-fns": "^2.29.3",
 		"flubber": "^0.4.2",
 		"motion": "^10.15.5",
