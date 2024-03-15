@@ -19,22 +19,22 @@
 
 	// The $: beneath these variables is necessary to subscribe to a built-in store
 	// And trigger a re-render when the store updates.
-	let form: Form;
-	$: form = $page?.form;
+	// let form: Form;
+	// $: form = $page?.form;
 
-	let error: string | undefined;
-	$: error = $page?.form?.error;
+	// let error: string | undefined;
+	// $: error = $page?.form?.error;
 
-	let status: string | undefined;
-	$: status = $page?.form?.status;
+	// let status: string | undefined;
+	// $: status = $page?.form?.status;
 
-	export function openEmailDialog() {
-		emailDialog.open();
-	}
+	// export function openEmailDialog() {
+	// 	emailDialog.open();
+	// }
 
-	export function closeEmailDialog() {
-		emailDialog.close();
-	}
+	// export function closeEmailDialog() {
+	// 	emailDialog.close();
+	// }
 
 	let mediaQuery: MediaQueryList;
 	let isMinDesktop: boolean | undefined;
@@ -65,16 +65,16 @@
 			<!-- <li class="nav__item">
 				<a href="/phases-by-month" class="nav__link">Phases by Month</a>
 			</li> -->
-			<li class="nav__item">
+			<!-- <li class="nav__item">
 				<button on:click={() => openEmailDialog()} class="nav__button">Alerts</button>
-			</li>
+			</li> -->
 		</ul>
 	{:else if mediaQuery}
 		<Menu />
 	{/if}
 </nav>
 
-<Dialog
+	<!--<Dialog
 	success={$page?.form?.success}
 	bind:this={emailDialog}
 	title="Sign up for email updates on the new and full moon"
@@ -99,8 +99,6 @@
 				};
 			}}
 		>
-			<!-- Fixes an issue where hitting enter on an input dismisses the modal without waiting for client or server-side validation -->
-			<!-- This should be hidden from keyboard users and screenreaders alike -->
 			<button disabled style="display:none;" />
 			<label class="form__label form__label--light" for="email">Email address</label>
 			<div class="form__input-group">
@@ -136,7 +134,7 @@
 			</div>
 		</form>
 	</div>
-</Dialog>
+</Dialog> -->
 
 <style>
 	.nav {

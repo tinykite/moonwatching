@@ -84,12 +84,12 @@
 			<a href="/about" class="mobileNav__link">About</a>
 		</li>
 
-		<li class="mobileNav__item">
+		<!-- <li class="mobileNav__item">
 			<a href="/phases-by-month" class="mobileNav__link">Phases by Month</a>
 		</li>
 		<li class="mobileNav__item">
 			<a href="/newsletter-signup" class="mobileNav__link">Alerts</a>
-		</li>
+		</li> -->
 	</ul>
 </div>
 
