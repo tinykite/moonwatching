@@ -15,6 +15,7 @@
 	let moonContainer: HTMLElement;
 
 	const steps = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
+	const stepLabels = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
 	let startPhase = 'Full Moon';
 	let endPhase = 'Full Moon';
@@ -140,8 +141,8 @@
 
 	<label for="step">Step</label>
 	<select name="step" id="step" bind:value={step}>
-		{#each steps as step}
-			<option value={step}>{step * 10}</option>
+		{#each steps as step, i}
+			<option value={step}>{stepLabels[i]}</option>
 		{/each}
 	</select>
 
