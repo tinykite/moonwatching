@@ -1,8 +1,12 @@
 <script lang="ts">
-	import * as flubber from "flubber"
+	import * as flubber from 'flubber';
 	import { onMount } from 'svelte';
 	import { animate } from 'motion';
 	import { getMoonPath } from '$lib/creative-utils';
+	import type { PageData } from './$types';
+	import { max } from 'd3-array';
+
+	export let data: PageData;
 
 	let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
 
@@ -10,53 +14,90 @@
 	let moonIllustrationRef: SVGSVGElement;
 	let moonContainer: HTMLElement;
 
-	const steps = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1
-	]
+	const steps = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
 
-	let startPhase = "Full Moon"
-	let endPhase = "Full Moon"
-	let step = steps[0]
+	let startPhase = 'Full Moon';
+	let endPhase = 'Full Moon';
+	let step = steps[0];
+
+	let months = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	];
+
+	const getMoonData = (month) => {
+		const allPhases = data.all_phases.filter(
+			(phase) => phase.month === month && phase.moon_phase === endPhase
+		);
+
+		return allPhases.length;
+	};
+
+	let monthData = [1];
+
+	const updatePhaseCount = () => {
+		monthData = months.map((month) => {
+			return getMoonData(month);
+		});
+	};
 
 	const moonPhaseOptions = [
 		{
-			slug: "fullMoon",
-			name: "Full Moon"
+			slug: 'fullMoon',
+			name: 'Full Moon'
 		},
 		{
-			slug: "waxingCrescent",
-			name: "Waxing Crescent"
-		}, 
-		{
-			slug: "waningCrescent",
-			name: "Waning Crescent"
-		}, 
-		{
-			slug: "newMoon",
-			name: "New Moon"
+			slug: 'waxingCrescent',
+			name: 'Waxing Crescent'
 		},
 		{
-			slug: "firstQuarter",
-			name: "First Quarter"
+			slug: 'waningCrescent',
+			name: 'Waning Crescent'
 		},
 		{
-			slug: "lastQuarter", 
-			name: "Last Quarter"
+			slug: 'newMoon',
+			name: 'New Moon'
+		},
+		{
+			slug: 'firstQuarter',
+			name: 'First Quarter'
+		},
+		{
+			slug: 'lastQuarter',
+			name: 'Last Quarter'
+		},
+		{
+			slug: 'waningGibbous',
+			name: 'Waning Gibbous'
+		},
+		{
+			slug: 'waxingGibbous',
+			name: 'Waxing Gibbous'
 		}
-	]
+	];
 
 	onMount(() => {
 		animate('.moon', { opacity: 1 }, { duration: 1 });
 	});
 
-
 	const interpolateShape = () => {
-		const oldPath = getMoonPath(startPhase)
-		const newPath = getMoonPath(endPhase)
+		const oldPath = getMoonPath(startPhase);
+		const newPath = getMoonPath(endPhase);
 		const mixPaths = flubberInterpolate(oldPath, newPath, {
-    maxSegmentLength: 0.1
-  });
+			maxSegmentLength: 0.1
+		});
 
-		animate(() => moonPhaseMask.setAttribute("d", mixPaths(step)), { duration: 0.3});
+		animate(() => moonPhaseMask.setAttribute('d', mixPaths(step)), { duration: 0.3 });
 	};
 </script>
 
@@ -70,17 +111,13 @@
 					</clipPath>
 				</defs>
 
-		
-					<circle
-						fill="#FFFFFF"
-						clip-path="url(#moonPhase)"
-						r="100"
-						cy="100"
-						cx="100"
-					/>
+				<circle fill="#FFFFFF" clip-path="url(#moonPhase)" r="100" cy="100" cx="100" />
 			</svg>
 		</div>
 	</div>
+
+	<h1>Moon Shape Generator</h1>
+	<p>Max days per phase during a lunar cycle: {max(monthData)}</p>
 
 	<label for="start_phase">Starting Phase</label>
 	<select name="start_phase" id="start_phase" bind:value={startPhase}>
@@ -90,7 +127,12 @@
 	</select>
 
 	<label for="end_phase">Ending Phase</label>
-	<select name="end_phase" id="end_phase" bind:value={endPhase}>
+	<select
+		name="end_phase"
+		id="end_phase"
+		bind:value={endPhase}
+		on:change={() => updatePhaseCount()}
+	>
 		{#each moonPhaseOptions as phaseOption}
 			<option value={phaseOption.name}>{phaseOption.name}</option>
 		{/each}
@@ -104,7 +146,6 @@
 	</select>
 
 	<button on:click={() => interpolateShape()}>Morph</button>
-
 </main>
 
 <style>
