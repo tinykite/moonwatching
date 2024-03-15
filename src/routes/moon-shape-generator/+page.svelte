@@ -10,8 +10,8 @@
 
 	let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
 
-	let moonPhaseMask: SVGPathElement;
 	let moonIllustrationRef: SVGSVGElement;
+	let moonPhaseRef: SVGPathElement;
 	let moonContainer: HTMLElement;
 
 	const steps = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
@@ -98,21 +98,15 @@
 			maxSegmentLength: 0.1
 		});
 
-		animate(() => moonPhaseMask.setAttribute('d', mixPaths(step)), { duration: 0.3 });
+		animate(() => moonPhaseRef.setAttribute('d', mixPaths(step)), { duration: 0.3 });
 	};
 </script>
 
 <main class="pageMain">
 	<div class="moonContainer" bind:this={moonContainer}>
 		<div class="moonGroup">
-			<svg bind:this={moonIllustrationRef} viewBox="0 0 200 200" class="moon" aria-hidden="true">
-				<defs>
-					<clipPath id="moonPhase">
-						<path bind:this={moonPhaseMask} d={getMoonPath(startPhase)} />
-					</clipPath>
-				</defs>
-
-				<circle fill="#FFFFFF" clip-path="url(#moonPhase)" r="100" cy="100" cx="100" />
+			<svg bind:this={moonIllustrationRef} viewBox="0 0 200 200" class="moon">
+				<path bind:this={moonPhaseRef} d={getMoonPath(startPhase)} fill="white" />
 			</svg>
 		</div>
 	</div>
@@ -189,12 +183,6 @@
 
 	.moon {
 		width: 80%;
-		opacity: 0;
 	}
 
-	@media (min-width: 48rem) {
-		.moon {
-			max-height: 50vh;
-		}
-	}
 </style>
