@@ -8,7 +8,7 @@ export const load = (async () => {
 
 	const { data: moonData, error: moonDataError } = await supabase
     .from('all_phases')
-    .select('moon_phase, date, moon_phase_float')
+    .select('moon_phase, date, moon_phase_float, subphase_max_length, subphase')
     .eq('month', currentMonth)
 
     if (moonDataError) {
