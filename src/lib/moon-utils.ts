@@ -1,9 +1,11 @@
 import { format, startOfMonth, endOfMonth, sub, add } from 'date-fns';
+import { articulatedMoonPaths } from './consts';
+import { scaleLinear } from 'd3-scale'
 
 export interface MoonPhase {
 	moon_phase:
 		| 'New Moon'
-		| 'Third Quarter'
+		| 'Last Quarter'
 		| 'Full Moon'
 		| 'First Quarter'
 		| 'Waxing Crescent'
@@ -16,12 +18,49 @@ export interface MoonPhase {
 	date: string;
 }
 
+const moonPhaseMap = {
+	'New Moon': "newMoon",
+	'Last Quarter': "lastQuarter",
+	'Full Moon': "fullMoon",
+	"First Quarter": "firstQuarter",
+	"Waxing Crescent": "waxingCrescent",
+	"Waning Gibbous": "waningGibbous",
+	"Waxing Gibbous": "waxingGibbous",
+	"Waning Crescent": "waningCrescent"
+}
+
+const majorVisiblePhases = [
+	'Full Moon', 'Last Quarter', 'First Quarter'
+]
+
 // New Moon: 0
 // FirstQuarter: 50
 // Full Moon: 100
 // Last Quarter: 50
 // Waxing Crescent and Waning Crescent: 0-50
 // Waxing Gibbous and Waning Gibbous: 50-100
+
+export const getArticulatedMoonPath = (phase: MoonPhase) => {
+	const currentPhase = phase["moon_phase"]
+	const moonId = moonPhaseMap[currentPhase]
+
+	if (majorVisiblePhases.includes(currentPhase)) {
+		return articulatedMoonPaths[moonId]
+	}
+
+	if (currentPhase === 'New Moon') {
+		// We'll handle this case later
+		return
+	}
+
+	const illustrationMaxLength = articulatedMoonPaths[moonId].length
+	const currentMaxLength = phase.subphase_max_length
+
+	const getScaledLength = scaleLinear().domain([0, currentMaxLength]).range([0, illustrationMaxLength])
+	const scaledLength = getScaledLength(phase.subphase)
+	
+	// Todo: Fix scaledLength numbers that include decimals, like scaled length: 1.3333333333333333 illustration max length: 8
+}
 
 export const getCurrentQuarter = (quarter: number) => {
 	if (quarter === 0) {
@@ -37,7 +76,7 @@ export const getCurrentQuarter = (quarter: number) => {
 	}
 
 	if (quarter === 3) {
-		return 'Third Quarter';
+		return 'Last Quarter';
 	}
 };
 

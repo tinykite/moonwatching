@@ -6,12 +6,16 @@
 	import type { MoonPhase } from '$lib/moon-utils';
 	import { animate, timeline } from 'motion';
 	import type { PageData } from './$types';
-	import { defaultBlobs, generateMoonBlobs, getMoonPath } from '$lib/creative-utils';
+	import { defaultBlobs, generateMoonBlobs } from '$lib/creative-utils';
+	import { getArticulatedMoonPath } from '$lib/moon-utils';
+	import { getMoonPath } from '$lib/creative-utils';
+	
 
 	export let data: PageData;
 	let phasesByDate = data.moonData.reduce(
 		(phases: Record<string, MoonPhase>, currentPhase: MoonPhase) => {
 			const date = parseInt(currentPhase.date.split('-')[2]);
+			const moonPath = getArticulatedMoonPath(currentPhase)
 			return { ...phases, [date]: currentPhase };
 		},
 		{}
