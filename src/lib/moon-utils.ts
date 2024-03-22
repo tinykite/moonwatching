@@ -1,7 +1,7 @@
 import { format, startOfMonth, endOfMonth, sub, add } from 'date-fns';
 
 export interface MoonPhase {
-	phase:
+	moon_phase:
 		| 'New Moon'
 		| 'Third Quarter'
 		| 'Full Moon'
@@ -10,7 +10,9 @@ export interface MoonPhase {
 		| 'Waning Crescent'
 		| 'Waning Gibbous'
 		| 'Waxing Gibbous';
-	ecliptic_longitude: number;
+	moon_phase_float: number;
+	subphase_max_length: number;
+	subphase: number;
 	date: string;
 }
 
