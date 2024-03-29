@@ -40,7 +40,7 @@ const majorVisiblePhases = [
 // Waxing Crescent and Waning Crescent: 0-50
 // Waxing Gibbous and Waning Gibbous: 50-100
 
-export const getArticulatedMoonPath = (phase: MoonPhase) => {
+export const getArticulatedMoonPath = (phase: MoonPhase, date: string) => {
 	const currentPhase = phase["moon_phase"]
 	const moonId = moonPhaseMap[currentPhase]
 
@@ -55,11 +55,11 @@ export const getArticulatedMoonPath = (phase: MoonPhase) => {
 
 	const illustrationMaxLength = articulatedMoonPaths[moonId].length
 	const currentMaxLength = phase.subphase_max_length
-
 	const getScaledLength = scaleLinear().domain([0, currentMaxLength]).range([0, illustrationMaxLength])
 	const scaledLength = getScaledLength(phase.subphase)
-	
-	// Todo: Fix scaledLength numbers that include decimals, like scaled length: 1.3333333333333333 illustration max length: 8
+	const illustrationIndex = illustrationMaxLength > currentMaxLength ? Math.ceil(scaledLength) : Math.floor(scaledLength)
+
+	return articulatedMoonPaths[moonId][illustrationIndex]
 }
 
 export const getCurrentQuarter = (quarter: number) => {
