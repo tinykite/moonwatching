@@ -9,17 +9,19 @@
 	import { defaultBlobs, generateMoonBlobs } from '$lib/creative-utils';
 	import { getArticulatedMoonPath } from '$lib/moon-utils';
 	import { getMoonPath } from '$lib/creative-utils';
+  import { phase } from '$lib/stores';
+  import { moonPaths } from '$lib/consts';
 	
-
 	export let data: PageData;
 	let phasesByDate = data.moonData.reduce(
 		(phases: Record<string, MoonPhase>, currentPhase: MoonPhase) => {
 			const date = parseInt(currentPhase.date.split('-')[2]);
-			const moonPath = getArticulatedMoonPath(currentPhase)
-			return { ...phases, [date]: currentPhase };
+			const moon_path = getArticulatedMoonPath(currentPhase)
+
+				return { ...phases, [date]: {...currentPhase, moon_path} };
 		},
 		{}
-	);
+	); 
 	let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
 
 	let dateMin = 1;
@@ -45,6 +47,7 @@
 	let scaleValue = 0;
 	let scaleRange = [0, 20];
 	let translateXValue = 0;
+	let testPhase: SVGPathElement;
 
 	$: rotateValue = interpolate({
 		domain: [0, 1],
@@ -69,27 +72,26 @@
 	onMount(() => {
 		blobs = generateMoonBlobs()
 		animate('.moon', { opacity: 1 }, { duration: 1 });
+		moonPhaseMask.setAttribute("d", phasesByDate[chosenDate].moon_path )
 	});
 
-
 	const updatePhase = async (nextValue) => {
-		const nextPhase = phasesByDate[nextValue].moon_phase;
+		const newPath = phasesByDate[nextValue].moon_path
+		const nextPhase = phasesByDate[nextValue].moon_phase
 
-		if (nextPhase !== chosenPhase) {
-		const newPath = getMoonPath(nextPhase)
 		const mixPaths = flubberInterpolate(moonPhaseMask.getAttribute("d"), newPath);
+		const transition = { duration: 0.5 };
 
 		const sequence = [ 
 			[currentPhaseTextRef, { opacity: 0 }, { duration: 0.3 }],
 			[blobContainer, { opacity: value }, { duration: 0.3, at: "<" }], 
 		] as any
 		
-		animate((progress) => moonPhaseMask.setAttribute("d", mixPaths(progress)), { duration: 0.3});
+		animate((progress) => moonPhaseMask.setAttribute("d", mixPaths(progress)), transition);
 		await timeline(sequence).finished
 		chosenPhase = nextPhase;
 		animate(currentPhaseTextRef, { opacity: 1 })
-		}
-	};
+	}
 </script>
 
 <main class="pageMain">
@@ -107,7 +109,7 @@
 					</clipPath>
 
 					<clipPath id="moonPhase">
-						<path bind:this={moonPhaseMask} d={getMoonPath(chosenPhase)} />
+						<path bind:this={moonPhaseMask} d={""} />
 					</clipPath>
 
 					<filter id="moonBlur" x="0" y="0">
@@ -122,6 +124,7 @@
 						</feMerge>
 					</filter>
 				</defs>
+
 
 				<g clip-path="url(#moonClip)" filter="url(#glow)">
 					<circle
