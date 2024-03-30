@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { timeline, stagger } from 'motion';
-	import { browser } from '$app/environment';
+	// import { browser } from '$app/environment';
 	import { onMount, onDestroy } from 'svelte';
 
 	let isOpen: boolean = false;
@@ -83,11 +83,12 @@
 		<li class="mobileNav__item">
 			<a href="/about" class="mobileNav__link">About</a>
 		</li>
-
-		<!-- <li class="mobileNav__item">
+		<li class="mobileNav__item">
 			<a href="/phases-by-month" class="mobileNav__link">Phases by Month</a>
 		</li>
-		<li class="mobileNav__item">
+
+		<!-- Moon Phase Alers on Hiatus -->
+		<!-- <li class="mobileNav__item">
 			<a href="/newsletter-signup" class="mobileNav__link">Alerts</a>
 		</li> -->
 	</ul>

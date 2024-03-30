@@ -2,11 +2,11 @@
 	import type { SvelteComponent } from 'svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import Logo from './Logo.svelte';
-	import Dialog from './Dialog.svelte';
-	import { enhance, applyAction } from '$app/forms';
-	import { page } from '$app/stores';
-	import classNames from 'classnames';
-	import HalfMoon from './illustrations/HalfMoon.svelte';
+	// import Dialog from './Dialog.svelte';
+	// import { enhance, applyAction } from '$app/forms';
+	// import { page } from '$app/stores';
+	// import classNames from 'classnames';
+	// import HalfMoon from './illustrations/HalfMoon.svelte';
 	import Menu from './Menu.svelte';
 
 	type Form = {
@@ -15,7 +15,7 @@
 		success?: string;
 	};
 
-	let emailDialog: SvelteComponent;
+	// let emailDialog: SvelteComponent;
 
 	// The $: beneath these variables is necessary to subscribe to a built-in store
 	// And trigger a re-render when the store updates.
@@ -62,9 +62,10 @@
 				<a href="/about" class="nav__link">About</a>
 			</li>
 
-			<!-- <li class="nav__item">
+			<li class="nav__item">
 				<a href="/phases-by-month" class="nav__link">Phases by Month</a>
-			</li> -->
+			</li>
+			<!-- Moon Phase Alerts are on hiatus -->
 			<!-- <li class="nav__item">
 				<button on:click={() => openEmailDialog()} class="nav__button">Alerts</button>
 			</li> -->
