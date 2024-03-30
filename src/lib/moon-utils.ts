@@ -56,9 +56,9 @@ export const getArticulatedMoonPath = (phase: MoonPhase) => {
 
 	const illustrationMaxLength = articulatedMoonPaths[moonId].length
 	const currentMaxLength = phase.subphase_max_length
-	const getScaledLength = scaleLinear().domain([0, currentMaxLength]).range([0, illustrationMaxLength])
-	const scaledLength = getScaledLength(phase.subphase) - 1 // Account for zero-indexing of illustration arrays
-	const illustrationIndex = illustrationMaxLength > currentMaxLength ? Math.ceil(scaledLength) : Math.floor(scaledLength)
+	const getScaledLength = scaleLinear().domain([1, currentMaxLength]).range([0, illustrationMaxLength - 1])
+	const scaledLength = getScaledLength(phase.subphase)
+	const illustrationIndex = Math.floor(scaledLength)
 
 	return articulatedMoonPaths[moonId][illustrationIndex]
 }
