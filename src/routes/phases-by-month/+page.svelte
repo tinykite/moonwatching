@@ -91,10 +91,12 @@
 	}
 
 	const updatePhase = async (nextValue: number) => {
+		const {oldPath, newPath} = getMoonPaths(nextValue)
+		if (oldPath === newPath) return 
+
 		const nextPhase = phasesByDate[nextValue].moon_phase
 		const isNewPhase = chosenPhase !== nextPhase
 
-		const {oldPath, newPath} = getMoonPaths(nextValue)
 		const mixPaths = flubberInterpolate(oldPath, newPath);
 		const transition = { duration: 0.5 };
 		
