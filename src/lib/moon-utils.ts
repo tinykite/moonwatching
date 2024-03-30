@@ -49,8 +49,9 @@ export const getArticulatedMoonPath = (phase: MoonPhase) => {
 	}
 
 	if (currentPhase === 'New Moon') {
-		// We'll handle this case later
-		return
+		// This needs to be handled conditionally
+		// But we'll return a default New Moon as a fallback
+		return articulatedMoonPaths.newMoonA
 	}
 
 	const illustrationMaxLength = articulatedMoonPaths[moonId].length

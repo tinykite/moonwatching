@@ -1,16 +1,14 @@
 <script lang="ts">
-	import { interpolate } from '$lib/math-utils';
+	// import { interpolate } from '$lib/math-utils';
 	import * as flubber from "flubber"
 	import { onMount } from 'svelte';
 	import { getDate, format } from 'date-fns';
 	import type { MoonPhase } from '$lib/moon-utils';
 	import { animate, timeline } from 'motion';
 	import type { PageData } from './$types';
-	import { defaultBlobs, generateMoonBlobs } from '$lib/creative-utils';
+	import { defaultBlobs, generateMoonBlobs, getMoonPath } from '$lib/creative-utils';
 	import { getArticulatedMoonPath } from '$lib/moon-utils';
-	import { getMoonPath } from '$lib/creative-utils';
-  import { phase } from '$lib/stores';
-  import { moonPaths } from '$lib/consts';
+  	import { articulatedMoonPaths } from "$lib/consts";
 	
 	export let data: PageData;
 	let phasesByDate = data.moonData.reduce(
@@ -43,54 +41,78 @@
 	let moonIllustrationRef: SVGSVGElement;
 	let moonContainer: HTMLElement;
 	let blobContainer: SVGGElement;
-	let rotateValue = 0;
-	let scaleValue = 0;
-	let scaleRange = [0, 20];
-	let translateXValue = 0;
-	let testPhase: SVGPathElement;
 
-	$: rotateValue = interpolate({
-		domain: [0, 1],
-		range: [0, 5],
-		value
-	});
+	// TODO: Add back rotate, translateX, and scale animations
+	// let rotateValue = 0;
+	// let scaleValue = 0;
+	// let scaleRange = [0, 20];
+	// let translateXValue = 0;
 
-	$: translateXValue = interpolate({
-		domain: [0, 1],
-		range: [0, -20],
-		value
-	});
+	// $: rotateValue = interpolate({
+	// 	domain: [0, 1],
+	// 	range: [0, 5],
+	// 	value
+	// });
 
-	$: scaleValue = interpolate({
-		domain: [0, 1],
-		range: scaleRange,
-		value
-	});
+	// $: translateXValue = interpolate({
+	// 	domain: [0, 1],
+	// 	range: [0, -20],
+	// 	value
+	// });
+
+	// $: scaleValue = interpolate({
+	// 	domain: [0, 1],
+	// 	range: scaleRange,
+	// 	value
+	// });
 
 	let blobs = defaultBlobs
 
 	onMount(() => {
 		blobs = generateMoonBlobs()
 		animate('.moon', { opacity: 1 }, { duration: 1 });
-		moonPhaseMask.setAttribute("d", phasesByDate[chosenDate].moon_path )
+		moonPhaseMask.setAttribute("d", phasesByDate[chosenDate].moon_path );
 	});
 
-	const updatePhase = async (nextValue) => {
-		const newPath = phasesByDate[nextValue].moon_path
+	const getMoonPaths = (nextValue: number) => {
+		const isNewMoon = chosenPhase === 'New Moon'
+
+		if (isNewMoon) {
+			return {
+				oldPath: articulatedMoonPaths.newMoonB,
+				newPath: articulatedMoonPaths.newMoonA
+			}
+		}
+
+		else return {
+			oldPath: moonPhaseMask.getAttribute("d"),
+			newPath: phasesByDate[nextValue].moon_path
+		}
+	}
+
+	const updatePhase = async (nextValue: number) => {
 		const nextPhase = phasesByDate[nextValue].moon_phase
+		const isNewPhase = chosenPhase !== nextPhase
 
-		const mixPaths = flubberInterpolate(moonPhaseMask.getAttribute("d"), newPath);
+		const {oldPath, newPath} = getMoonPaths(nextValue)
+		const mixPaths = flubberInterpolate(oldPath, newPath);
 		const transition = { duration: 0.5 };
-
-		const sequence = [ 
-			[currentPhaseTextRef, { opacity: 0 }, { duration: 0.3 }],
-			[blobContainer, { opacity: value }, { duration: 0.3, at: "<" }], 
-		] as any
 		
 		animate((progress) => moonPhaseMask.setAttribute("d", mixPaths(progress)), transition);
+
+		const defaultSecondaryAnimation = [blobContainer, { opacity: value }, { duration: 0.3, at: "<" }] 
+
+		const sequence = isNewPhase ? [ 
+			[currentPhaseTextRef, { opacity: 0 }, { duration: 0.3 }],
+		 	[...defaultSecondaryAnimation]
+			]  : [[...defaultSecondaryAnimation]] as any
+
 		await timeline(sequence).finished
 		chosenPhase = nextPhase;
-		animate(currentPhaseTextRef, { opacity: 1 })
+
+		if (isNewPhase) {
+			animate(currentPhaseTextRef, { opacity: 1 })
+		}
 	}
 </script>
 
