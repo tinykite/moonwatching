@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { phase } from '$lib/stores';
-	import { calculatePhase } from '$lib/moon-utils';
 	import { animate } from 'motion';
+	import { lookupPhase } from '$lib/moon-utils';
 
 	let dateInput: HTMLInputElement | null;
 	let userDate: string;
@@ -14,6 +14,7 @@
 		error = false;
 		errorMessage = '';
 
+		const currentDate = new Date()
 		const dateParams = userDate.split('/');
 
 		// Javascript months are zero-indexed. So January is 0
@@ -21,22 +22,32 @@
 		const day = parseInt(dateParams[1]);
 		const year = parseInt(dateParams[2]);
 
-		// TODO: Find a more efficient way to set this
 		// Date object will not accept a string literal as valid date arguments
 		// Passing a full date string is not recommended
-		const date = new Date();
-		date.setFullYear(year);
-		date.setMonth(month);
-		date.setDate(day);
+		const newDate = new Date()
+		newDate.setFullYear(year)
+		newDate.setMonth(month)
+		newDate.setDate(day);
 
-		if (!date) {
+		if (!userDate) {
 			error = true;
 			errorMessage = 'Please enter a valid date';
 			return;
 		}
 
-		const nextQuarter = astronomy.SearchMoonQuarter(date);
-		const newPhase = calculatePhase({ nextQuarter, date });
+		if (newDate.getFullYear() !== currentDate.getFullYear()) {
+			error = true;
+			errorMessage = `Please enter a ${currentDate.getFullYear()} date`;
+			return;
+		}
+
+		const {phase: newPhase, error: lookupError} = await lookupPhase(newDate)
+
+		if (lookupError) {
+			error = true;
+			errorMessage = "There was an error looking up your date. Please try again."; // Finesse this
+			return;
+		}
 
 		await animate('.illustrationContainer', { opacity: 0 }, { duration: 0.75 }).finished;
 		phase.set(newPhase);
@@ -66,7 +77,7 @@
 	}}
 >
 	<div class="input-group">
-		<label for="date">Date (MM/DD/YYYY)</label>
+		<label for="date">2024 Date (MM/DD/YYYY)</label>
 		<input
 			bind:this={dateInput}
 			type="text"
@@ -97,5 +108,11 @@
 	.input-group {
 		display: flex;
 		flex-direction: column;
+		text-align: left;
+	}
+
+	.custom-date-lookup__error {
+		text-align: left;
+		padding-block-start: 0.5rem;
 	}
 </style>

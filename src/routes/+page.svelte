@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import MoonPhase from '../components/MoonPhase.svelte';
-	// import DateInput from '../components/DateInput.svelte';
+	import DateInput from '../components/DateInput.svelte';
 	import CurrentDate from '../components/CurrentDate.svelte';
 	import { phase } from '$lib/stores';
 	import { timeline } from 'motion';
@@ -27,7 +27,7 @@
 	<MoonPhase phase={$phase} />
 	 <div class="dateContainer">
 			<CurrentDate currentDate={format(new Date(), "MMMM d, y")} handleToggle={() => toggleDateInput()} />
-			<!-- <DateInput /> -->
+			<DateInput />
 	</div>
 </main>
 

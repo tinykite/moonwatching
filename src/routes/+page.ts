@@ -1,5 +1,5 @@
 import type { PageLoad } from './$types';
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 import { formatISO } from "date-fns";
 

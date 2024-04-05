@@ -1,6 +1,31 @@
 import { format, startOfMonth, endOfMonth, sub, add } from 'date-fns';
 import { articulatedMoonPaths } from './consts';
 import { scaleLinear } from 'd3-scale'
+import formatISO from 'date-fns/formatISO';
+import { supabase } from '$lib/supabaseClient';
+
+export const lookupPhase = async (date: Date) => {
+	const formattedDate = formatISO(date,  { representation: 'date' })
+
+	const { data: moonData, error: moonDataError } = await supabase
+	.from('all_phases')
+	.select('moon_phase')
+	.eq('date', formattedDate)
+	.single();
+	
+	if (moonDataError || !moonData.moon_phase) {
+		return {
+			phase: null,
+			error: moonDataError
+		}
+	}
+	
+	return {
+		phase: moonData.moon_phase,
+		error: null
+	}
+}
+
 
 export interface MoonPhase {
 	moon_phase:
