@@ -42,7 +42,7 @@
 
 	@media (min-width: 1440px) {
 		.pageMain {
-			margin: 25vh auto 2rem;
+			margin: 15vh auto 2rem;
 		}
 	}
 
