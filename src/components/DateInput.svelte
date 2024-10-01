@@ -1,7 +1,9 @@
 <script lang="ts">
+	import * as astronomy from '$lib/astronomy-reference';
 	import { phase } from '$lib/stores';
+	import { calculatePhase } from '$lib/moon-utils';
 	import { animate } from 'motion';
-	import { lookupPhase } from '$lib/moon-utils';
+	import classNames from 'classnames';
 
 	let dateInput: HTMLInputElement | null;
 	let userDate: string;
@@ -14,40 +16,21 @@
 		error = false;
 		errorMessage = '';
 
-		const currentDate = new Date()
 		const dateParams = userDate.split('/');
-
-		// Javascript months are zero-indexed. So January is 0
 		const month = parseInt(dateParams[0]) - 1;
 		const day = parseInt(dateParams[1]);
 		const year = parseInt(dateParams[2]);
 
+		// TODO: Find a more efficient way to set this
 		// Date object will not accept a string literal as valid date arguments
 		// Passing a full date string is not recommended
-		const newDate = new Date()
-		newDate.setFullYear(year)
-		newDate.setMonth(month)
-		newDate.setDate(day);
+		const date = new Date();
+		date.setFullYear(year);
+		date.setMonth(month);
+		date.setDate(day);
 
-		if (!userDate) {
-			error = true;
-			errorMessage = 'Please enter a valid date';
-			return;
-		}
-
-		if (newDate.getFullYear() !== currentDate.getFullYear()) {
-			error = true;
-			errorMessage = `Please enter a ${currentDate.getFullYear()} date`;
-			return;
-		}
-
-		const {phase: newPhase, error: lookupError} = await lookupPhase(newDate)
-
-		if (lookupError) {
-			error = true;
-			errorMessage = "There was an error looking up your date. Please try again."; // Finesse this
-			return;
-		}
+		const nextQuarter = astronomy.SearchMoonQuarter(date);
+		const newPhase = calculatePhase({ nextQuarter, date });
 
 		await animate('.illustrationContainer', { opacity: 0 }, { duration: 0.75 }).finished;
 		phase.set(newPhase);
@@ -56,12 +39,12 @@
 
 	$: if (userDate && validDateFormat.test(userDate)) {
 		onSubmitCustomDate();
-	}
+	} 
 
 	const onSubmit = (e: Event) => {
 		e.preventDefault();
 
-		if (validDateFormat.test(userDate)) {
+		if (!!userDate && validDateFormat.test(userDate)) {
 			onSubmitCustomDate();
 		} else {
 			error = true;
@@ -77,23 +60,23 @@
 	}}
 >
 	<div class="input-group">
-		<label for="date">2024 Date (MM/DD/YYYY)</label>
+		<label for="date">Date (MM/DD/YYYY)</label>
 		<input
 			bind:this={dateInput}
 			type="text"
 			id="date"
-			class="form__input"
+			class={classNames('form__input', {
+				'form__input--invalid': error
+			})}
 			bind:value={userDate}
-			required
-			title="Please enter a date in the format MM/DD/YYYY"
-			pattern={String.raw`^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$`}
 			maxLength={10}
 		/>
 	</div>
 </form>
-{#if error}
-	<p class="custom-date-lookup__error">{errorMessage}</p>
-{/if}
+<div 	class={classNames('form__errorMessage', {
+	'form__errorMessage--visible': error
+})}>{errorMessage}</div>
+
 
 <style>
 	.dateInputContainer {
@@ -108,11 +91,5 @@
 	.input-group {
 		display: flex;
 		flex-direction: column;
-		text-align: left;
-	}
-
-	.custom-date-lookup__error {
-		text-align: left;
-		padding-block-start: 0.5rem;
 	}
 </style>
