@@ -3,6 +3,7 @@
 	import { phase } from '$lib/stores';
 	import { calculatePhase } from '$lib/moon-utils';
 	import { animate } from 'motion';
+	import classNames from 'classnames';
 
 	let dateInput: HTMLInputElement | null;
 	let userDate: string;
@@ -28,12 +29,6 @@
 		date.setMonth(month);
 		date.setDate(day);
 
-		if (!date) {
-			error = true;
-			errorMessage = 'Please enter a valid date';
-			return;
-		}
-
 		const nextQuarter = astronomy.SearchMoonQuarter(date);
 		const newPhase = calculatePhase({ nextQuarter, date });
 
@@ -44,12 +39,12 @@
 
 	$: if (userDate && validDateFormat.test(userDate)) {
 		onSubmitCustomDate();
-	}
+	} 
 
 	const onSubmit = (e: Event) => {
 		e.preventDefault();
 
-		if (validDateFormat.test(userDate)) {
+		if (!!userDate && validDateFormat.test(userDate)) {
 			onSubmitCustomDate();
 		} else {
 			error = true;
@@ -70,18 +65,18 @@
 			bind:this={dateInput}
 			type="text"
 			id="date"
-			class="form__input"
+			class={classNames('form__input', {
+				'form__input--invalid': error
+			})}
 			bind:value={userDate}
-			required
-			title="Please enter a date in the format MM/DD/YYYY"
-			pattern={String.raw`^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$`}
 			maxLength={10}
 		/>
 	</div>
 </form>
-{#if error}
-	<p class="custom-date-lookup__error">{errorMessage}</p>
-{/if}
+<div 	class={classNames('form__errorMessage', {
+	'form__errorMessage--visible': error
+})}>{errorMessage}</div>
+
 
 <style>
 	.dateInputContainer {
