@@ -32,10 +32,14 @@
 
     <h2 class="heading">Data & Methodology</h2>
     <p class="text">
-      The Moon Watching website uses data based on information provided by the <a
+      The Moon Watching website primarily uses data based on information provided by the <a
         href="https://aa.usno.navy.mil/index"
         >Astronomical Applications Department</a
       > of the U.S. Naval Observatory.
+    </p>
+
+    <p class="text">
+      For user lookups of the moon phase associated with custom dates, Moon Watching relies on the <a href="https://github.com/cosinekitty/astronomy">Astronomy Engine library by cosinekitty</a>, which is an open-source project based on the VSOP87 and NOVAS C 3.1 models.
     </p>
 
     <h2 class="heading">Credits</h2>
