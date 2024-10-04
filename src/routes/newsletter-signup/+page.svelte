@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { enhance, applyAction } from '$app/forms';
 	import type { SvelteComponent } from 'svelte';
 	import { page } from '$app/stores';
@@ -101,4 +101,4 @@
 	.form {
 		width: 80%;
 	}
-</style>
+</style> -->
