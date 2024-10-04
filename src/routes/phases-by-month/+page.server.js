@@ -1,6 +1,6 @@
-import { newsletterSignup } from '$lib/forms';
+// import { newsletterSignup } from '$lib/forms';
 
-// @type {import('./$types').Actions}
-export const actions = {
-	default: newsletterSignup
-};
+// // @type {import('./$types').Actions}
+// export const actions = {
+// 	default: newsletterSignup
+// };
