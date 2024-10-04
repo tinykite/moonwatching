@@ -5,7 +5,13 @@ import adapter from '@sveltejs/adapter-cloudflare';
 const config = {
 	preprocess: vitePreprocess(),
   kit: {
-	adapter: adapter(),
+	adapter: adapter({
+		      // Cloudflare Pages configuration
+			  routes: {
+				include: ['/*'],
+				exclude: ['<all>']
+			  }
+  	}),
     alias: {
       $components: 'src/components',
       $utils: 'src/utils',
