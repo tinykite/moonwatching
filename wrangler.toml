@@ -1,8 +1,0 @@
-[build]
-command = "npm run build"
-
-[site]
-bucket = ".svelte-kit/cloudflare"
-
-[build.environment]
-NODE_VERSION = "18.18.0"
