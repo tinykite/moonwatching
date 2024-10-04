@@ -12,8 +12,8 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"test": "vitest"
 	},
-	"devDependencies": {
-		"@sveltejs/adapter-netlify": "^4.3.4",
+	"devDependencies": {		
+		"@sveltejs/adapter-auto": "^3.2.5",	
 		"@sveltejs/kit": "^2.6.1",
 		"@types/d3-array": "^3.2.1",
 		"@types/d3-scale": "^4.0.8",
