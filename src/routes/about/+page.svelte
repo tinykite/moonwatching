@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
+  import { run } from "svelte/legacy";
 
   import { animate } from "motion";
   let intro: HTMLElement = $state();
@@ -32,18 +31,14 @@
       project will continue to evolve to explore ways in which creative
       technology can make it easier to develop an appreciation for your own
       backyard — in addition, of course, to the sky above.
-	</p>
+    </p>
 
     <h2 class="heading">Data & Methodology</h2>
     <p class="text">
-      The Moon Watching website primarily uses data based on information provided by the <a
+      The Moon Watching website relies on data provided by the <a
         href="https://aa.usno.navy.mil/index"
         >Astronomical Applications Department</a
       > of the U.S. Naval Observatory.
-    </p>
-
-    <p class="text">
-      For user lookups of the moon phase associated with custom dates, Moon Watching relies on the <a href="https://github.com/cosinekitty/astronomy">Astronomy Engine library by cosinekitty</a>, which is an open-source project based on the VSOP87 and NOVAS C 3.1 models.
     </p>
 
     <h2 class="heading">Credits</h2>
@@ -87,7 +82,6 @@
     margin: 0 auto;
   }
   .heading,
-  .callout,
   .introduction {
     font-family: "swear-text", serif;
     font-weight: 500;
@@ -131,52 +125,5 @@
 
   .text + .text {
     margin-top: 1.5rem;
-  }
-
-  .callout {
-    font-size: 1.25rem;
-    margin: 1.5rem auto 1.5rem;
-    text-align: center;
-  }
-
-  @media (min-width: 46rem) {
-    .callout {
-      max-width: 60%;
-      font-size: 1.75rem;
-      margin: 3rem auto 3rem;
-    }
-  }
-
-  .callout--emphasis {
-    font-family: swear-text, serif;
-    font-weight: 600;
-    font-style: italic;
-  }
-
-  .button {
-    display: flex;
-    align-items: center;
-    border-radius: 100px;
-    border: 1px solid #e4edff;
-    color: #e4edff;
-    padding: 0.75rem 1.5rem;
-    background: none;
-    margin: 1.5rem auto 0;
-    font-family: "swear-display", serif;
-    line-height: 1.125;
-    font-weight: 500;
-    font-style: normal;
-    cursor: pointer;
-  }
-
-  @media (min-width: 46rem) {
-    .button {
-      font-size: 1.125rem;
-      margin: 3rem auto 3rem;
-    }
-  }
-
-  .button__icon {
-    margin-right: 0.5rem;
   }
 </style>
