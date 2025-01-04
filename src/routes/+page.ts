@@ -1,21 +1,12 @@
 import type { PageLoad } from './$types';
-import { error } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
+import { json } from '@sveltejs/kit';
 import { formatISO } from "date-fns";
+import { moonPhases2025 } from '../data/moonPhases2025';
 
 export const load = (async () => {    
     const date = formatISO(new Date(),  { representation: 'date' })
+    const moonData = moonPhases2025.find(phase => phase.date === date)
 
-    const { data: moonData, error: moonDataError } = await supabase
-    .from('all_phases')
-    .select('moon_phase, date')
-    .eq('date', date)
-    .single();
-
-    if (moonDataError) {
-        throw error(400, moonDataError)
-    }
-
-    return moonData
+    return {...moonData}
 
 }) satisfies PageLoad;

@@ -1,4 +1,4 @@
-[
+export const moonPhases2025 = [
   {
     date: "2025-01-01",
     month: "December",
