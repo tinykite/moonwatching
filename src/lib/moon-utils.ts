@@ -1,7 +1,7 @@
 import { format, startOfMonth, endOfMonth, sub, add } from 'date-fns';
 import { articulatedMoonPaths } from './consts';
 import { scaleLinear } from 'd3-scale'
-import formatISO from 'date-fns/formatISO';
+import { formatISO } from 'date-fns/formatISO';
 import { supabase } from '$lib/supabaseClient';
 
 export const lookupPhase = async (date: Date) => {
@@ -234,19 +234,6 @@ const getAllPhaseData = (majorMoonPhaseData) => {
 				minor_moon_phase: minorMoonPhase,
 				source: "moonwatching"
 			}
-		}
-	})
-}
-
-const getSimplifiedPhaseData = (phases) => {
-	return phases.map(phase => {
-		return {
-			date: phase.date, 
-			moon_phase_float: phase.moon_phase_float,
-			month: phase.month,
-			year: phase.year,
-			source: phase.source,
-			moon_phase_name: phase?.minor_moon_phase ? phase.minor_moon_phase : phase.major_moon_phase
 		}
 	})
 }
