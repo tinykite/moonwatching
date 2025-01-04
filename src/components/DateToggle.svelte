@@ -1,8 +1,12 @@
 <script lang="ts">
-	export let handleToggle: () => void;
+	interface Props {
+		handleToggle: () => void;
+	}
+
+	let { handleToggle }: Props = $props();
 </script>
 
-<button class="dateToggle" on:click={() => handleToggle()}>
+<button class="dateToggle" onclick={() => handleToggle()}>
 	<p class="dateToggle__text">Choose a different date</p>
 	<svg class={'dateToggle__icon'} viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<path

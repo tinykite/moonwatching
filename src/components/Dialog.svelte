@@ -1,10 +1,23 @@
 <script lang="ts">
-	import { animate } from 'motion';
-	export let title: string;
-	export let success: string;
+	import { run } from 'svelte/legacy';
 
-	let dialog: HTMLDialogElement;
-	let isOpen = false;
+	import { animate } from 'motion';
+	interface Props {
+		title: string;
+		success: string;
+		icon?: import('svelte').Snippet;
+		form?: import('svelte').Snippet;
+	}
+
+	let {
+		title,
+		success,
+		icon,
+		form
+	}: Props = $props();
+
+	let dialog: HTMLDialogElement = $state();
+	let isOpen = $state(false);
 
 	function closeDialog() {
 		isOpen = false;
@@ -29,9 +42,11 @@
 		dialog.close('close');
 	}
 
-	$: if (success) {
-		close();
-	}
+	run(() => {
+		if (success) {
+			close();
+		}
+	});
 </script>
 
 <!-- Aria-hidden is unnecessary for clients that support the inert property -->
@@ -39,15 +54,15 @@
 	inert={isOpen ? undefined : true}
 	aria-hidden={isOpen ? undefined : true}
 	bind:this={dialog}
-	on:close={closeDialog}
-	on:click={lightDismiss}
+	onclose={closeDialog}
+	onclick={lightDismiss}
 	class="dialog"
 >
 	<div class="dialog__inner">
-		<slot name="icon" />
+		{@render icon?.()}
 		<h1>{title}</h1>
 
-		<slot name="form" />
+		{@render form?.()}
 	</div>
 </dialog>
 

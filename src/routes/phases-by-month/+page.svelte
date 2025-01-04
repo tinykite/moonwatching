@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	// import { interpolate } from '$lib/math-utils';
 	import * as flubber from "flubber"
 	import { onMount } from 'svelte';
@@ -10,7 +12,11 @@
 	import { getArticulatedMoonPath } from '$lib/moon-utils';
   	import { articulatedMoonPaths } from "$lib/consts";
 	
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 	let phasesByDate = data.moonData.reduce(
 		(phases: Record<string, MoonPhase>, currentPhase: MoonPhase) => {
 			const date = parseInt(currentPhase.date.split('-')[2]);
@@ -29,18 +35,20 @@
 	const currentDate = getDate(date);
 	const currentMonth = format(date, 'MMMM');
 
-	let chosenDate: number = currentDate;
+	let chosenDate: number = $state(currentDate);
 
-	let chosenPhase: string = phasesByDate[chosenDate].moon_phase;
-	let value: number = 0;
+	let chosenPhase: string = $state(phasesByDate[chosenDate].moon_phase);
+	let value: number = $state(0);
 
-	$: value = phasesByDate[chosenDate].moon_phase_float;
+	run(() => {
+		value = phasesByDate[chosenDate].moon_phase_float;
+	});
 
-	let currentPhaseTextRef: HTMLElement;
-	let moonPhaseMask: SVGPathElement;
-	let moonIllustrationRef: SVGSVGElement;
-	let moonContainer: HTMLElement;
-	let blobContainer: SVGGElement;
+	let currentPhaseTextRef: HTMLElement = $state();
+	let moonPhaseMask: SVGPathElement = $state();
+	let moonIllustrationRef: SVGSVGElement = $state();
+	let moonContainer: HTMLElement = $state();
+	let blobContainer: SVGGElement = $state();
 
 	// TODO: Add back rotate, translateX, and scale animations
 	// let rotateValue = 0;
@@ -66,7 +74,7 @@
 	// 	value
 	// });
 
-	let blobs = defaultBlobs
+	let blobs = $state(defaultBlobs)
 
 	onMount(() => {
 		blobs = generateMoonBlobs()
@@ -193,7 +201,7 @@
 				name="date"
 				min={dateMin}
 				max={dateMax}
-				on:input={(e) => {
+				oninput={(e) => {
 					updatePhase(e.target.value);
 				}}
 			/>

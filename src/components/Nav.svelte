@@ -3,8 +3,8 @@
   import Logo from "./Logo.svelte";
   import Menu from "./Menu.svelte";
 
-  let mediaQuery: MediaQueryList;
-  let isMinDesktop: boolean | undefined;
+  let mediaQuery: MediaQueryList = $state();
+  let isMinDesktop: boolean | undefined = $state();
 
   const setMatches = () => {
     isMinDesktop = mediaQuery.matches;

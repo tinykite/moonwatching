@@ -1,12 +1,14 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { animate } from "motion";
   import classNames from "classnames";
   import { phase } from "$lib/stores";
 
-  let dateInput: HTMLInputElement | null;
-  let userDate: string;
-  let error: boolean;
-  let errorMessage: string;
+  let dateInput: HTMLInputElement | null = $state();
+  let userDate: string = $state();
+  let error: boolean = $state();
+  let errorMessage: string = $state();
 
   const validDateFormat =
     /^(0?[1-9]|1[0-2])\/(0?[1-9]|1[0-9]|2[0-9]|3(0|1))\/\d{4}$/;
@@ -34,9 +36,11 @@
     animate(".illustrationContainer", { opacity: 1 }, { duration: 0.75 });
   };
 
-  $: if (userDate && validDateFormat.test(userDate)) {
-    onSubmitCustomDate();
-  }
+  run(() => {
+    if (userDate && validDateFormat.test(userDate)) {
+      onSubmitCustomDate();
+    }
+  });
 
   const onSubmit = (e: Event) => {
     e.preventDefault();
@@ -52,7 +56,7 @@
 
 <form
   class="dateInputContainer"
-  on:submit={(event) => {
+  onsubmit={(event) => {
     onSubmit(event);
   }}
 >

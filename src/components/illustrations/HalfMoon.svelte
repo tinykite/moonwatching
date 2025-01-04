@@ -1,6 +1,10 @@
 <script lang="ts">
-	export let variant: string;
-	export let size: number;
+	interface Props {
+		variant: string;
+		size: number;
+	}
+
+	let { variant, size }: Props = $props();
 	const color = variant === 'light' ? '#d1d1d1' : '#000E24';
 	const iconSize = size ? size : 48;
 </script>

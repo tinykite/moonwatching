@@ -1,9 +1,13 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
 
   import { animate } from "motion";
-  let intro: HTMLElement;
+  let intro: HTMLElement = $state();
 
-  $: if (intro) animate(intro, { opacity: 1 }, { duration: 3 });
+  run(() => {
+    if (intro) animate(intro, { opacity: 1 }, { duration: 3 });
+  });
 </script>
 
 <main>

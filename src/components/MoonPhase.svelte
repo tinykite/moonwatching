@@ -1,13 +1,21 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { animate } from 'motion';
-	export let phase: any;
 	import MoonIllustration from './MoonIllustration.svelte';
-
-	let illustrationRef: HTMLElement;
-
-	$: if (phase && illustrationRef) {
-		animate(illustrationRef, { opacity: 1 }, { duration: 0.5 });
+	interface Props {
+		phase: any;
 	}
+
+	let { phase }: Props = $props();
+
+	let illustrationRef: HTMLElement = $state();
+
+	run(() => {
+		if (phase && illustrationRef) {
+			animate(illustrationRef, { opacity: 1 }, { duration: 0.5 });
+		}
+	});
 </script>
 
 <div class="illustrationContainer" bind:this={illustrationRef}>

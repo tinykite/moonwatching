@@ -1,5 +1,4 @@
 <script lang="ts">
-	export let phase: any;
 	import NewMoon from './illustrations/NewMoon.svelte';
 	import WaxingCrescent from './illustrations/WaxingCrescent.svelte';
 	import FirstQuarter from './illustrations/FirstQuarter.svelte';
@@ -8,6 +7,11 @@
 	import WaningGibbous from './illustrations/WaningGibbous.svelte';
 	import LastQuarter from './illustrations/LastQuarter.svelte';
 	import WaningCrescent from './illustrations/WaningCrescent.svelte';
+	interface Props {
+		phase: any;
+	}
+
+	let { phase }: Props = $props();
 </script>
 
 {#if phase === 'New Moon'}

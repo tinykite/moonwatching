@@ -7,7 +7,11 @@
 	import { timeline } from 'motion';
 	import { format } from 'date-fns';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	phase.set(data?.moon_phase);
 

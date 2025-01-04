@@ -25,7 +25,7 @@
 <div class="phaseGrid">
 	{#each phaseOptions as phaseOption}
 		<button
-			on:click={() => {
+			onclick={() => {
 				updatePhase(phaseOption);
 			}}
 		>

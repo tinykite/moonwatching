@@ -6,20 +6,24 @@
 	import type { PageData } from './$types';
 	import { max } from 'd3-array';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	let flubberInterpolate = flubber.interpolate ?? flubber.default.interpolate;
 
-	let moonIllustrationRef: SVGSVGElement;
-	let moonPhaseRef: SVGPathElement;
-	let moonContainer: HTMLElement;
+	let moonIllustrationRef: SVGSVGElement = $state();
+	let moonPhaseRef: SVGPathElement = $state();
+	let moonContainer: HTMLElement = $state();
 
 	const steps = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
 	const stepLabels = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-	let startPhase = 'Full Moon';
-	let endPhase = 'Full Moon';
-	let step = steps[0];
+	let startPhase = $state('Full Moon');
+	let endPhase = $state('Full Moon');
+	let step = $state(steps[0]);
 
 	let months = [
 		'January',
@@ -44,7 +48,7 @@
 		return allPhases.length;
 	};
 
-	let monthData = [1];
+	let monthData = $state([1]);
 
 	const updatePhaseCount = () => {
 		monthData = months.map((month) => {
@@ -126,7 +130,7 @@
 		name="end_phase"
 		id="end_phase"
 		bind:value={endPhase}
-		on:change={() => updatePhaseCount()}
+		onchange={() => updatePhaseCount()}
 	>
 		{#each moonPhaseOptions as phaseOption}
 			<option value={phaseOption.name}>{phaseOption.name}</option>
@@ -140,7 +144,7 @@
 		{/each}
 	</select>
 
-	<button on:click={() => interpolateShape()}>Morph</button>
+	<button onclick={() => interpolateShape()}>Morph</button>
 </main>
 
 <style>

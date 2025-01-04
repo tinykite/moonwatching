@@ -3,8 +3,8 @@
 	// import { browser } from '$app/environment';
 	import { onMount, onDestroy } from 'svelte';
 
-	let isOpen: boolean = false;
-	let mobileNavRef: HTMLElement;
+	let isOpen: boolean = $state(false);
+	let mobileNavRef: HTMLElement = $state();
 
 	const handleClick = async () => {
 		if (!isOpen) {
@@ -33,7 +33,7 @@
 	});
 </script>
 
-<button aria-hasPopup="true" on:click={() => handleClick()} class="navButton">
+<button aria-hasPopup="true" onclick={() => handleClick()} class="navButton">
 	<span class="u-visuallyHidden">Open Navigation Menu</span>
 	<svg
 		width="24"
@@ -57,7 +57,7 @@
 >
 	<button
 		class="mobileNav__button mobileNav__button--close"
-		on:click={() => {
+		onclick={() => {
 			handleClick();
 		}}
 	>

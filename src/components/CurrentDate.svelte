@@ -1,7 +1,11 @@
 <script lang="ts">
 	import DateToggle from './DateToggle.svelte';
-	export let currentDate: string;
-	export let handleToggle: () => void;
+	interface Props {
+		currentDate: string;
+		handleToggle: () => void;
+	}
+
+	let { currentDate, handleToggle }: Props = $props();
 </script>
 
 <div class="currentDateContainer">
