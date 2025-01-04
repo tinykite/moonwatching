@@ -1,30 +1,49 @@
-// import { json } from '@sveltejs/kit';
-// import type { RequestHandler } from './$types';
-// import { eachDayOfInterval, isValid, addYears } from 'date-fns';
-// import { error } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
+import { formatISO, format, add } from 'date-fns';
+import { error } from '@sveltejs/kit';
+import * as astronomy from "$lib/astronomy-reference"
+import { calculatePhase } from '$lib/moon-utils';
 
-// // This is an internal route used to calculate an entire years worth of dates.
-// export const GET = (async ({ url }) => {
-// 	const searchParams = new URLSearchParams(url.search);
-// 	const query = searchParams.get('date');
+// This is an internal route used to calculate an entire years worth of dates.
+export const GET = (async ({ url }) => {
+	const searchParams = new URLSearchParams(url.search);
+	const query = searchParams.get('date');
 
-// 	if (!query) {
-// 		throw error(500, 'No date provided');
-// 	}
+	if (!query) {
+		throw error(500, 'No date provided');
+	}
 
-// 	const validDate = isValid(new Date(query));
+    const START_DATE = new Date(2025, 0, 1, 11, 59)
+	const dates = []
 
-// 	if (!validDate) {
-// 		throw error(500, 'Invalid date provided');
-// 	}
+	const getNextDay = (date, distanceFrom) => {
+			const nextDay = add(date, {
+        days: distanceFrom
+      })
 
-// 	const startDate = new Date(query);
-// 	const endDate = addYears(startDate, 1);
+		return formatISO(nextDay)
+	}
 
-// 	const calendarYear = eachDayOfInterval({
-// 		start: startDate,
-// 		end: endDate
-// 	});
+	let n = 0;
 
-// 	return json(calendarYear);
-// }) satisfies RequestHandler;
+  while (n < 366) {
+		const day = getNextDay(START_DATE, n)
+		dates.push(day)
+    n++;
+  }
+
+  const moonData = dates.map(date => {
+    const newDate = new Date(date)
+    const nextQuarter = astronomy.SearchMoonQuarter(date);
+    const newPhase = calculatePhase({ nextQuarter, date });		
+    return {
+        date: formatISO(date, { representation: 'date' }), 
+        year: newDate.getFullYear(),
+        month: format(newDate, "LLLL"),
+        phase: newPhase
+    }
+})
+
+	return json(moonData);
+}) satisfies RequestHandler;
