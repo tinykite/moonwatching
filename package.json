@@ -13,9 +13,8 @@
 		"test": "vitest"
 	},
 	"devDependencies": {
-		"@sveltejs/vite-plugin-svelte": "^4.0.0-next.6",
-		"@sveltejs/adapter-cloudflare": "^4.7.2",
 		"@sveltejs/kit": "^2.6.1",
+		"@sveltejs/vite-plugin-svelte": "^4.0.0-next.6",
 		"@types/d3-array": "^3.2.1",
 		"@types/d3-scale": "^4.0.8",
 		"@typescript-eslint/eslint-plugin": "^8.8.0",
@@ -34,6 +33,7 @@
 	"type": "module",
 	"dependencies": {
 		"@supabase/supabase-js": "^2.45.4",
+		"@sveltejs/adapter-netlify": "^5.0.2",
 		"classnames": "^2.5.1",
 		"colorjs.io": "^0.5.2",
 		"d3-array": "^3.2.4",
