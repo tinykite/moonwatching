@@ -1,22 +1,23 @@
 import type { PageLoad } from './$types';
 import { error } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
+import { moonPhases2026 } from '../../data/moonPhaseData2026';
 import { format } from 'date-fns';
 
 export const load = (async () => {
-    const currentDate = new Date()
-	const currentMonth = format(currentDate, "MMMM")
-    const currentYear = currentDate.getFullYear()
+    const currentDate = new Date();
+    const currentMonth = format(currentDate, "MMMM");
+    const currentYear = currentDate.getFullYear();
 
-	const { data: moonData, error: moonDataError } = await supabase
-    .from('all_phases')
-    .select('moon_phase, date, moon_phase_float, subphase_max_length, subphase')
-    .eq('month', currentMonth)
-    .eq('year', currentYear)
+    // Filter data for current month and year
+    const moonData = moonPhases2026[currentMonth]?.filter(
+        entry => entry.year === currentYear
+    );
 
-    if (moonDataError) {
-        throw error(400, moonDataError)
+    if (!moonData || moonData.length === 0) {
+        throw error(400, {
+            message: `No moon phase data available for ${currentMonth} ${currentYear}`
+        });
     }
 
-    return { moonData }
+    return { moonData };
 }) satisfies PageLoad;

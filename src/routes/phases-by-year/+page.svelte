@@ -6,30 +6,29 @@
     eachDayOfInterval,
   } from "date-fns";
 
-  import { phases2025 } from "../../data/moonData2025revised";
+  type InputMoonData = {
+    properties: {
+      data: {
+        closestphase: {
+          day: number;
+          month: number;
+          phase: string;
+          time: string;
+          year: number;
+        };
+        curphase: string;
+        day: number;
+        month: number;
+        year: number;
+        fracillum: string;
+      };
+    };
+  };
 
-  console.log(phases2025);
+  let phases: Record<string, any[]> = $state({});
 
-  const options = [
-    { value: 0, label: "January" },
-    { value: 1, label: "February" },
-    { value: 2, label: "March" },
-    { value: 3, label: "April" },
-    { value: 4, label: "May" },
-    { value: 5, label: "June" },
-    { value: 6, label: "July" },
-    { value: 7, label: "August" },
-    { value: 8, label: "September" },
-    { value: 9, label: "October" },
-    { value: 10, label: "November" },
-    { value: 11, label: "December" },
-  ];
-
-  let chosenMonth = $state(0);
-  let phases: unknown = $state();
-
-  const getDays = (monthIndex: number) => {
-    const baseDate = new Date(new Date().getFullYear(), monthIndex);
+  const getDays = (monthIndex: number, year: number) => {
+    const baseDate = new Date(year, monthIndex);
     const start = startOfMonth(baseDate);
     const end = endOfMonth(start);
     return eachDayOfInterval({ start, end }).map((date) =>
@@ -45,19 +44,118 @@
     return res.json();
   };
 
-  const fetchAllPhases = async (days: Array<string>) => {
-    try {
-      const results = await Promise.all(days.map((date) => fetchPhase(date)));
-      return results;
-    } catch (err) {
-      console.error(err);
+  const fetchInBatches = async (
+    days: Array<string>,
+    batchSize: number = 10,
+  ) => {
+    const results = [];
+    for (let i = 0; i < days.length; i += batchSize) {
+      const batch = days.slice(i, i + batchSize);
+      const batchResults = await Promise.all(
+        batch.map((day) => fetchPhase(day)),
+      );
+      results.push(...batchResults);
     }
+    return results;
+  };
+
+  const getMonthName = (monthNum: number) => {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return months[monthNum - 1];
+  };
+
+  const addSubphaseInfo = (item: any, index: number, array: any[]) => {
+    const currentPhase = item.moon_phase;
+
+    // Find where this consecutive phase started (go backwards)
+    let phaseStartIndex = index;
+    while (
+      phaseStartIndex > 0 &&
+      array[phaseStartIndex - 1].moon_phase === currentPhase
+    ) {
+      phaseStartIndex--;
+    }
+
+    // Find where this consecutive phase ends (go forwards)
+    let phaseEndIndex = index;
+    while (
+      phaseEndIndex < array.length - 1 &&
+      array[phaseEndIndex + 1].moon_phase === currentPhase
+    ) {
+      phaseEndIndex++;
+    }
+
+    const totalDaysInPhase = phaseEndIndex - phaseStartIndex + 1;
+    const currentDayInPhase = index - phaseStartIndex + 1;
+
+    return {
+      ...item,
+      subphase: currentDayInPhase,
+      subphase_max_length: totalDaysInPhase,
+    };
+  };
+
+  const transformMoonData = (inputArray: InputMoonData[]) => {
+    const transformed = inputArray.map((item) => {
+      const props = item.properties.data;
+      const date = new Date(props.year, props.month - 1, props.day);
+      const dateString = date.toLocaleDateString("en-CA"); // Returns YYYY-MM-DD format
+
+      const isClosestPhaseDay =
+        props.closestphase.day === props.day &&
+        props.closestphase.month === props.month &&
+        props.closestphase.year === props.year;
+
+      const moonPhase = isClosestPhaseDay
+        ? props.closestphase.phase
+        : props.curphase;
+
+      return {
+        date: dateString,
+        month: getMonthName(props.month),
+        year: props.year,
+        moon_phase: moonPhase,
+        moon_phase_float: parseFloat(props.fracillum) / 100,
+        source: "Astronomical Applications API",
+      };
+    });
+
+    return transformed.map(addSubphaseInfo);
+  };
+
+  const fetchAllMonths = async () => {
+    const groupedPhases: Record<string, any[]> = {};
+    const currentYear = new Date().getFullYear();
+
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+      const monthDays = getDays(monthIndex, currentYear);
+      const navalMoonData = await fetchInBatches(monthDays);
+      const transformedData = transformMoonData(navalMoonData);
+
+      // Group by month name
+      const monthName = getMonthName(monthIndex + 1);
+      groupedPhases[monthName] = transformedData;
+    }
+
+    phases = groupedPhases;
   };
 
   const onSubmit = async (e: Event) => {
     e.preventDefault();
-    const allCurrentDays = getDays(chosenMonth);
-    phases = await fetchAllPhases(allCurrentDays);
+    await fetchAllMonths();
   };
 </script>
 
@@ -68,18 +166,11 @@
       onSubmit(event);
     }}
   >
-    <label for="month">Choose a Month</label>
-    <select id="month" bind:value={chosenMonth}>
-      {#each options as option}
-        <option value={option.value}>{option.label}</option>
-      {/each}
-    </select>
-
-    <button class="button">Submit</button>
+    <button class="button">Fetch All 12 Months</button>
   </form>
 
-  {#if Array.isArray(phases)}
-    {JSON.stringify(phases)}
+  {#if Object.keys(phases).length > 0}
+    {JSON.stringify(phases, null, 2)}
   {/if}
 </div>
 
